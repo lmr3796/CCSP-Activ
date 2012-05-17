@@ -1,0 +1,143 @@
+class EventController < ApplicationController
+  def index
+	@id = params[:id]
+	@e = Event.find(@id)
+	@head = User.find(@e.event_head)
+	@users = @e.users
+	@user_id = Integer(params[:user_id])
+	@new_user = User.new
+	@deps = @e.departments
+	@acts = @e.activities
+  end
+  def destroy
+	@d_id = params[:d_id]
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@a = UserEvent.where(:user_id => @d_id, :event_id => @id).first
+	@a.destroy
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def destroy_depuser
+	@d_id = params[:d_id]
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@dep_id = params[:dep_id]
+	@d = UserDepartment.where(:user_id => @d_id, :department_id => @dep_id).first
+	@d.destroy
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def destroy_dep
+	@d_id = params[:d_id]
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@d = Department.find(@d_id)
+	@d.destroy
+	@ds = UserDepartment.where(:department_id => @d_id)
+	@ds.destroy_all
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def destroy_actuser
+	@d_id = params[:d_id]
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@act_id = params[:act_id]
+	@a = UserActivity.where(:user_id => @d_id, :activity_id => @act_id).first
+	@a.destroy
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def destroy_act
+	@d_id = params[:d_id]
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@a = Activity.find(@d_id)
+	@a.destroy
+	@as = UserActivity.where(:activity_id => @d_id)
+	@as.destroy_all
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def create
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@email = params[:email]
+	@u = User.where(:email => @email).first
+	if @u == nil
+		@u = User.new(:email => @email)
+		@u.save
+	end
+	@a = UserEvent.new(:user_id => @u.id, :event_id => @id)
+	@a.save
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def create_depuser
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@dep_id = params[:dep_id]
+	@email = params[:email]
+	@u = User.where(:email => @email).first
+	if @u == nil
+		flash[:notice] = "dep user must join the event first!\n"
+	else
+		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
+		if @t == nil
+			flash[:notice] = "dep user must join the event first!\n"
+		else
+			@a = UserDepartment.new(:user_id => @u.id, :department_id => @dep_id)
+			@a.save
+		end
+	end
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def create_dep
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@dep_name = params[:dep_name]
+	@email = params[:email]
+	@u = User.where(:email => @email).first
+	if @u == nil
+		flash[:notice] = "dep admin must join the event first!\n"
+	else
+		@dep_head = @u.id
+		@d = Department.new(:dep_name => @dep_name, :dep_head => @dep_head, :event_id => @id)
+		@d.save
+		@a = UserDepartment.new(:user_id => @dep_head, :department_id => @d.id)
+		@a.save
+	end
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def create_actuser
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@act_id = params[:act_id]
+	@email = params[:email]
+	@u = User.where(:email => @email).first
+	if @u == nil
+		flash[:notice] = "act user must join the event first!\n"
+	else
+		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
+		if @t == nil
+			flash[:notice] = "act user must join the event first!\n"
+		else
+			@a = UserActivity.new(:user_id => @u.id, :activity_id => @act_id)
+			@a.save
+		end
+	end
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+  def create_act
+	@user_id = params[:user_id]
+	@id = params[:id]
+	@act_name = params[:act_name]
+	@email = params[:email]
+	@u = User.where(:email => @email).first
+	if @u == nil
+		flash[:notice] = "act admin must join the event first!\n"
+	else
+		@act_head = @u.id
+		@a = Activity.new(:act_name => @act_name, :act_head => @act_head, :event_id => @id)
+		@a.save
+		@a2 = UserActivity.new(:user_id => @act_head, :activity_id => @a.id)
+		@a2.save
+	end
+	redirect_to :action => :index, :id => @id, :user_id => @user_id
+  end
+end

@@ -1,0 +1,23 @@
+<h2>Activ</h2>
+<% if @access_token%>
+	<% if @type == 1 #new%> 
+		<p>Welcome to join us, <%= @user.username %><br>
+  		your email is <%=@user.email%><br>
+		<img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+	<% else #old%>
+		<p>Hello, <%= @user.username %><br>
+  		your email is <%=@user.email%><br>
+		<img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+	<%end%>
+	<h3>Which event do yo want to visit?</h3>
+		<%@events.each do |e|%>
+			<%=link_to e.event_name,  {:controller => 'event', :action => 'index', :user_id => @user.id, :id => e.id}%>
+		<%end%>
+	<br><br>
+	<h3>Create a new event</h3>
+	<%=link_to "press here"%>  , it needs to be confirmed!
+	<br><br>
+	<h3>See Hot and New events!!!</h3>
+	<%=link_to "press here"%>  
+<%end%>
+

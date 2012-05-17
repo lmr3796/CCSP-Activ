@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  dep_name: MyString
+  dep_head: 1
+  event_id: 1
+
+two:
+  dep_name: MyString
+  dep_head: 1
+  event_id: 1
