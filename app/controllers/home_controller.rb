@@ -45,16 +45,21 @@ class HomeController < ApplicationController
 	@start_date = @start["event_start(1i)"] .concat("-").concat(@start["event_start(2i)"]).concat("-").concat(@start["event_start(3i)"])
 	@end_date = @end["event_end(1i)"] .concat("-").concat(@end["event_end(2i)"]).concat("-").concat(@end["event_end(3i)"])
 	@org = params[:org]
-	if @org == "1"
+	if @org == "1" #exist
 		@org_name = params[:org_name]
 		@org_id = Organization.where(:org_name => @org_name).first.id
-	else
+	else #not exist
 		@org_name_new = params[:org_name_new]
 		@o_new = Organization.new(:org_name => @org_name_new)
 		@o_new.save
 		@org_name = @o_new.org_name
 		@org_id = @o_new.id
 	end
+	@e = Event.new(:event_name => @event_name, :event_start => @start_date, :event_end => @end_date, :event_head => session[:user_id],:organization_id=> @org_id)
+	@e.save
+	@a = UserEvent.new(:user_id => session[:user_id], :event_id => @e.id)
+	@a.save
+	redirect_to home_path
   end
 private
 	def login_facebook
