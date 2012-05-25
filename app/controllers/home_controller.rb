@@ -1,6 +1,9 @@
 class HomeController < ApplicationController
   include RestGraph::RailsUtil
-  before_filter :login_facebook
+  #before_filter :login_facebook, :only => [:index]
+  before_filter :login_facebook, :only => [:login]
+  before_filter :load_facebook, :except => [:login]
+
 
   def index
 	@access_token = rest_graph.access_token
@@ -9,9 +12,9 @@ class HomeController < ApplicationController
 		@email = @me["email"]
 		@u = User.where(:email => @email).first
 		if @u == nil
-			@u2 = User.new(:username => @me["name"], :email => @email, :fb_id => @me["id"])
-			@u2.save
-			@user = @u2
+			#@u2 = User.new(:username => @me["name"], :email => @email, :fb_id => @me["id"])
+			#@u2.save
+			#@user = @u2
 			@type = 1 #new
 			
 		else
@@ -20,23 +23,49 @@ class HomeController < ApplicationController
 				@u.username = @me["name"]
 				@u.fb_id = @me["id"]
 				@u.save
-				@type = 1 #new
 			end
 			@user = @u
+			session[:user_id] = @user.id
+			@events = @user.events #list events for user
 		end
-		@events = @user.events #list events for user
-
 	end
   end
+  def login
+       redirect_to home_path
+  end
 
-  def event
-	
+
+  def create_event
+	@o = Organization.all
+  end
+  def create_event_done
+	@event_name = params[:event_name]
+	@start = params[:event_start]	
+	@end = params[:event_end]
+	@start_date = @start["event_start(1i)"] .concat("-").concat(@start["event_start(2i)"]).concat("-").concat(@start["event_start(3i)"])
+	@end_date = @end["event_end(1i)"] .concat("-").concat(@end["event_end(2i)"]).concat("-").concat(@end["event_end(3i)"])
+	@org = params[:org]
+	if @org == "1"
+		@org_name = params[:org_name]
+		@org_id = Organization.where(:org_name => @org_name).first.id
+	else
+		@org_name_new = params[:org_name_new]
+		@o_new = Organization.new(:org_name => @org_name_new)
+		@o_new.save
+		@org_name = @o_new.org_name
+		@org_id = @o_new.id
+	end
   end
 private
 	def login_facebook
+		reset_session
 		rest_graph_setup(:auto_authorize => true,
 				 :auto_authorize_scope => 'email',
 				 :ensure_authorized => true,
 				 :write_session => true )
 	end
+ 	def load_facebook
+                  rest_graph_setup(:write_session => true)
+        end
+
 end

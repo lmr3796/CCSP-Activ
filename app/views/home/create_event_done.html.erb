@@ -1,0 +1,11 @@
+event name:<%=@event_name%><br>
+event start:<%=@start_date%><br>
+event end:<%=@end_date%><br>
+<% if @org == "1"%>
+	Exist!  org_name: <%=@org_name%><br>
+		org_id: <%=@org_id%><br>
+<%else%>
+	Not Exist,Create new!  org_name: <%=@org_name%><br>
+		org_id: <%=@org_id%><br>
+<%end%>
+

@@ -1,23 +1,30 @@
-<h2>Activ</h2>
 <% if @access_token%>
+<h2>Activ</h2>
 	<% if @type == 1 #new%> 
-		<p>Welcome to join us, <%= @user.username %><br>
-  		your email is <%=@user.email%><br>
-		<img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+		<p>Welcome to join us, <%= @me["name"] %><br>
+		<img src="https://graph.facebook.com/<%=@me["id"]%>/picture?access_token=<%= @access_token %>"></p>
 	<% else #old%>
 		<p>Hello, <%= @user.username %><br>
-  		your email is <%=@user.email%><br>
 		<img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>"></p>
-	<%end%>
-	<h3>Which event do yo want to visit?</h3>
-		<%@events.each do |e|%>
-			<%=link_to e.event_name,  {:controller => 'event', :action => 'index', :user_id => @user.id, :id => e.id}%>
+		<% if @events.size > 0 %>
+		<h3>Which event do yo want to visit?</h3>
+			<%@events.each do |e|%>
+				<%=form_tag :controller => 'event', :action => 'index' do %>
+			<!--%=button_to e.event_name,  {:controller => 'event', :action => 'index', :user_id => @user.id, :id => e.id}%-->
+					<%= hidden_field_tag(:id, e.id) %>
+					<%= submit_tag(e.event_name) %>
+				<%end%>
+			<%end%>
+		<br><br>
 		<%end%>
-	<br><br>
+	<%end%>
 	<h3>Create a new event</h3>
-	<%=link_to "press here"%>  , it needs to be confirmed!
+	<%=link_to "press here", :controller => 'home',:action => 'create_event'%>  , it needs to be confirmed!
 	<br><br>
-	<h3>See Hot and New events!!!</h3>
-	<%=link_to "press here"%>  
+	<h3>Hot and New events!!!(list below)</h3>
+<% else %>
+   <img src="http://w.csie.org/~b97005/Activ2.PNG" />
+
+   <p><%= button_to 'Go', login_path %></p>
 <%end%>
 

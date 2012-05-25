@@ -3,8 +3,7 @@ development:
     app_id: '418210271537455'
     secret: 'b1c644831e188433148d3009e01675a2'
     callback_host: 'http://localhost:3000/'
-#production:
-#    app_id: '301051506641125'
-#    secret: '67c2a52e5d5f504a37df6fc7e8287afc'
-#    callback_host: 'http://fierce-day-6312.herokuapp.com/'
-
+production:
+    app_id: '418210271537455'
+    secret: 'b1c644831e188433148d3009e01675a2'
+    callback_host: 'http://Activ.herokuapp.com/'

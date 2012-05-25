@@ -1,3 +1,6 @@
+<!--% unless flash[:error].blank? %-->
+	<!--script>alert(<%= flash[:error] -%>)</script-->
+<!--% end %-->
 <%=flash[:notice]%>
 <h3><%=@e.organization.org_name%><h2><%=@e.event_name%></h2>
 <h2>administrator: <%=@head.username%><img src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>"></h2>
@@ -7,10 +10,10 @@
 <ul>
 	<% @users.each do |u|%>
 		<li>
-		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>">
+		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
 		<%=u.username%> <%=u.email%> #<%=u.id%>
 		<% if @user_id == @e.event_head && u.id != @e.event_head%>
-			<%= link_to 'Delete User', :controller => 'event', :action => 'destroy', :id => @id, :user_id => @user_id, :d_id => u.id, :onclick => "alert('Are you sure?');"%>
+			<%= link_to 'Delete User',{ :controller => 'event', :action => 'destroy', :d_id => u.id},:method => :delete, :confirm => "Are you sure you want to delete the user from the evnet? It may delete it from all the departments and activities in the event. If the user is a administrator of some departments or activities, it will replace to the administrator of this event!"%>
 		<%end%>
 		</li>
 	<%end%>
@@ -18,7 +21,7 @@
 	
 <% if @user_id == @e.event_head %>
 <h2>Add new user into this event!</h2>
-	<%= form_tag(:controller => 'event', :action => 'create',:id => @id, :user_id => @user_id) do %>
+	<%= form_tag(:controller => 'event', :action => 'create') do %>
 	fb email<%= text_field_tag(:email)%>
 	<%= submit_tag("Add User")%>
 	<%end%>
@@ -35,7 +38,7 @@
                 <%=@u.email%>
 		dep_id = <%=d.id%>
 		<% if @user_id == @e.event_head%>
-			<%= link_to 'Delete department', :controller => 'event', :action => 'destroy_dep', :id => @id, :user_id => @user_id, :d_id => d.id%>
+			<%= link_to 'Delete department', :controller => 'event', :action => 'destroy_dep',:d_id => d.id%>
 		<%end%>
 		<ul>
 			<% d.users.each do |u|%>
@@ -43,13 +46,13 @@
 					<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>">
 					<%=u.username%> <%=u.email%> #<%=u.id%>
 					<% if @user_id == d.dep_head && u.id != d.dep_head %>
-						<%= link_to 'Delete User', :controller => 'event', :action => 'destroy_depuser', :id => @id, :user_id => @user_id, :d_id => u.id, :dep_id => d.id%>
+						<%= link_to 'Delete User', :controller => 'event', :action => 'destroy_depuser', :d_id => u.id, :dep_id => d.id%>
 					<%end%>
 				</li>
 			<%end%>
 			<% if @user_id == d.dep_head %>
 			<li>
-				<%= form_tag(:controller => 'event', :action => 'create_depuser',:id => @id, :user_id => @user_id, :dep_id => d.id) do %>
+				<%= form_tag(:controller => 'event', :action => 'create_depuser',:dep_id => d.id) do %>
 					fb email<%= text_field_tag(:email)%>
 					<%= submit_tag("Add User")%>
 				<%end%>
@@ -63,7 +66,7 @@
 <% if @user_id == @e.event_head %>
 <h2>Add new department into this event!</h2>
 <h3> 新增部門(default template: google 行事曆, 約練討論區, 收支記帳表,部門介紹單,檔案連結區)</h3>
-	<%= form_tag(:controller => 'event', :action => 'create_dep',:id => @id, :user_id => @user_id) do %>
+	<%= form_tag(:controller => 'event', :action => 'create_dep') do %>
 	department name<%= text_field_tag(:dep_name)%><br>
 	administrator email<%= text_field_tag(:email)%>
 	<%= submit_tag("Add Department")%>
@@ -81,7 +84,7 @@
                 <%=@u.email%>
 		act_id = <%=a.id%>
 		<% if @user_id == @e.event_head%>
-			<%= link_to 'Delete Activity', :controller => 'event', :action => 'destroy_act', :id => @id, :user_id => @user_id, :d_id => a.id%>
+			<%= link_to 'Delete Activity', :controller => 'event', :action => 'destroy_act', :d_id => a.id%>
 		<%end%>
 		<ul>
 			<% a.users.each do |u|%>
@@ -89,13 +92,13 @@
 					<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>">
 					<%=u.username%> <%=u.email%> #<%=u.id%>
 					<% if @user_id == a.act_head && u.id != a.act_head %>
-						<%= link_to 'Delete User', :controller => 'event', :action => 'destroy_actuser', :id => @id, :user_id => @user_id, :d_id => u.id, :act_id => a.id%>
+						<%= link_to 'Delete User', :controller => 'event', :action => 'destroy_actuser', :d_id => u.id, :act_id => a.id%>
 					<%end%>
 				</li>
 			<%end%>
 			<% if @user_id == a.act_head %>
 			<li>
-				<%= form_tag(:controller => 'event', :action => 'create_actuser',:id => @id, :user_id => @user_id, :act_id => a.id) do %>
+				<%= form_tag(:controller => 'event', :action => 'create_actuser',:act_id => a.id) do %>
 					fb email<%= text_field_tag(:email)%>
 					<%= submit_tag("Add User")%>
 				<%end%>
@@ -109,7 +112,7 @@
 <% if @user_id == @e.event_head %>
 <h2>Add new activity into this event!</h2>
 <h3> 新增節目(default template: google 行事曆, 約練討論區, 收支記帳表,節目介紹單,檔案連結區)</h3>
-	<%= form_tag(:controller => 'event', :action => 'create_act',:id => @id, :user_id => @user_id) do %>
+	<%= form_tag(:controller => 'event', :action => 'create_act') do %>
 	activity name<%= text_field_tag(:act_name)%><br>
 	administrator email<%= text_field_tag(:email)%><br>
 	optional template
@@ -120,3 +123,4 @@
 	<%= submit_tag("Add Activity")%>
 	<%end%>
 <%end%>
+<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://localhost:3000/event?id=1&user_id=1" num_posts="2" width="500"></fb:comments>  
