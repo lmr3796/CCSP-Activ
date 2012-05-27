@@ -1,6 +1,7 @@
 Activ::Application.routes.draw do
 
   get "/" => "home#index", :as => :home
+  post "/" => "home#index"
   post "/login" => "home#login"
   get "/login" => "home#login"
   post "home/create_event" => 'home#create_event_done'

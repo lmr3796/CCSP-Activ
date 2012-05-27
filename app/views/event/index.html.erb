@@ -7,8 +7,25 @@
 
 
 <h2>Users in this event</h2>
+Already joined<br>
+<ul> 
+<% @users.each do |u|%>
+	<% if u.username != nil%>
+	<li>
+		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
+		<%=u.username%> <%=u.email%> #<%=u.id%>
+		<% if @user_id == @e.event_head && u.id != @e.event_head%>
+			<%= link_to 'Delete User',{ :controller => 'event', :action => 'destroy', :d_id => u.id},:method => :delete, :confirm => "Are you sure you want to delete the user from the evnet? It may delete it from all the departments and activities in the event. If the user is a administrator of some departments or activities, it will replace to the administrator of this event!"%>
+		<%end%>
+	</li>
+	<%end%>
+<%end%>
+</ul>
+
+Not joined yet<br>
 <ul>
-	<% @users.each do |u|%>
+<% @users.each do |u|%>
+	<% if u.username == nil%>
 		<li>
 		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
 		<%=u.username%> <%=u.email%> #<%=u.id%>
@@ -17,6 +34,7 @@
 		<%end%>
 		</li>
 	<%end%>
+<%end%>
 </ul>
 	
 <% if @user_id == @e.event_head %>
@@ -39,6 +57,16 @@
 		dep_id = <%=d.id%>
 		<% if @user_id == @e.event_head%>
 			<%= link_to 'Delete department', :controller => 'event', :action => 'destroy_dep',:d_id => d.id%>
+		
+			<%= form_tag(:controller => 'event', :action => 'edit_depname',:e_id => d.id) do %>
+				更改部門名稱<%= text_field_tag(:dep_name_new)%>
+				<%= submit_tag("確定")%>
+			<%end%>
+			<%= form_tag(:controller => 'event', :action => 'edit_dephead',:e_id => d.id) do %>
+				更改部門負責人(fb_email)<%= text_field_tag(:dep_head_new)%>
+				<%= submit_tag("確定")%>
+			<%end%>
+			
 		<%end%>
 		<ul>
 			<% d.users.each do |u|%>
@@ -85,6 +113,14 @@
 		act_id = <%=a.id%>
 		<% if @user_id == @e.event_head%>
 			<%= link_to 'Delete Activity', :controller => 'event', :action => 'destroy_act', :d_id => a.id%>
+			<%= form_tag(:controller => 'event', :action => 'edit_actname',:e_id => a.id) do %>
+				更改節目名稱<%= text_field_tag(:act_name_new)%>
+				<%= submit_tag("確定")%>
+			<%end%>
+			<%= form_tag(:controller => 'event', :action => 'edit_acthead',:e_id => a.id) do %>
+				更改節目負責人(fb_email)<%= text_field_tag(:act_head_new)%>
+				<%= submit_tag("確定")%>
+			<%end%>
 		<%end%>
 		<ul>
 			<% a.users.each do |u|%>
@@ -123,4 +159,11 @@
 	<%= submit_tag("Add Activity")%>
 	<%end%>
 <%end%>
-<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://localhost:3000/event?id=1&user_id=1" num_posts="2" width="500"></fb:comments>  
+
+<br><br>
+<h2>Leave messages!!!!!!!</h2>
+<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://Activ.herokuapp.com?event_id=<%=@id%>" num_posts="2" width="500"></fb:comments>  
+  
+<p><%= button_to 'back to home', home_path %></p>
+
+
