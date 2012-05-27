@@ -55,6 +55,15 @@ class HomeController < ApplicationController
 		@org_name = @o_new.org_name
 		@org_id = @o_new.id
 	end
+	if session[:user_id] == nil
+		@me = rest_graph.get('/me')
+		@u = User.new
+		@u.username = @me["name"]
+		@u.fb_id = @me["id"]
+		@u.email = @me["email"]
+		@u.save
+		session[:user_id] = @u.id
+	end
 	@e = Event.new(:event_name => @event_name, :event_start => @start_date, :event_end => @end_date, :event_head => session[:user_id],:organization_id=> @org_id)
 	@e.save
 	@a = UserEvent.new(:user_id => session[:user_id], :event_id => @e.id)

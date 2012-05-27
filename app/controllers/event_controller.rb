@@ -18,6 +18,42 @@ class EventController < ApplicationController
 	@d_id = params[:d_id]
 	@a = UserEvent.where(:user_id => @d_id, :event_id => @id).first
 	@a.destroy
+	@e = Event.find(@id)
+	#delete uesrs which attend any department in this event
+	@d = @e.departments
+	@d.each do |du|
+		if du.dep_head == Integer(@d_id)
+			du.dep_head = @e.event_head
+			du.save
+			@a = UserDepartment.where(:user_id => @e.event_head, :department_id => du.id).first
+			if @a == nil
+				@b = UserDepartment.new(:user_id => @e.event_head, :department_id => du.id)
+				@b.save
+			end
+		end
+		@dd = UserDepartment.where(:user_id => @d_id, :department_id => du.id).first
+		if @dd != nil
+			@dd.destroy
+		end
+	end
+	#delete uesrs which attend any activity in this event
+	@a = @e.activities
+	@a.each do |au|
+		if au.act_head == Integer(@d_id)
+			au.act_head = @e.event_head
+			au.save
+			@a = UserActivity.where(:user_id => @e.event_head, :activity_id => au.id).first
+			if @a == nil
+				@b = UserActivity.new(:user_id => @e.event_head, :activity_id => au.id)
+				@b.save
+			end
+		end
+		@aa = UserActivity.where(:user_id => @d_id, :activity_id => au.id).first
+		if @aa != nil
+			@aa.destroy
+		end
+	end
+	
 	redirect_to :action => :index
   end
   def destroy_depuser
@@ -95,14 +131,50 @@ class EventController < ApplicationController
 	if @u == nil
 		flash[:notice] = "dep admin must join the event first!\n"
 	else
-		@dep_head = @u.id
-		@d = Department.new(:dep_name => @dep_name, :dep_head => @dep_head, :event_id => @id)
-		@d.save
-		@a = UserDepartment.new(:user_id => @dep_head, :department_id => @d.id)
-		@a.save
+		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
+		if @t == nil
+			flash[:notice] = "dep admin must join the event first!\n"
+		else
+			@dep_head = @u.id
+			@d = Department.new(:dep_name => @dep_name, :dep_head => @dep_head, :event_id => @id)
+			@d.save
+			@a = UserDepartment.new(:user_id => @dep_head, :department_id => @d.id)
+			@a.save
+		end
 	end
 	redirect_to :action => :index
   end
+  def edit_depname
+	@dep_id = params[:e_id]		
+	@dep_name_new = params[:dep_name_new]
+	@d = Department.find(@dep_id)
+	@d.dep_name = @dep_name_new
+	@d.save
+	redirect_to :action => :index
+  end	
+  def edit_dephead
+	@dep_id = params[:e_id]	
+	@dep_head_new = params[:dep_head_new]
+	@u = User.where(:email => @dep_head_new).first
+	if @u == nil
+		flash[:notice] = "dep admin must join the event first!\n"
+	else
+		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
+		if @t == nil
+			flash[:notice] = "dep admin must join the event first!\n"
+		else
+			@d = Department.find(@dep_id)
+			@d.dep_head = @u.id
+			@d.save
+			@a = UserDepartment.where(:user_id => @u.id, :department_id => @dep_id).first
+			if @a == nil
+				@b = UserDepartment.new(:user_id => @u.id, :department_id => @dep_id)
+				@b.save
+			end
+		end
+	end
+	redirect_to :action => :index
+  end	
   def create_actuser
 	@act_id = params[:act_id]
 	@email = params[:email]
@@ -132,12 +204,48 @@ class EventController < ApplicationController
 	if @u == nil
 		flash[:notice] = "act admin must join the event first!\n"
 	else
-		@act_head = @u.id
-		@a = Activity.new(:act_name => @act_name, :act_head => @act_head, :event_id => @id)
-		@a.save
-		@a2 = UserActivity.new(:user_id => @act_head, :activity_id => @a.id)
-		@a2.save
+		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
+		if @t == nil
+			flash[:notice] = "act admin must join the event first!\n"
+		else
+			@act_head = @u.id
+			@a = Activity.new(:act_name => @act_name, :act_head => @act_head, :event_id => @id)
+			@a.save
+			@a2 = UserActivity.new(:user_id => @act_head, :activity_id => @a.id)
+			@a2.save
+		end
 	end
 	redirect_to :action => :index
   end
+  def edit_actname
+	@act_id = params[:e_id]		
+	@act_name_new = params[:act_name_new]
+	@a = Activity.find(@act_id)
+	@a.act_name = @act_name_new
+	@a.save
+	redirect_to :action => :index
+  end	
+  def edit_acthead
+	@act_id = params[:e_id]	
+	@act_head_new = params[:act_head_new]
+	@u = User.where(:email => @act_head_new).first
+	if @u == nil
+		flash[:notice] = "act admin must join the event first!\n"
+	else
+		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
+		if @t == nil
+			flash[:notice] = "act admin must join the event first!\n"
+		else
+			@d = Activity.find(@act_id)
+			@d.act_head = @u.id
+			@d.save
+			@a = UserActivity.where(:user_id => @u.id, :activity_id => @act_id).first
+			if @a == nil
+				@b = UserActivity.new(:user_id => @u.id, :activity_id => @act_id)
+				@b.save
+			end
+		end
+	end
+	redirect_to :action => :index
+  end	
 end
