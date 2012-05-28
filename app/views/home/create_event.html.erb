@@ -1,17 +1,17 @@
-<h2>create event</h2>
+<h2>新增活動</h2>
 <%=form_tag  do %>
-  <%= label_tag :event_name,"Event name" %>:
+  <%= label_tag :event_name,"活動名稱" %>:
   <%= text_field_tag :event_name %><br />
-  <%= label_tag :event_start,"Event starting date" %>:
+  <%= label_tag :event_start,"活動開始日期" %>:
   <%= date_select(:event_start, :event_start )%><br />
-  <%= label_tag :event_end,"Event ending date" %>:
+  <%= label_tag :event_end,"活動結束日期" %>:
   <%= date_select(:event_end, :event_end )%><br />
-  <%= label_tag :org_name,"Select Organization name" %>:<br / >
+  <%= label_tag :org_name,"請選擇活動隸屬於哪個組織" %>:<br / >
   <%= check_box_tag(:org) %>
-  <%= label_tag(:org_exist, "Exist") %>
+  <%= label_tag(:org_exist, "組織已存在,請選擇") %>
   <%= select_tag :org_name, options_from_collection_for_select(@o, :org_name, :org_name) %><br />
   <%= check_box_tag(:org,"0") %>
-  <%= label_tag(:org_notexist, "Not Exist, Enter a new Organization name:") %>
+  <%= label_tag(:org_notexist, "組織尚未存在，請輸入組織名稱") %>
   <%= text_field_tag :org_name_new %><br />
-  <%= submit_tag("Create Event") %>
+  <%= submit_tag("完成") %>
 <%end%>

@@ -6,7 +6,8 @@ Activ::Application.routes.draw do
   get "/login" => "home#login"
   post "home/create_event" => 'home#create_event_done'
   match ':controller(/:action(/:id2))(.:format)'
-  get "event/" => "event#index" , :as => :event
+  get "/event" => "event#index" , :as => :event
+  post "/event" => "event#index"
   #match "events/:id" => "event#index"
   # The priority is based upon order of creation:
   # first created -> highest priority.

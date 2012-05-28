@@ -54,14 +54,14 @@ class EventController < ApplicationController
 		end
 	end
 	
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def destroy_depuser
 	@d_id = params[:d_id]
 	@dep_id = params[:dep_id]
 	@d = UserDepartment.where(:user_id => @d_id, :department_id => @dep_id).first
 	@d.destroy
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def destroy_dep
 	@d_id = params[:d_id]
@@ -69,14 +69,14 @@ class EventController < ApplicationController
 	@d.destroy
 	@ds = UserDepartment.where(:department_id => @d_id)
 	@ds.destroy_all
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def destroy_actuser
 	@d_id = params[:d_id]
 	@act_id = params[:act_id]
 	@a = UserActivity.where(:user_id => @d_id, :activity_id => @act_id).first
 	@a.destroy
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def destroy_act
 	@d_id = params[:d_id]
@@ -84,7 +84,7 @@ class EventController < ApplicationController
 	@a.destroy
 	@as = UserActivity.where(:activity_id => @d_id)
 	@as.destroy_all
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def create
 	@email = params[:email]
@@ -100,7 +100,7 @@ class EventController < ApplicationController
 		@a = UserEvent.new(:user_id => @u.id, :event_id => @id)
 		@a.save
 	end
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def create_depuser
 	@dep_id = params[:dep_id]
@@ -122,7 +122,7 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def create_dep
 	@dep_name = params[:dep_name]
@@ -142,7 +142,7 @@ class EventController < ApplicationController
 			@a.save
 		end
 	end
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def edit_depname
 	@dep_id = params[:e_id]		
@@ -150,7 +150,7 @@ class EventController < ApplicationController
 	@d = Department.find(@dep_id)
 	@d.dep_name = @dep_name_new
 	@d.save
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end	
   def edit_dephead
 	@dep_id = params[:e_id]	
@@ -173,8 +173,13 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end	
+  def show_dep
+	@dep_id = params[:dep_id]
+	@d = Department.find(@dep_id)	
+	@e = Event.find(@id)
+  end
   def create_actuser
 	@act_id = params[:act_id]
 	@email = params[:email]
@@ -195,7 +200,7 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def create_act
 	@act_name = params[:act_name]
@@ -215,7 +220,7 @@ class EventController < ApplicationController
 			@a2.save
 		end
 	end
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end
   def edit_actname
 	@act_id = params[:e_id]		
@@ -223,7 +228,7 @@ class EventController < ApplicationController
 	@a = Activity.find(@act_id)
 	@a.act_name = @act_name_new
 	@a.save
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end	
   def edit_acthead
 	@act_id = params[:e_id]	
@@ -246,6 +251,19 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :index
+	redirect_to :action => :manage
   end	
+  def show_act
+	@act_id = params[:act_id]
+	@a = Activity.find(@act_id)	
+	@e = Event.find(@id)
+  end
+  def manage
+	@e = Event.find(@id)
+	@head = User.find(@e.event_head)
+	@users = @e.users
+	@new_user = User.new
+	@deps = @e.departments
+	@acts = @e.activities
+  end
 end

@@ -13,9 +13,8 @@
 				<%=form_tag :controller => 'event', :action => 'index' do %>
 			<!--%=button_to e.event_name,  {:controller => 'event', :action => 'index', :user_id => @user.id, :id => e.id}%-->
 					<%= hidden_field_tag(:id, e.id) %>
-					<%= button_tag e.event_name,:class => "sexybutton sexysimple sexygreen sexylarge", :type => "submit"%>
+					<%= link_to(e.event_name)%>
 				<%end%>
-				<br>
 			<%end%>
 		<br><br>
 		<%end%>

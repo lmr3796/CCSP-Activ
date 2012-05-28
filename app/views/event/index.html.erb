@@ -1,169 +1,52 @@
+<link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
 <!--% unless flash[:error].blank? %-->
 	<!--script>alert(<%= flash[:error] -%>)</script-->
 <!--% end %-->
 <%=flash[:notice]%>
 <h3><%=@e.organization.org_name%><h2><%=@e.event_name%></h2>
-<h2>administrator: <%=@head.username%><img src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>"></h2>
+<h2>負責人: <%=@head.username%><img src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>"></h2>
 
+<p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
 
-<h2>Users in this event</h2>
-Already joined<br>
-<ul> 
+<h2>成員</h2>
 <% @users.each do |u|%>
 	<% if u.username != nil%>
-	<li>
 		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
-		<%=u.username%> <%=u.email%> #<%=u.id%>
-		<% if @user_id == @e.event_head && u.id != @e.event_head%>
-			<%= link_to 'Delete User',{ :controller => 'event', :action => 'destroy', :d_id => u.id},:method => :delete, :confirm => "Are you sure you want to delete the user from the evnet? It may delete it from all the departments and activities in the event. If the user is a administrator of some departments or activities, it will replace to the administrator of this event!"%>
-		<%end%>
-	</li>
+		<%=u.username%> 
 	<%end%>
 <%end%>
-</ul>
-
-Not joined yet<br>
-<ul>
+<br>
 <% @users.each do |u|%>
 	<% if u.username == nil%>
-		<li>
-		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
-		<%=u.username%> <%=u.email%> #<%=u.id%>
-		<% if @user_id == @e.event_head && u.id != @e.event_head%>
-			<%= link_to 'Delete User',{ :controller => 'event', :action => 'destroy', :d_id => u.id},:method => :delete, :confirm => "Are you sure you want to delete the user from the evnet? It may delete it from all the departments and activities in the event. If the user is a administrator of some departments or activities, it will replace to the administrator of this event!"%>
-		<%end%>
-		</li>
+		<%=u.email%><br>
 	<%end%>
 <%end%>
-</ul>
 	
-<% if @user_id == @e.event_head %>
-<h2>Add new user into this event!</h2>
-	<%= form_tag(:controller => 'event', :action => 'create') do %>
-	fb email<%= text_field_tag(:email)%>
-	<%= submit_tag("Add User")%>
-	<%end%>
-<%end%>
-
 <br><br>
-<h2>Departments in this event</h2>
-<ul>
 	<% @deps.each do |d|%>
-		<li>
-		<%= d.dep_name%>
-		<%@u = User.find(d.dep_head)%>
-		<%=@u.username%> 
-                <%=@u.email%>
-		dep_id = <%=d.id%>
-		<% if @user_id == @e.event_head%>
-			<%= link_to 'Delete department', :controller => 'event', :action => 'destroy_dep',:d_id => d.id%>
-		
-			<%= form_tag(:controller => 'event', :action => 'edit_depname',:e_id => d.id) do %>
-				更改部門名稱<%= text_field_tag(:dep_name_new)%>
-				<%= submit_tag("確定")%>
-			<%end%>
-			<%= form_tag(:controller => 'event', :action => 'edit_dephead',:e_id => d.id) do %>
-				更改部門負責人(fb_email)<%= text_field_tag(:dep_head_new)%>
-				<%= submit_tag("確定")%>
-			<%end%>
-			
-		<%end%>
-		<ul>
-			<% d.users.each do |u|%>
-				<li>
-					<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>">
-					<%=u.username%> <%=u.email%> #<%=u.id%>
-					<% if @user_id == d.dep_head && u.id != d.dep_head %>
-						<%= link_to 'Delete User', :controller => 'event', :action => 'destroy_depuser', :d_id => u.id, :dep_id => d.id%>
-					<%end%>
-				</li>
-			<%end%>
-			<% if @user_id == d.dep_head %>
-			<li>
-				<%= form_tag(:controller => 'event', :action => 'create_depuser',:dep_id => d.id) do %>
-					fb email<%= text_field_tag(:email)%>
-					<%= submit_tag("Add User")%>
-				<%end%>
-			</li>
-			<%end%>
-		</ul>
-		</li>
+ 		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
+                	<%= hidden_field_tag(:dep_id, d.id) %>
+                        <!--%= submit_tag(d.dep_name) %-->
+			<%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxl", :type => "submit"%>
+                <%end%>
+		<br>
 	<%end%>
-</ul>
-
-<% if @user_id == @e.event_head %>
-<h2>Add new department into this event!</h2>
-<h3> 新增部門(default template: google 行事曆, 約練討論區, 收支記帳表,部門介紹單,檔案連結區)</h3>
-	<%= form_tag(:controller => 'event', :action => 'create_dep') do %>
-	department name<%= text_field_tag(:dep_name)%><br>
-	administrator email<%= text_field_tag(:email)%>
-	<%= submit_tag("Add Department")%>
-	<%end%>
-<%end%>
 
 <br><br>
-<h2>Activities in this event</h2>
-<ul>
 	<% @acts.each do |a|%>
-		<li>
-		<%= a.act_name%>
-		<%@u = User.find(a.act_head)%>
-		<%=@u.username%> 
-                <%=@u.email%>
-		act_id = <%=a.id%>
-		<% if @user_id == @e.event_head%>
-			<%= link_to 'Delete Activity', :controller => 'event', :action => 'destroy_act', :d_id => a.id%>
-			<%= form_tag(:controller => 'event', :action => 'edit_actname',:e_id => a.id) do %>
-				更改節目名稱<%= text_field_tag(:act_name_new)%>
-				<%= submit_tag("確定")%>
-			<%end%>
-			<%= form_tag(:controller => 'event', :action => 'edit_acthead',:e_id => a.id) do %>
-				更改節目負責人(fb_email)<%= text_field_tag(:act_head_new)%>
-				<%= submit_tag("確定")%>
-			<%end%>
-		<%end%>
-		<ul>
-			<% a.users.each do |u|%>
-				<li>
-					<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>">
-					<%=u.username%> <%=u.email%> #<%=u.id%>
-					<% if @user_id == a.act_head && u.id != a.act_head %>
-						<%= link_to 'Delete User', :controller => 'event', :action => 'destroy_actuser', :d_id => u.id, :act_id => a.id%>
-					<%end%>
-				</li>
-			<%end%>
-			<% if @user_id == a.act_head %>
-			<li>
-				<%= form_tag(:controller => 'event', :action => 'create_actuser',:act_id => a.id) do %>
-					fb email<%= text_field_tag(:email)%>
-					<%= submit_tag("Add User")%>
-				<%end%>
-			</li>
-			<%end%>
-		</ul>
-		</li>
+ 		<%=form_tag :controller => 'event', :action => 'show_act' do %>
+                	<%= hidden_field_tag(:act_id, a.id) %>
+                        <!--%= submit_tag(a.act_name) %-->
+			<%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxl", :type => "submit"%>
+                <%end%>
+		<br>
 	<%end%>
-</ul>
-
-<% if @user_id == @e.event_head %>
-<h2>Add new activity into this event!</h2>
-<h3> 新增節目(default template: google 行事曆, 約練討論區, 收支記帳表,節目介紹單,檔案連結區)</h3>
-	<%= form_tag(:controller => 'event', :action => 'create_act') do %>
-	activity name<%= text_field_tag(:act_name)%><br>
-	administrator email<%= text_field_tag(:email)%><br>
-	optional template
-	<%= check_box_tag(:light_music_table) %>
-	<%= label_tag(:light_music_table, "燈音表") %>
-	<%= check_box_tag(:script) %>
-	<%= label_tag(:script, "劇本") %>
-	<%= submit_tag("Add Activity")%>
-	<%end%>
-<%end%>
 
 <br><br>
+<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
+
 <h2>Leave messages!!!!!!!</h2>
 <div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://Activ.herokuapp.com?event_id=<%=@id%>" num_posts="2" width="500"></fb:comments>  
   
-<p><%= button_to 'back to home', home_path %></p>
 
 

@@ -1,0 +1,14 @@
+<link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
+<h2><%=@d.dep_name%></h2>
+<% @d.users.each do |u|%>
+	<%if u.fb_id != nil%>
+		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
+	<%else%>
+		<br><%=u.email%>
+	<%end%>
+<%end%>
+<br>
+
+<p><%= link_to @e.event_name, event_path,:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+
+
