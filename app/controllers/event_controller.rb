@@ -13,6 +13,9 @@ class EventController < ApplicationController
 	@new_user = User.new
 	@deps = @e.departments
 	@acts = @e.activities
+	
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
   end
   def destroy
 	@d_id = params[:d_id]
@@ -179,6 +182,10 @@ class EventController < ApplicationController
 	@dep_id = params[:dep_id]
 	@d = Department.find(@dep_id)	
 	@e = Event.find(@id)
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
+	@deps = @e.departments
+	@acts = @e.activities
   end
   def create_actuser
 	@act_id = params[:act_id]
@@ -257,12 +264,18 @@ class EventController < ApplicationController
 	@act_id = params[:act_id]
 	@a = Activity.find(@act_id)	
 	@e = Event.find(@id)
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
+	@deps = @e.departments
+	@acts = @e.activities
   end
   def manage
 	@e = Event.find(@id)
 	@head = User.find(@e.event_head)
 	@users = @e.users
 	@new_user = User.new
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
 	@deps = @e.departments
 	@acts = @e.activities
   end

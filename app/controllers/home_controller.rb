@@ -28,6 +28,10 @@ class HomeController < ApplicationController
 			session[:user_id] = @user.id
 			@events = @user.events #list events for user
 		end
+		session[:access_token] = @access_token
+		session[:type] = @type
+		session[:me] = @me
+		session[:user] = @user
 	end
   end
   def login
@@ -37,6 +41,10 @@ class HomeController < ApplicationController
 
   def create_event
 	@o = Organization.all
+	@access_token = session[:access_token]
+	@type = session[:type]
+	@me = session[:me]
+	@user = session[:user]
   end
   def create_event_done
 	@event_name = params[:event_name]

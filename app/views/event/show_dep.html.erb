@@ -1,5 +1,28 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
-<h2><%=@d.dep_name%></h2>
+ <%= stylesheet_link_tag 'event' %>
+<div id="header">
+<h3><%=@e.organization.org_name%></h3><h1><%=@e.event_name%></h1>  
+</div>
+<div id="userinfo">
+       <p>Hello, <%= @uu.username %><br>
+       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+
+<p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
+<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
+</div>
+<div id="content">
+<div id="tabs27">
+        <ul>
+        <li><a href="#" title="css menus" class="current"><%=@d.dep_name%></a></li>
+        <li><a href="#" title="css menus">最新消息</a></li>
+        <li><a href="#" title="css menus">成員</a></li>
+        <li><a href="#" title="css menus">行事曆</a></li>
+        <li><a href="#" title="css menus">討論區</a></li>
+        <li><a href="#" title="css menus">收支表</a></li>
+        </ul>
+</div>
+
+
 <% @d.users.each do |u|%>
 	<%if u.fb_id != nil%>
 		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
@@ -10,5 +33,27 @@
 <br>
 
 <p><%= link_to @e.event_name, event_path,:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+</div>
+<div id="rightcolumn">
+        <br><br><br>
+        <% @deps.each do |d|%>
+                <%=form_tag :controller => 'event', :action => 'show_dep' do %>
+                        <%= hidden_field_tag(:dep_id, d.id) %>
+                        <!--%= submit_tag(d.dep_name) %-->
+                        <%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxl", :type => "submit"%>
+                <%end%>
+                <br>
+        <%end%>
+
+        <% @acts.each do |a|%>
+                <%=form_tag :controller => 'event', :action => 'show_act' do %>
+                        <%= hidden_field_tag(:act_id, a.id) %>
+                        <!--%= submit_tag(a.act_name) %-->
+                        <%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxl", :type => "submit"%>
+                <%end%>
+                <br>
+        <%end%>
+
+</div>
 
 

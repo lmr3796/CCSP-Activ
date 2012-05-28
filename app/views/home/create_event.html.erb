@@ -1,3 +1,19 @@
+<link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
+<div id="header"><h1>Activ</h1></div>
+<% if @type == 1 #new%> 
+	<div id="userinfo">
+        <p>Welcome to join us, <%= @me["name"] %><br>
+        <img src="https://graph.facebook.com/<%=@me["id"]%>/picture?access_token=<%= @access_token %>"></p>
+        </div>
+<% else #old%>
+        <div id="userinfo">
+        <p>Hello, <%= @user.username %><br>
+        <img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+        </div>
+<%end%>
+
+<div id="content">
+<div class="create">
 <h2>新增活動</h2>
 <%=form_tag  do %>
   <%= label_tag :event_name,"活動名稱" %>:
@@ -13,5 +29,13 @@
   <%= check_box_tag(:org,"0") %>
   <%= label_tag(:org_notexist, "組織尚未存在，請輸入組織名稱") %>
   <%= text_field_tag :org_name_new %><br />
-  <%= submit_tag("完成") %>
+  <%= button_tag "完成",:class => "sexybutton sexysimple sexymagenta sexylarge", :type => "submit"%>
+  <%= link_to "取消",home_path,:class => "sexybutton sexysimple sexymagenta sexylarge"%>
 <%end%>
+
+</div>
+</div>
+<div id="rightcolumn">
+     <h3>熱門與最新活動</h3>
+</div>
+

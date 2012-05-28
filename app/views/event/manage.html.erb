@@ -2,8 +2,19 @@
 <!--% unless flash[:error].blank? %-->
 	<!--script>alert(<%= flash[:error] -%>)</script-->
 <!--% end %-->
+<div id="header">
+<h3><%=@e.organization.org_name%></h3><h1><%=@e.event_name%></h1>  
+</div>
+<div id="userinfo">
+       <p>Hello, <%= @uu.username %><br>
+       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+
+<p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
+<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
+</div>
+
+<div id="content">
 <%=flash[:notice]%>
-<h3><%=@e.organization.org_name%><h2><%=@e.event_name%></h2>
 <p><%= link_to @e.event_name, event_path,:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
 
 <% if @user_id == @e.event_head%>
@@ -37,10 +48,7 @@
 <ul>
 	<% @deps.each do |d|%>
 		<li>
- 		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
-                	<%= hidden_field_tag(:dep_id, d.id) %>
-                        <%= submit_tag(d.dep_name) %>
-                <%end%>
+		<%= d.dep_name%>
 		<%@u = User.find(d.dep_head)%>
 		<%=@u.username%> 
                 <%=@u.email%>
@@ -147,4 +155,27 @@
 	<%= submit_tag("Add Activity")%>
 	<%end%>
 <%end%>
+</div>
+<div id="rightcolumn">
+        <br><br><br>
+        <% @deps.each do |d|%>
+                <%=form_tag :controller => 'event', :action => 'show_dep' do %>
+                        <%= hidden_field_tag(:dep_id, d.id) %>
+                        <!--%= submit_tag(d.dep_name) %-->
+                        <%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxl", :type => "submit"%>
+                <%end%>
+                <br>
+        <%end%>
+
+        <% @acts.each do |a|%>
+                <%=form_tag :controller => 'event', :action => 'show_act' do %>
+                        <%= hidden_field_tag(:act_id, a.id) %>
+                        <!--%= submit_tag(a.act_name) %-->
+                        <%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxl", :type => "submit"%>
+                <%end%>
+                <br>
+        <%end%>
+
+</div>
+
 

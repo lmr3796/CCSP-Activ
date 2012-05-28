@@ -1,13 +1,22 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
 <% if @access_token%>
-<h1>Activ</h1>
+<div id="header"><h1>Activ</h1></div>
 	<% if @type == 1 #new%> 
+		<div id="userinfo">
 		<p>Welcome to join us, <%= @me["name"] %><br>
 		<img src="https://graph.facebook.com/<%=@me["id"]%>/picture?access_token=<%= @access_token %>"></p>
+		</div>
+		<div id="content">
+		<%=link_to "新增一個活動", {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxl'%>  
+		<br><br>
+		</div>
 	<% else #old%>
+		<div id="userinfo">
 		<p>Hello, <%= @user.username %><br>
 		<img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+		</div>
 		<% if @events.size > 0 %>
+		<div id="content">
 		<h3>我的活動列表</h3>
 			<%@events.each do |e|%>
 				<%=form_tag :controller => 'event', :action => 'index' do %>
@@ -18,11 +27,14 @@
 				<br>
 			<%end%>
 		<br><br>
+		<%=link_to "新增一個活動", {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxl'%>  
+		<br><br>
+		</div>
 		<%end%>
 	<%end%>
-	<%=link_to "新增一個活動", {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxl'%>  
-	<br><br>
+	<div id="rightcolumn">
 	<h3>熱門與最新活動</h3>
+	</div>
 <% else %>
    <img src="http://w.csie.org/~b97005/Activ2.PNG" />
 

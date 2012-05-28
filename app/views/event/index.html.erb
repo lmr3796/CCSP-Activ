@@ -1,12 +1,32 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
+ <%= stylesheet_link_tag 'event' %>
 <!--% unless flash[:error].blank? %-->
 	<!--script>alert(<%= flash[:error] -%>)</script-->
 <!--% end %-->
-<%=flash[:notice]%>
-<h3><%=@e.organization.org_name%><h2><%=@e.event_name%></h2>
-<h2>負責人: <%=@head.username%><img src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>"></h2>
+<div id="header">
+<h3><%=@e.organization.org_name%></h3><h1><%=@e.event_name%></h1>
+</div>
+<div id="userinfo">
+       <p>Hello, <%= @uu.username %><br>
+       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>"></p>
 
 <p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
+<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
+</div>
+<div id="content">
+<div id="tabs27">
+	<ul>
+	<li><a href="#" title="css menus" class="current">HOME</a></li>
+	<li><a href="#" title="css menus">最新消息</a></li>
+	<li><a href="#" title="css menus">成員</a></li>
+	<li><a href="#" title="css menus">活動行事曆</a></li>
+	<li><a href="#" title="css menus">活動討論區</a></li>
+	</ul>
+</div>
+
+<%=flash[:notice]%>
+<h2>負責人: <%=@head.username%><img src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>"></h2>
+
 
 <h2>成員</h2>
 <% @users.each do |u|%>
@@ -23,6 +43,11 @@
 <%end%>
 	
 <br><br>
+<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://Activ.herokuapp.com?event_id=<%=@id%>" num_posts="2" width="500"></fb:comments>  
+  
+</div>
+<div id="rightcolumn">
+	<br><br><br>
 	<% @deps.each do |d|%>
  		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
                 	<%= hidden_field_tag(:dep_id, d.id) %>
@@ -32,7 +57,6 @@
 		<br>
 	<%end%>
 
-<br><br>
 	<% @acts.each do |a|%>
  		<%=form_tag :controller => 'event', :action => 'show_act' do %>
                 	<%= hidden_field_tag(:act_id, a.id) %>
@@ -42,11 +66,6 @@
 		<br>
 	<%end%>
 
-<br><br>
-<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
-
-<h2>Leave messages!!!!!!!</h2>
-<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://Activ.herokuapp.com?event_id=<%=@id%>" num_posts="2" width="500"></fb:comments>  
-  
+</div>
 
 
