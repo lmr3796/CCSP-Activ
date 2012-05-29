@@ -179,13 +179,45 @@ class EventController < ApplicationController
 	redirect_to :action => :manage
   end	
   def show_dep
-	@dep_id = params[:dep_id]
+	@dep_id = params[:dep_id] || session[:dep_id]
+	session[:dep_id] = @dep_id
 	@d = Department.find(@dep_id)	
 	@e = Event.find(@id)
 	@uu = User.find(@user_id)
+	@dep_head = User.find(@d.dep_head)
 	@access_token = session[:access_token]
 	@deps = @e.departments
 	@acts = @e.activities
+	@dep_type = session[:dep_type] || 0
+	session[:dep_type]=0
+	if @dep_type == 4 #forum,only members in the activity can see
+		@tmp = UserDepartment.where(:user_id => @user_id,:department_id =>@d.id).first
+		if @tmp != nil || (@user_id == @e.event_head)
+			@see = 1
+		else
+			@see = 0
+		end
+	end
+  end
+  def show_dep_news
+	session[:dep_type]=1
+	redirect_to :action => :show_dep
+  end
+  def show_dep_members
+	session[:dep_type]=2
+	redirect_to :action => :show_dep
+  end
+  def show_dep_calendar
+	session[:dep_type]=3
+	redirect_to :action => :show_dep
+  end
+  def show_dep_forum
+	session[:dep_type]=4
+	redirect_to :action => :show_dep
+  end
+  def show_dep_accounting
+	session[:dep_type]=5
+	redirect_to :action => :show_dep
   end
   def create_actuser
 	@act_id = params[:act_id]
@@ -261,13 +293,45 @@ class EventController < ApplicationController
 	redirect_to :action => :manage
   end	
   def show_act
-	@act_id = params[:act_id]
+	@act_id = params[:act_id] || session[:act_id]
+	session[:act_id] = @act_id
 	@a = Activity.find(@act_id)	
 	@e = Event.find(@id)
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
 	@deps = @e.departments
 	@acts = @e.activities
+	@act_head = User.find(@a.act_head)
+	@act_type = session[:act_type] || 0
+	session[:act_type]=0
+	if @act_type == 4 #forum,only members in the activity can see
+		@tmp = UserActivity.where(:user_id => @user_id,:activity_id =>@a.id).first
+		if @tmp != nil || (@user_id == @e.event_head)
+			@see = 1
+		else
+			@see = 0
+		end
+	end
+  end
+  def show_act_news
+	session[:act_type]=1
+	redirect_to :action => :show_act
+  end
+  def show_act_members
+	session[:act_type]=2
+	redirect_to :action => :show_act
+  end
+  def show_act_calendar
+	session[:act_type]=3
+	redirect_to :action => :show_act
+  end
+  def show_act_forum
+	session[:act_type]=4
+	redirect_to :action => :show_act
+  end
+  def show_act_accounting
+	session[:act_type]=5
+	redirect_to :action => :show_act
   end
   def manage
 	@e = Event.find(@id)
@@ -278,5 +342,59 @@ class EventController < ApplicationController
 	@access_token = session[:access_token]
 	@deps = @e.departments
 	@acts = @e.activities
+	@manage_type = session[:manage_type] || 0
+	session[:manage_type] = 0
+  end
+  def manage_user 
+	session[:manage_type] = 1
+	redirect_to :action => :manage
+  end
+  def manage_dep
+	session[:manage_type] = 2
+	redirect_to :action => :manage
+  end
+  def manage_act
+	session[:manage_type] = 3
+	redirect_to :action => :manage
+  end
+  def members
+	@e = Event.find(@id)
+	@head = User.find(@e.event_head)
+	@users = @e.users
+	@new_user = User.new
+	@deps = @e.departments
+	@acts = @e.activities
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
+  end
+  def news
+	@e = Event.find(@id)
+	@head = User.find(@e.event_head)
+	@users = @e.users
+	@new_user = User.new
+	@deps = @e.departments
+	@acts = @e.activities
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
+  end
+  def forum
+	@e = Event.find(@id)
+	@head = User.find(@e.event_head)
+	@users = @e.users
+	@new_user = User.new
+	@deps = @e.departments
+	@acts = @e.activities
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
+  end
+  def calendar
+	@e = Event.find(@id)
+	@head = User.find(@e.event_head)
+	@users = @e.users
+	@new_user = User.new
+	@deps = @e.departments
+	@acts = @e.activities
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
   end
 end

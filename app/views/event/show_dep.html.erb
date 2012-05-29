@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
  <%= stylesheet_link_tag 'event' %>
 <div id="header">
-<h3><%=@e.organization.org_name%></h3><h1><%=@e.event_name%></h1>  
+<h3><%=@e.organization.org_name%></h3><a href="/event/" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
 </div>
 <div id="userinfo">
        <p>Hello, <%= @uu.username %><br>
@@ -11,28 +11,114 @@
 <p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
 </div>
 <div id="content">
-<div id="tabs27">
+<%if @dep_type == 0%> 
+<div id="tabs25">
         <ul>
-        <li><a href="#" title="css menus" class="current"><%=@d.dep_name%></a></li>
-        <li><a href="#" title="css menus">最新消息</a></li>
-        <li><a href="#" title="css menus">成員</a></li>
-        <li><a href="#" title="css menus">行事曆</a></li>
-        <li><a href="#" title="css menus">討論區</a></li>
-        <li><a href="#" title="css menus">收支表</a></li>
+        <li><a href="/event/show_dep" class="current"><%=@d.dep_name%></a></li>
+        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_members/" >成員</a></li>
+        <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
+        <li><a href="/event/show_dep_forum/" >討論區</a></li>
+        <li><a href="/event/show_dep_accounting/" >收支表</a></li>
         </ul>
 </div>
 
+<%elsif @dep_type == 1%>
+<div id="tabs25">
+        <ul>
+        <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
+        <li><a href="/event/show_dep_news/" class="current">最新消息</a></li>
+        <li><a href="/event/show_dep_members/" >成員</a></li>
+        <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
+        <li><a href="/event/show_dep_forum/" >討論區</a></li>
+        <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+        </ul>
+</div>
 
+<%elsif @dep_type == 2%>
+<div id="tabs25">
+        <ul>
+        <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
+        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_members/" class="current" >成員</a></li>
+        <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
+        <li><a href="/event/show_dep_forum/" >討論區</a></li>
+        <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+        </ul>
+</div>
+負責人: 
+<%if @dep_head.fb_id == nil%>
+<%=@dep_head.email%>
+<%else%>
+<div class="grid_item">
+<a href=http://www.facebook.com/profile.php?id=<%=@dep_head.fb_id%>>
+<img class="img" src="https://graph.facebook.com/<%=@dep_head.fb_id%>/picture?access_token=<%= @access_token %>"><div class="name"><%=@dep_head.username%></div>
+</a></div>
+<%end%>
+
+<h3>成員 共<%=@d.users.size%>人</h3>
 <% @d.users.each do |u|%>
-	<%if u.fb_id != nil%>
-		<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"> 
-	<%else%>
-		<br><%=u.email%>
-	<%end%>
+        <% if u.username != nil%>
+<div class="grid_item">
+        <a href=http://www.facebook.com/profile.php?id=<%=u.fb_id%>><img class="img" src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"><div class="name"><%=u.username%></div></a>
+</div>
+        <%end%>
 <%end%>
 <br>
+<% @d.users.each do |u|%>
+        <% if u.username == nil%>
+                <%=u.email%><br>
+        <%end%>
+<%end%>
 
-<p><%= link_to @e.event_name, event_path,:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+
+<%elsif @dep_type == 3%>
+<div id="tabs25">
+        <ul>
+        <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
+        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_members/" >成員</a></li>
+        <li><a href="/event/show_dep_calendar/"class="current" >行事曆</a></li>
+        <li><a href="/event/show_dep_forum/" >討論區</a></li>
+        <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+        </ul>
+</div>
+
+<%elsif @dep_type == 4%>
+<div id="tabs25">
+        <ul>
+        <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
+        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_members/" >成員</a></li>
+        <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
+        <li><a href="/event/show_dep_forum/"class="current" >討論區</a></li>
+        <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+        </ul>
+</div>
+<%if @see == 1%> 
+<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://Activ.herokuapp.com?event_id=<%=@id%>&dep_id=<%=@d.id%>" num_posts="2" width="500"></fb:comments>
+<%else %>
+        <h3>很抱歉，你無權限觀看此頁。</h3>
+<%end%>
+
+
+
+<%elsif @dep_type == 5%>
+<div id="tabs25">
+        <ul>
+        <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
+        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_members/" >成員</a></li>
+        <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
+        <li><a href="/event/show_dep_forum/" >討論區</a></li>
+        <li><a href="/event/show_dep_accounting/" class="current">收支表</a></li>
+        </ul>
+</div>
+
+<%end%>
+
+
+
 </div>
 <div id="rightcolumn">
         <br><br><br>

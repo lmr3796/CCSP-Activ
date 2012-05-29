@@ -1,9 +1,10 @@
  <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
+<%=stylesheet_link_tag 'event'%>
 <!--% unless flash[:error].blank? %-->
 	<!--script>alert(<%= flash[:error] -%>)</script-->
 <!--% end %-->
 <div id="header">
-<h3><%=@e.organization.org_name%></h3><h1><%=@e.event_name%></h1>  
+<h3><%=@e.organization.org_name%></h3><a href="/event/" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
 </div>
 <div id="userinfo">
        <p>Hello, <%= @uu.username %><br>
@@ -15,7 +16,11 @@
 
 <div id="content">
 <%=flash[:notice]%>
-<p><%= link_to @e.event_name, event_path,:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<%if @manage_type == 0%>
+<p><%= link_to "管理成員", {:action => :manage_user},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<p><%= link_to "管理部門", {:action=>:manage_dep},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<p><%= link_to "管理節目", {:action=>:manage_act},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<%elsif @manage_type == 1%>
 
 <% if @user_id == @e.event_head%>
 <h2>成員列表</h2>
@@ -44,6 +49,7 @@
 <%end%>
 
 <br><br>
+<%elsif @manage_type == 2%>
 <h2>部門列表</h2>
 <ul>
 	<% @deps.each do |d|%>
@@ -99,6 +105,7 @@
 <%end%>
 
 <br><br>
+<%elsif @manage_type == 3%>
 <h2>節目列表</h2>
 <ul>
 	<% @acts.each do |a|%>
@@ -154,6 +161,7 @@
 	<%= label_tag(:script, "劇本") %>
 	<%= submit_tag("Add Activity")%>
 	<%end%>
+<%end%>
 <%end%>
 </div>
 <div id="rightcolumn">

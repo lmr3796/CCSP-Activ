@@ -8,7 +8,9 @@ h1 {
 	text-align:center;
 	margin: 20px 0;
 	position:relative;
-	color:#544C4A;
+	//color:#544C4A;
+	//color:#7d1b7e;
+	color: maroon;
 }
 #header h3 {
 	text-align:center;
@@ -64,3 +66,40 @@ h1 {
 #tabs27 ul li a{display:block;float:left;color:#FECCC3;text-decoration:none;padding:14px 22px 0 22px;height:28px;}
 #tabs27 ul li a:hover,#tabs27 ul li a.current{color:#fff;background:transparent url('redslate_backgroundOVER.gif') no-repeat top center;}
 /* ---------------------- END Redslate nav ---------------------- */
+/* ---------------------- Purpleslate nav ---------------------- */
+#tabs28{position:relative;display:block;height:42px;width:95%;text-align:center;font-size:16px;background:transparent url('purpleslate_background.gif') repeat-x top left;font-family:Arial,Verdana,Helvitica,sans-serif;text-transform:uppercase;margin:15px;}
+#tabs28 ul{margin:0px;padding:0;list-style-type:none;width:auto;}
+#tabs28 ul li{display:block;float:left;margin:0 1px 0 0;}
+#tabs28 ul li a{display:block;float:left;color:#FBDAFA;text-decoration:none;padding:14px 22px 0 22px;height:28px;}
+#tabs28 ul li a:hover,#tabs28 ul li a.current{color:#fff;background:transparent url('purpleslate_backgroundOVER.gif') no-repeat top center;}
+/* ---------------------- END Purpleslate nav ---------------------- */
+/* ---------------------- Blueslate nav ---------------------- */
+#tabs25{position:relative;display:block;height:42px;width:95%;text-align:center;font-size:16px;background:transparent url('blueslate_background.gif') repeat-x top left;font-family:Arial,Verdana,Helvitica,sans-serif;text-transform:uppercase;margin:15px;}
+#tabs25 ul{margin:0px;padding:0;list-style-type:none;width:auto;}
+#tabs25 ul li{display:block;float:left;margin:0 1px 0 0;}
+#tabs25 ul li a{display:block;float:left;color:#D5F1FF;text-decoration:none;padding:14px 22px 0 22px;height:28px;}
+#tabs25 ul li a:hover,#tabs25 ul li a.current{color:#fff;background:transparent url('blueslate_backgroundOVER.gif') no-repeat top center;}
+/* ---------------------- END Blueslate nav ---------------------- */
+
+.grid_item {
+	padding:0 5px 8px 0;
+	overflow:hidden;
+	width:50px;
+	display:inline-block;
+}
+a {
+	cursor: pointer;
+	color:#3b5998;
+}
+
+img {
+	border:0;
+}
+.name {
+	font-size:10px;
+	color:maroon;
+	overflow:hidden;
+	padding-top:2px;
+	text-align:center;
+	white-space:nowrap;
+}

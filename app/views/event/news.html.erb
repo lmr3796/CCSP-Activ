@@ -5,7 +5,6 @@
 <!--% end %-->
 <div id="header">
 <h3><%=@e.organization.org_name%></h3><a href="/event/" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
-
 </div>
 <div id="userinfo">
        <p>Hello, <%= @uu.username %><br>
@@ -17,13 +16,15 @@
 <div id="content">
 <div id="tabs27">
 	<ul>
-	<li><a href="/event/" class="current">活動首頁</a></li>
-	<li><a href="/event/news/" >最新消息</a></li>
+	<li><a href="/event/" >活動首頁</a></li>
+	<li><a href="/event/news/" class="current" >最新消息</a></li>
 	<li><a href="/event/members/" >活動成員</a></li>
 	<li><a href="/event/calendar/" >活動行事曆</a></li>
 	<li><a href="/event/forum/" >活動討論區</a></li>
 	</ul>
 </div>
+
+<%=flash[:notice]%>
 
 
 </div>
