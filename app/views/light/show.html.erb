@@ -12,7 +12,7 @@
         var start = -1,end = -1,light=new Array(),ctime = 0,block = 0,temp;
 
         function load_data(){
-            $.get('/old.json', function(data) {
+            $.get('<%= light_script %>', function(data) {
                     if(data != null){
                     light = data;
                     var counter = 0;
@@ -104,9 +104,9 @@ $("#whole").click(function(){
 $("#jquery_jplayer_1").jPlayer({
 ready: function (event) {
 $(this).jPlayer("setMedia", {
-m4a: "https://dl.dropbox.com/u/31496039/OLD0307.m4a",
-oga: "https://dl.dropbox.com/u/31496039/OLD0307.ogg",
-mp3: "https://dl.dropbox.com/u/31496039/OLD0307.mp3",
+m4a: "<%= music_m4a %>",
+oga: "<%= music_oga %>",
+mp3: "<%= music_mp3 %>",
 });
 },
 timeupdate:function(event){
