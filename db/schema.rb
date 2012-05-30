@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120530081059) do
+ActiveRecord::Schema.define(:version => 20120530162744) do
 
   create_table "activities", :force => true do |t|
     t.string   "act_name"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20120530081059) do
     t.string   "act_subtitle"
     t.text     "act_description"
     t.text     "act_image_url"
+    t.text     "music_url"
+    t.text     "light_json"
   end
 
   create_table "departments", :force => true do |t|

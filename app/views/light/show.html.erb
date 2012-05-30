@@ -7,12 +7,13 @@
         <meta name="robots" content="noindex, NOFOLLOW" />
         <%= javascript_include_tag "application" %>
         <%= stylesheet_link_tag "application" %>
+	<meta data="jizz"/>
         <script type="text/javascript">
             //<![CDATA[
         var start = -1,end = -1,light=new Array(),ctime = 0,block = 0,temp;
 
         function load_data(){
-            $.get('<%= light_script %>', function(data) {
+            $.get('/old.json', function(data) {
                     if(data != null){
                     light = data;
                     var counter = 0;
@@ -43,7 +44,18 @@ $(document).ready(function(){
 362: "燈全亮",
 508: "End"
 };*/
-        load_data();
+        //load_data();
+	light = <%=raw @script %>
+                    var counter = 0;
+                    $.each(light,function(k,v){
+                        time = v[0];
+                        content = v[1];
+                        if((counter)%2 ==0)
+                        $("#light").append('<p class="triangle-border right" style="position:absolute;top:'+t_o(time)+'px;right:510px">'+content+'</p>');
+                        else
+                        $("#spotlight").append('<p class="triangle-border left" style="position:absolute;top:'+t_o(time)+'px; ">'+content+'</p>');
+                        counter++;
+                        });
 
         $("#circle").click(function(){
             $("#jquery_jplayer_1").jPlayer("pause");
@@ -104,9 +116,9 @@ $("#whole").click(function(){
 $("#jquery_jplayer_1").jPlayer({
 ready: function (event) {
 $(this).jPlayer("setMedia", {
-m4a: "<%= music_m4a %>",
-oga: "<%= music_oga %>",
-mp3: "<%= music_mp3 %>",
+m4a: "<%= @m4a %>",
+oga: "<%= @oga %>",
+mp3: "<%= @mp3 %>",
 });
 },
 timeupdate:function(event){

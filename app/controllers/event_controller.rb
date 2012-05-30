@@ -337,6 +337,14 @@ class EventController < ApplicationController
 	session[:act_type]=5
 	redirect_to :action => :show_act
   end
+  def show_act_light
+	session[:act_type]=6
+	redirect_to :action => :show_act
+  end
+  def show_act_script
+	session[:act_type]=7
+	redirect_to :action => :show_act
+  end
   def manage
 	@e = Event.find(@id)
 	@head = User.find(@e.event_head)
