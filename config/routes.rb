@@ -1,5 +1,9 @@
 Activ::Application.routes.draw do
 
+  get "light/show"
+  get "light/update"
+  get "light" => "light#show"
+
   get "/" => "home#index", :as => :home
   post "/" => "home#index"
   post "/login" => "home#login"
