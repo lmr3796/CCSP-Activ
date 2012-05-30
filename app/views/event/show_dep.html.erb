@@ -12,34 +12,61 @@
 </div>
 <div id="content">
 <%if @dep_type == 0%> 
-<div id="tabs25">
+	<div id="tabs25">
         <ul>
         <li><a href="/event/show_dep" class="current"><%=@d.dep_name%></a></li>
-        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_aboutus/" >部門介紹</a></li>
         <li><a href="/event/show_dep_members/" >成員</a></li>
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
         </ul>
-</div>
+	</div>
+	
+	<%if @ps.size == 0%>
+		<h3>目前尚無公告文章。</h3>
+	<%end%>
+
+        <%= form_tag(:controller => 'event', :action => 'create_post',:type => 'dep',:e_id => @d.id) do %>
+                <h3>文章標題&nbsp;&nbsp;<%= text_field_tag(:post_title)%></h3>
+                <h3>文章內容</h3><h3><%= text_area_tag(:post_content,nil,:size=>"25x10",:border=>"0")%></h3>
+                <%= submit_tag("完成")%>
+        <%end%>
+        <br><br>
+
+
 
 <%elsif @dep_type == 1%>
 <div id="tabs25">
         <ul>
         <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
-        <li><a href="/event/show_dep_news/" class="current">最新消息</a></li>
+        <li><a href="/event/show_dep_aboutus/ "class="current" >部門介紹</a></li>
         <li><a href="/event/show_dep_members/" >成員</a></li>
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
         </ul>
 </div>
+<%if @d.dep_subtitle == nil && @d.dep_description == nil && @d.dep_image_url == nil%>
+        <h3>尚未建立任何介紹內容，部門負責人可於 管理->管理部門 修改。</h3>
+<%else%>
+        <h2><%=@d.dep_name%><%if @d.dep_subtitle != nil%> - <%=@d.dep_subtitle%><%end%>
+        </h2>
+        <%if @d.dep_description != nil%>
+                <h3><%=@d.dep_description%></h3>
+        <%end%>
+<br>
+        <%if @d.dep_image_url != nil%>
+                <%=image_tag(@d.dep_image_url,:width=>250)%>&nbsp;&nbsp;
+        <%end%>
+<%end%>
+
 
 <%elsif @dep_type == 2%>
 <div id="tabs25">
         <ul>
         <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
-        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_aboutus/" >部門介紹</a></li>
         <li><a href="/event/show_dep_members/" class="current" >成員</a></li>
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
@@ -76,19 +103,23 @@
 <div id="tabs25">
         <ul>
         <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
-        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_aboutus/" >部門介紹</a></li>
         <li><a href="/event/show_dep_members/" >成員</a></li>
         <li><a href="/event/show_dep_calendar/"class="current" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
         </ul>
 </div>
+<%if @see == 1%> 
+<%else %>
+        <h3>很抱歉，你無權限觀看此頁。</h3>
+<%end%>
 
 <%elsif @dep_type == 4%>
 <div id="tabs25">
         <ul>
         <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
-        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_aboutus/" >部門介紹</a></li>
         <li><a href="/event/show_dep_members/" >成員</a></li>
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/"class="current" >討論區</a></li>
@@ -107,7 +138,7 @@
 <div id="tabs25">
         <ul>
         <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
-        <li><a href="/event/show_dep_news/" >最新消息</a></li>
+        <li><a href="/event/show_dep_aboutus/" >部門介紹</a></li>
         <li><a href="/event/show_dep_members/" >成員</a></li>
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
@@ -139,6 +170,7 @@
                 <%end%>
                 <br>
         <%end%>
+<%= link_to @e.event_name, {:controller => 'event',:action => '/'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
 
 </div>
 

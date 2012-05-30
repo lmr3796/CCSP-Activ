@@ -15,7 +15,7 @@
 <div id="tabs28">
         <ul>
         <li><a href="/event/show_act" class="current"><%=@a.act_name%></a></li>
-        <li><a href="/event/show_act_news/" >最新消息</a></li>
+        <li><a href="/event/show_act_aboutus/" >節目介紹</a></li>
         <li><a href="/event/show_act_members/" >成員</a></li>
         <li><a href="/event/show_act_calendar/" >行事曆</a></li>
         <li><a href="/event/show_act_forum/" >討論區</a></li>
@@ -26,18 +26,33 @@
 <div id="tabs28">
         <ul>
         <li><a href="/event/show_act" ><%=@a.act_name%></a></li>
-        <li><a href="/event/show_act_news/" class="current">最新消息</a></li>
+        <li><a href="/event/show_act_aboutus/" class="current">節目介紹</a></li>
         <li><a href="/event/show_act_members/" >成員</a></li>
         <li><a href="/event/show_act_calendar/" >行事曆</a></li>
         <li><a href="/event/show_act_forum/" >討論區</a></li>
         <li><a href="/event/show_act_accounting/" >收支表</a></li>
         </ul>
 </div>
+
+<%if @a.act_subtitle == nil && @a.act_description == nil && @a.act_image_url == nil%>
+        <h3>尚未建立任何介紹內容，節目負責人可於 管理->管理節目 修改。</h3>
+<%else%>
+        <h2><%=@a.act_name%><%if @a.act_subtitle != nil%> - <%=@a.act_subtitle%><%end%>
+        </h2>
+        <%if @a.act_description != nil%>
+                <h3><%=@a.act_description%></h3>
+        <%end%>
+<br>
+        <%if @a.act_image_url != nil%>
+                <%=image_tag(@a.act_image_url,:width=>250)%>&nbsp;&nbsp;
+        <%end%>
+<%end%>
+
 <%elsif @act_type == 2%>
 <div id="tabs28">
         <ul>
         <li><a href="/event/show_act" ><%=@a.act_name%></a></li>
-        <li><a href="/event/show_act_news/">最新消息</a></li>
+        <li><a href="/event/show_act_aboutus/" >節目介紹</a></li>
         <li><a href="/event/show_act_members/"  class="current">成員</a></li>
         <li><a href="/event/show_act_calendar/" >行事曆</a></li>
         <li><a href="/event/show_act_forum/" >討論區</a></li>
@@ -74,18 +89,23 @@
 <div id="tabs28">
         <ul>
         <li><a href="/event/show_act" ><%=@a.act_name%></a></li>
-        <li><a href="/event/show_act_news/" >最新消息</a></li>
+        <li><a href="/event/show_act_aboutus/" >節目介紹</a></li>
         <li><a href="/event/show_act_members/" >成員</a></li>
         <li><a href="/event/show_act_calendar/"  class="current">行事曆</a></li>
         <li><a href="/event/show_act_forum/" >討論區</a></li>
         <li><a href="/event/show_act_accounting/" >收支表</a></li>
         </ul>
 </div>
+<%if @see == 1%>
+<div id="fb-root"></div><script src="http://connect.facebook.net/en_US/all.js#appId=418210271537455&amp;xfbml=1"></script><fb:comments href="http://Activ.herokuapp.com?event_id=<%=@id%>&act_id=<%=@a.id%>" num_posts="2" width="500"></fb:comments>
+<%else %>
+	<h3>很抱歉，你無權限觀看此頁。</h3>
+<%end%>
 <%elsif @act_type == 4%>
 <div id="tabs28">
         <ul>
         <li><a href="/event/show_act" ><%=@a.act_name%></a></li>
-        <li><a href="/event/show_act_news/" >最新消息</a></li>
+        <li><a href="/event/show_act_aboutus/" >節目介紹</a></li>
         <li><a href="/event/show_act_members/" >成員</a></li>
         <li><a href="/event/show_act_calendar/" >行事曆</a></li>
         <li><a href="/event/show_act_forum/" class="current" >討論區</a></li>
@@ -101,7 +121,7 @@
 <div id="tabs28">
         <ul>
         <li><a href="/event/show_act" ><%=@a.act_name%></a></li>
-        <li><a href="/event/show_act_news/" >最新消息</a></li>
+        <li><a href="/event/show_act_aboutus/" >節目介紹</a></li>
         <li><a href="/event/show_act_members/" >成員</a></li>
         <li><a href="/event/show_act_calendar/" >行事曆</a></li>
         <li><a href="/event/show_act_forum/" >討論區</a></li>
@@ -131,6 +151,7 @@
                 <%end%>
                 <br>
         <%end%>
+<%= link_to @e.event_name, {:controller => 'event',:action => '/'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
 
 </div>
 

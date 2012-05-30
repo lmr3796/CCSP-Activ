@@ -16,6 +16,8 @@ class EventController < ApplicationController
 	
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
+	@ps = Post.where(:event_id => @id)
+	
   end
   def destroy
 	@d_id = params[:d_id]
@@ -190,16 +192,18 @@ class EventController < ApplicationController
 	@acts = @e.activities
 	@dep_type = session[:dep_type] || 0
 	session[:dep_type]=0
-	if @dep_type == 4 #forum,only members in the activity can see
+	if @dep_type == 4 || @dep_type == 3#forum&calendar,only members in the activity can see
 		@tmp = UserDepartment.where(:user_id => @user_id,:department_id =>@d.id).first
 		if @tmp != nil || (@user_id == @e.event_head)
 			@see = 1
 		else
 			@see = 0
 		end
+	elsif @dep_type == 0
+		@ps = Post.where(:event_id => @id,:dep_id => @dep_id,:act_id => nil).order("updated_at DESC")
 	end
   end
-  def show_dep_news
+  def show_dep_aboutus
 	session[:dep_type]=1
 	redirect_to :action => :show_dep
   end
@@ -304,7 +308,7 @@ class EventController < ApplicationController
 	@act_head = User.find(@a.act_head)
 	@act_type = session[:act_type] || 0
 	session[:act_type]=0
-	if @act_type == 4 #forum,only members in the activity can see
+	if @act_type == 4 || @act_type == 3 #calendar&forum,only members in the activity can see
 		@tmp = UserActivity.where(:user_id => @user_id,:activity_id =>@a.id).first
 		if @tmp != nil || (@user_id == @e.event_head)
 			@see = 1
@@ -313,7 +317,7 @@ class EventController < ApplicationController
 		end
 	end
   end
-  def show_act_news
+  def show_act_aboutus
 	session[:act_type]=1
 	redirect_to :action => :show_act
   end
@@ -357,6 +361,10 @@ class EventController < ApplicationController
 	session[:manage_type] = 3
 	redirect_to :action => :manage
   end
+  def manage_event
+	session[:manage_type] = 4
+	redirect_to :action => :manage
+  end
   def members
 	@e = Event.find(@id)
 	@head = User.find(@e.event_head)
@@ -367,7 +375,7 @@ class EventController < ApplicationController
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
   end
-  def news
+  def aboutus
 	@e = Event.find(@id)
 	@head = User.find(@e.event_head)
 	@users = @e.users
@@ -397,4 +405,100 @@ class EventController < ApplicationController
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
   end
+  def accounting
+	@e = Event.find(@id)
+	@head = User.find(@e.event_head)
+	@users = @e.users
+	@new_user = User.new
+	@deps = @e.departments
+	@acts = @e.activities
+	@uu = User.find(@user_id)
+	@access_token = session[:access_token]
+  end
+  def edit_event
+	@e = Event.find(@id)
+	@event_new_name = params[:event_new_name]
+	@event_new_sub = params[:event_new_sub]
+	@event_new_desc = params[:event_new_desc]
+	@event_new_imgurl = params[:event_new_imgurl]
+	@event_new_trailerurl = params[:event_new_trailerurl]
+	if(@event_new_sub == "") 
+		@event_new_sub = nil 
+	end
+	if(@event_new_desc == "") 
+		@event_new_desc = nil 
+	end
+	if(@event_new_imgurl == "") 
+		@event_new_imgurl = nil 
+	end
+	if(@event_new_trailerurl == "") 
+		@event_new_trailerurl = nil 
+	end
+	@e.event_name = @event_new_name
+	@e.event_subtitle = @event_new_sub
+	@e.event_description = @event_new_desc
+	@e.event_image_url = @event_new_imgurl
+	@e.event_trailer_url = @event_new_trailerurl
+	@e.save
+	redirect_to :action => :manage
+  end
+  def edit_dep
+	@d = Department.find(params[:e_id])
+	@dep_new_name = params[:dep_new_name]
+	@dep_new_sub = params[:dep_new_sub]
+	@dep_new_desc = params[:dep_new_desc]
+	@dep_new_imgurl = params[:dep_new_imgurl]
+	if(@dep_new_sub == "") 
+		@dep_new_sub = nil 
+	end
+	if(@dep_new_desc == "") 
+		@dep_new_desc = nil 
+	end
+	if(@dep_new_imgurl == "") 
+		@dep_new_imgurl = nil 
+	end
+	@d.dep_name = @dep_new_name
+	@d.dep_subtitle = @dep_new_sub
+	@d.dep_description = @dep_new_desc
+	@d.dep_image_url = @dep_new_imgurl
+	@d.save
+	redirect_to :action => :manage
+  end
+  def edit_act
+	@a = Activity.find(params[:e_id])
+	@act_new_name = params[:act_new_name]
+	@act_new_sub = params[:act_new_sub]
+	@act_new_desc = params[:act_new_desc]
+	@act_new_imgurl = params[:act_new_imgurl]
+	if(@act_new_sub == "") 
+		@act_new_sub = nil 
+	end
+	if(@act_new_desc == "") 
+		@act_new_desc = nil 
+	end
+	if(@act_new_imgurl == "") 
+		@act_new_imgurl = nil 
+	end
+	@a.act_name = @act_new_name
+	@a.act_subtitle = @act_new_sub
+	@a.act_description = @act_new_desc
+	@a.act_image_url = @act_new_imgurl
+	@a.save
+	redirect_to :action => :manage
+  end
+  def create_post
+	@title = params[:post_title]
+	@content = params[:post_content]
+	@type = params[:type]
+  	if @type == "dep"
+		@dep_id = params[:e_id]
+		@act_id = nil
+	elsif @type == "act"
+		@act_id = params[:e_id]
+		@dep_id = nil
+	end
+	@p = Post.new(:event_id => @id, :dep_id => @dep_id, :act_id => @act_id, :title => @title, :content => @content, :user_id => @user_id)
+	@p.save
+	redirect_to :action => :index
+  end	
 end

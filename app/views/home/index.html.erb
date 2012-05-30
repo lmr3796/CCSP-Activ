@@ -1,6 +1,9 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
 <% if @access_token%>
-<div id="header"><h1>Activ</h1></div>
+<div id="header">
+<h1>Activ
+<%=image_tag('activman.png',:width=>80)%></h1>
+</div>
 	<% if @type == 1 #new%> 
 		<div id="userinfo">
 		<p>Welcome to join us, <%= @me["name"] %><br>
@@ -36,8 +39,6 @@
 	<h3>熱門與最新活動</h3>
 	</div>
 <% else %>
-   <img src="http://w.csie.org/~b97005/Activ2.PNG" />
-
-   <p><%= button_to 'Go', login_path %></p>
+   <p align="center"><%= link_to image_tag("activ.png", :width=>480), login_path %></p>
 <%end%>
 
