@@ -7,7 +7,8 @@
         <meta name="robots" content="noindex, NOFOLLOW" />
         <%= javascript_include_tag "application" %>
         <%= stylesheet_link_tag "application" %>
-	<meta data="jizz"/>
+        <%= stylesheet_link_tag "light" %>
+        <meta data="jizz"/>
         <script type="text/javascript">
             //<![CDATA[
         var start = -1,end = -1,light=new Array(),ctime = 0,block = 0,temp;
@@ -45,34 +46,36 @@ $(document).ready(function(){
 508: "End"
 };*/
         //load_data();
-	light = <%=raw @script %>
-                    var counter = 0;
-                    $.each(light,function(k,v){
-                        time = v[0];
-                        content = v[1];
-                        if((counter)%2 ==0)
-                        $("#light").append('<p class="triangle-border right" style="position:absolute;top:'+t_o(time)+'px;right:510px">'+content+'</p>');
-                        else
-                        $("#spotlight").append('<p class="triangle-border left" style="position:absolute;top:'+t_o(time)+'px; ">'+content+'</p>');
-                        counter++;
-                        });
-
-        $("#circle").click(function(){
-            $("#jquery_jplayer_1").jPlayer("pause");
-            $("#spotlight").append('<p id="new" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="40" rows="4" id="content"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>');
-            $("#confirm").click(function(){
-                light.push(new Array(ctime,$("#content").val()));
-                $.get("save.php",{"data":light},function(result){
-                    if(result){
-                    $("#new").remove();
-                    load_data();
-                    }
-                    },"json");
-                });
-            $("#cancel").click(function(){
-                $("#new").remove();
-                });
+        light = <%=raw @script %>
+        var counter = 0;
+        $.each(light,function(k,v){
+            time = v[0];
+            content = v[1];
+            if((counter)%2 ==0)
+            $("#light").append('<p class="triangle-border right" style="position:absolute;top:'+t_o(time)+'px;right:510px">'+content+'</p>');
+            else
+            $("#spotlight").append('<p class="triangle-border left" style="position:absolute;top:'+t_o(time)+'px; ">'+content+'</p>');
+            counter++;
             });
+
+$("#circle").click(function(){
+        $("#jquery_jplayer_1").jPlayer("pause");
+        $("#spotlight").append('<p id="new" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="40" rows="4" id="new_event"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>');
+
+//'<p id="new" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="40" rows="4" id="content"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>'
+        $("#confirm").click(function(){
+            light.push(new Array(ctime,$("#content").val()));
+            $.get("save.php",{"data":light},function(result){
+                if(result){
+                $("#new").remove();
+                load_data();
+                }
+                },"json");
+            });
+        $("#cancel").click(function(){
+            $("#new").remove();
+            });
+        });
 
 $("#circle").hover(function(){
         temp = $("#circle").html();
