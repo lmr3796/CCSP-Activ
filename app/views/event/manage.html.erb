@@ -20,10 +20,10 @@
 <% if @user_id == @e.event_head%>
 <p><%= link_to "管理成員", {:action => :manage_user},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
 <%end%>
-<%if @dep_me.size >0%>
+<%if @dep_me.size >0 || @user_id == @e.event_head%>
 <p><%= link_to "管理部門", {:action=>:manage_dep},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
 <%end%>
-<%if @act_me.size >0%>
+<%if @act_me.size >0 || @user_id == @e.event_head%>
 <p><%= link_to "管理節目", {:action=>:manage_act},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
 <%end%>
 <% if @user_id == @e.event_head%>
