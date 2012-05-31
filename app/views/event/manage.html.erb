@@ -17,10 +17,18 @@
 <div id="content">
 <%=flash[:notice]%>
 <%if @manage_type == 0%>
+<% if @user_id == @e.event_head%>
 <p><%= link_to "管理成員", {:action => :manage_user},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<%end%>
+<%if @dep_me.size >0%>
 <p><%= link_to "管理部門", {:action=>:manage_dep},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<%end%>
+<%if @act_me.size >0%>
 <p><%= link_to "管理節目", {:action=>:manage_act},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<%end%>
+<% if @user_id == @e.event_head%>
 <p><%= link_to "管理活動", {:action=>:manage_event},:class => 'sexybutton sexysimple sexyorange sexyxl' %></p>
+<%end%>
 <%elsif @manage_type == 1%>
 
 <% if @user_id == @e.event_head%>
@@ -108,10 +116,9 @@
 	<%end%>
 <%end%>
 <br>
-
+<%if @dep_me.size > 0%>
 <h2>編輯部門資訊</h2>
-<% @deps.each do |d|%>
-	<%if @user_id == d.dep_head%>
+<% @dep_me.each do |d|%>
 	<%= form_tag(:controller => 'event', :action => 'edit_dep',:e_id => d.id) do %>
 		<h3>部門名稱&nbsp;&nbsp;<%= text_field_tag(:dep_new_name,d.dep_name)%></h3>
 		<h3>部門副標題&nbsp;&nbsp;<%= text_field_tag(:dep_new_sub,d.dep_subtitle)%></h3>
@@ -122,7 +129,6 @@
 	<br><br>
 	<%end%>
 <%end%>
-
 
 <br><br>
 <%elsif @manage_type == 3%>
@@ -175,18 +181,18 @@
 	<%= form_tag(:controller => 'event', :action => 'create_act') do %>
 	節目名稱<%= text_field_tag(:act_name)%><br>
 	節目負責人fb email<%= text_field_tag(:email)%><br>
-	其他樣板
-	<%= check_box_tag(:light_music_table) %>
-	<%= label_tag(:light_music_table, "燈音表") %>
-	<%= check_box_tag(:script) %>
-	<%= label_tag(:script, "劇本") %>
+	<!--其他樣板-->
+	<!--%= check_box_tag(:light_music_table) %-->
+	<!--%= label_tag(:light_music_table, "燈音表") %-->
+	<!--%= check_box_tag(:script) %-->
+	<!--%= label_tag(:script, "劇本") %-->
 	<%= submit_tag("新增節目")%>
 	<%end%>
 <%end%>
 <br>
+<%if @act_me.size > 0%>
 <h2>編輯節目資訊</h2>
-<% @acts.each do |a|%>
-	<%if @user_id == a.act_head%>
+<% @act_me.each do |a|%>
 	<%= form_tag(:controller => 'event', :action => 'edit_act',:e_id => a.id) do %>
 		<h3>節目名稱&nbsp;&nbsp;<%= text_field_tag(:act_new_name,a.act_name)%></h3>
 		<h3>節目副標題&nbsp;&nbsp;<%= text_field_tag(:act_new_sub,a.act_subtitle)%></h3>

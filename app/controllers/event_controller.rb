@@ -368,6 +368,8 @@ class EventController < ApplicationController
 	@access_token = session[:access_token]
 	@deps = @e.departments
 	@acts = @e.activities
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
 	@manage_type = session[:manage_type] || 0
 	session[:manage_type] = 0
   end
@@ -527,4 +529,15 @@ class EventController < ApplicationController
 		redirect_to :action => :show_act
 	end
   end	
+  def del_post
+	@p_id = params[:p_id]
+	@type = params[:type]
+	@p = Post.find(@p_id)
+	@p.destroy
+	if @type == "dep"
+		redirect_to :action => :show_dep
+	elsif @type == "act"
+		redirect_to :action => :show_act
+	end
+  end
 end

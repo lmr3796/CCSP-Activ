@@ -28,7 +28,11 @@
 	<%else%>
 		<%@ps.each do |p|%>
 			<%@u = User.find(p.user_id)%>
-			<p><%=p.title%>:<%=p.content%> posted by <%=@u.username%></p>
+			<p><%=p.title%>:<%=p.content%> posted by <%=@u.username%> <%=p.updated_at%>
+			<%if @u.id == @user_id%>
+                                 <%= link_to '刪除',{ :controller => 'event', :action     => 'del_post', :p_id => p.id, :type => "dep"},:method => :delete, :confirm => "你確定要刪除此篇文章嗎？"%>
+                        <%end%></p>
+
 		<%end%>
 	<%end%>
 

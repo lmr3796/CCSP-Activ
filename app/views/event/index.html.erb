@@ -28,7 +28,11 @@
 <%if @ps.size == 0%>
 	<h3>目前尚無公告文章，請至各部門或節目首頁張貼公告。</h3>
 <%else%>
+	<div id="post">
+	<table><tr><th span="col">編號 <th span="col">日期 <th span="col">作者 <th span="col">部門/節目 <th span="col">文章標題</tr>
+	<%@i = 0%>
 	 <%@ps.each do |p|%>
+		<%@i = @i + 1%>
          	<%@u = User.find(p.user_id)%>
 		<%if p.dep_id != nil%>
 			<%@d = Department.find(p.dep_id)%>
@@ -37,9 +41,9 @@
 			<%@a = Activity.find(p.act_id)%>
 			<%@name = @a.act_name%>
 		<%end%>	
-              	<p>[<%=@name%>] <%=p.title%>:<%=p.content%> posted by <%=@u.username%></p>
+              	<tr id='tmp' onclick="addBox('tmp');"><td><%=@ps.size-@i+1%> <td><%=p.updated_at%> <td><%=@u.username%> <td>[<%=@name%>] <td><%=p.title%></tr>
          <%end%>
-
+	</table></div>
 <%end%>
 
 </div>
@@ -65,4 +69,10 @@
 <%= link_to @e.event_name, {:controller => 'event',:action => '/'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
 </div>
 
-
+<script>
+	function addBox(divName){
+		var newdiv = document.createElement('tr');
+		newdiv.innerHTML = "<input type='text' name='haha'>";
+          	document.getElementById(divName).appendChild(newdiv); 
+	}
+</script>
