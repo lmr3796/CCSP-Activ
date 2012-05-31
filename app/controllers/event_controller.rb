@@ -16,7 +16,7 @@ class EventController < ApplicationController
 	
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
-	@ps = Post.where(:event_id => @id)
+	@ps = Post.where(:event_id => @id).order("updated_at DESC")
 	
   end
   def destroy
@@ -201,6 +201,12 @@ class EventController < ApplicationController
 		end
 	elsif @dep_type == 0
 		@ps = Post.where(:event_id => @id,:dep_id => @dep_id,:act_id => nil).order("updated_at DESC")
+		@tmp = UserDepartment.where(:user_id => @user_id,:department_id =>@d.id).first
+		if @tmp != nil 
+			@see = 1
+		else
+			@see = 0
+		end
 	end
   end
   def show_dep_aboutus
@@ -311,6 +317,14 @@ class EventController < ApplicationController
 	if @act_type == 4 || @act_type == 3 #calendar&forum,only members in the activity can see
 		@tmp = UserActivity.where(:user_id => @user_id,:activity_id =>@a.id).first
 		if @tmp != nil || (@user_id == @e.event_head)
+			@see = 1
+		else
+			@see = 0
+		end
+	elsif @act_type == 0
+		@ps = Post.where(:event_id => @id,:act_id => @act_id,:dep_id => nil).order("updated_at DESC")
+		@tmp = UserActivity.where(:user_id => @user_id,:activity_id =>@a.id).first
+		if @tmp != nil 
 			@see = 1
 		else
 			@see = 0
@@ -507,6 +521,10 @@ class EventController < ApplicationController
 	end
 	@p = Post.new(:event_id => @id, :dep_id => @dep_id, :act_id => @act_id, :title => @title, :content => @content, :user_id => @user_id)
 	@p.save
-	redirect_to :action => :index
+	if @type == "dep"
+		redirect_to :action => :show_dep
+	elsif @type =="act"
+		redirect_to :action => :show_act
+	end
   end	
 end

@@ -27,6 +27,19 @@
 </div>
 <%if @ps.size == 0%>
 	<h3>目前尚無公告文章，請至各部門或節目首頁張貼公告。</h3>
+<%else%>
+	 <%@ps.each do |p|%>
+         	<%@u = User.find(p.user_id)%>
+		<%if p.dep_id != nil%>
+			<%@d = Department.find(p.dep_id)%>
+			<%@name = @d.dep_name%>
+		<%elsif p.act_id != nil%>
+			<%@a = Activity.find(p.act_id)%>
+			<%@name = @a.act_name%>
+		<%end%>	
+              	<p>[<%=@name%>] <%=p.title%>:<%=p.content%> posted by <%=@u.username%></p>
+         <%end%>
+
 <%end%>
 
 </div>

@@ -24,6 +24,27 @@
         <li><a href="/event/show_act_script/" >劇本</a></li>
         </ul>
 </div>
+	<%if @ps.size == 0%>
+                <h3>目前尚無公告文章。</h3>
+        <%else%>
+                <%@ps.each do |p|%>
+                        <%@u = User.find(p.user_id)%>
+                        <p><%=p.title%>:<%=p.content%> posted by <%=@u.username%>
+			<%if @u.id == @user_id%>
+				刪除	
+			<%end%>
+			</p>
+                <%end%>
+        <%end%>
+
+        <%if @see == 1%> 
+        <%= form_tag(:controller => 'event', :action => 'create_post',:type => 'act',:e_id => @a.id) do %>
+                <h3>文章標題&nbsp;&nbsp;<%= text_field_tag(:post_title)%></h3>
+                <h3>文章內容</h3><h3><%= text_area_tag(:post_content,nil,:size=>"25x10",:border=>"0")%></h3>
+                <%= submit_tag("完成")%>
+        <%end%>
+        <%end%>
+
 <%elsif @act_type == 1%>
 <div id="tabs28">
         <ul>
