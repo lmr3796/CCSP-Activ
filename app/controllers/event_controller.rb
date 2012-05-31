@@ -17,6 +17,8 @@ class EventController < ApplicationController
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
 	@ps = Post.where(:event_id => @id).order("updated_at DESC")
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
 	
   end
   def destroy

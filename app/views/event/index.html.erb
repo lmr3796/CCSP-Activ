@@ -8,11 +8,32 @@
 
 </div>
 <div id="userinfo">
-       <p>Hello, <%= @uu.username %><br>
-       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+       Hello, <%= @uu.username %>
+       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>" width=30><br>
+	<%if @user_id == @e.event_head%>
+		活動負責人<br>
+	<%end%>
+	<%@dep_me.each do |d|%>
+		<%if @user_id == d.dep_head%>
+			<%=d.dep_name%>負責人<br>
+		<%end%>
+	<%end%>
+	<%@act_me.each do |a|%>
+		<%if @user_id == a.act_head%>
+			<%=a.act_name%>負責人<br>
+		<%end%>
+	<%end%>
+	<%@uu.departments.where(:event_id => @e.id).each do |d|%>
+		<%if @user_id != d.dep_head%>
+			<%=d.dep_name%>成員<br>
+		<%end%>
+	<%end%>
+	<%@uu.activities.where(:event_id => @e.id).each do |a|%>
+		<%if @user_id != a.act_head%>
+			<%=a.act_name%>成員<br>
+		<%end%>
+	<%end%>
 
-<p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
-<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
 </div>
 <div id="content">
 <div id="tabs27">
@@ -28,8 +49,7 @@
 <%if @ps.size == 0%>
 	<h3>目前尚無公告文章，請至各部門或節目首頁張貼公告。</h3>
 <%else%>
-	<div id="post">
-	<table><tr><th span="col">編號 <th span="col">日期 <th span="col">作者 <th span="col">部門/節目 <th span="col">文章標題</tr>
+	<table id="post"><tr><th span="col">編號 <th span="col">日期 <th span="col">作者 <th span="col">部門/節目 <th span="col">文章標題</tr>
 	<%@i = 0%>
 	 <%@ps.each do |p|%>
 		<%@i = @i + 1%>
@@ -41,14 +61,15 @@
 			<%@a = Activity.find(p.act_id)%>
 			<%@name = @a.act_name%>
 		<%end%>	
-              	<tr id='tmp' onclick="addBox('tmp');"><td><%=@ps.size-@i+1%> <td><%=p.updated_at%> <td><%=@u.username%> <td>[<%=@name%>] <td><%=p.title%></tr>
+              	<tr class='tmp' id=<%=p.content%>><td><%=@ps.size-@i+1%> <td><%=p.updated_at%> <td><%=@u.username%> <td>[<%=@name%>] <td><%=p.title%></tr>
          <%end%>
-	</table></div>
+	</table>
 <%end%>
 
 </div>
 <div id="rightcolumn">
-	<br><br><br>
+<p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
+<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
 	<% @deps.each do |d|%>
  		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
                 	<%= hidden_field_tag(:dep_id, d.id) %>
@@ -70,9 +91,14 @@
 </div>
 
 <script>
-	function addBox(divName){
-		var newdiv = document.createElement('tr');
-		newdiv.innerHTML = "<input type='text' name='haha'>";
-          	document.getElementById(divName).appendChild(newdiv); 
-	}
+	$('.tmp').live('click',function(){
+		var self = $(this);
+		if(self.hasClass('added')) {
+			self.removeClass('added');
+			self.next().remove();
+			return;
+		}
+		var id = self.attr('id');
+		self.addClass('added').after('<tr class="detail"><td colspan="5">'+id+'</td></tr>');
+	});
 </script>

@@ -166,9 +166,22 @@ height:100%;
 
 }
 #post {
-	color:white;
-	background-color:black;	
+	color:e6e0db;
+	background-color:#232323;	
 	text-align:left;
 	width:95%;
 	margin-left:15px;
+}
+.detail {
+	background-color:#232323;
+	height:150px;
+	color:yellow;
+}
+
+#post tr {
+	cursor:pointer;
+}
+
+.added {
+	background-color:blue;
 }
