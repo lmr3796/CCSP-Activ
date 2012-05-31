@@ -5,10 +5,91 @@
         <title>老人舞燈音表</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <meta name="robots" content="noindex, NOFOLLOW" />
-        <%= javascript_include_tag "application" %>
         <%= stylesheet_link_tag "application" %>
         <%= stylesheet_link_tag "light" %>
-        <meta data="jizz"/>
+    </head>
+    <body >
+        <table width="100%" height="100%">
+            <tr>
+                <td width="60%" height="100%" >
+                    <div id="outer" style="width:99%;height:100%;min-height:100%;overflow:hidden;">
+                        <div id="circle" style="background-image:url(<%= asset_path "square.png" %>);width:40px;height:40px;position:relative;left:48.5%;z-index:100;font-size:30px;color:white;text-align:center">5</div>
+                        <div id="line" style="height:300px;background-color: #BBBAF4; width:3px;position:relative;left:50%;z-index:50"></div>
+                        <div id="timeline" style="width:100%;height:2550px;position:relative;top:-499px;">
+                            <table width="100%" height="100%">
+                                <tr>
+                                    <td width="50%">
+                                        <div id="light" style="height:100%;margin:5%">
+                                        </div>
+                                    </td>
+                                    <td width="50%">
+                                        <div id="spotlight" style="height:100%;margin:5%">
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </div>
+                    </div>
+                </td>
+                <td height="100%">
+                    <div id="jquery_jplayer_1" class="jp-jplayer" ></div>
+
+                    <div id="jp_container_1" class="jp-audio" style="position:absolute;right:0%;top:0%;z-index:75">
+                        <div class="jp-type-single" >
+                            <div class="jp-gui jp-interface">
+                                <ul class="jp-controls">
+                                    <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
+                                    <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
+                                    <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
+                                    <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
+                                    <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
+                                    <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
+                                </ul>
+                                <div class="jp-progress">
+                                    <div class="jp-seek-bar">
+                                        <div class="jp-play-bar"></div>
+
+                                    </div>
+                                </div>
+                                <div class="jp-volume-bar">
+                                    <div class="jp-volume-bar-value"></div>
+                                </div>
+                                <div class="jp-current-time"></div>
+                                <div class="jp-duration"></div>
+                                <ul class="jp-toggles">
+                                    <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
+                                    <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
+                                </ul>
+                            </div>
+                            <div class="jp-title">
+                                <ul>
+                                    <li><h2 id="title">Old Dance</h2></li>
+                                </ul>
+                                <div>
+                                    <ul>
+                                        <li><a href="#" id="hip">Hip hop repeat</a></li>
+                                        <li><a href="#" id="lockin">Lockin repeat</a></li>
+                                        <li><a href="#" id="pop"> Popping repeat</a></li>
+                                        <li><a href="#" id="gs">Girl Style repeat</a></li>
+                                        <li><a href="#" id="yn">Yes or No repeat</a></li>
+                                        <li><a href="#" id="battle">Battle repeat</a></li>
+                                        <li><a href="#" id="whole">Whole</a></li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="jp-no-solution">
+                                <span>Update Required</span>
+                                To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <div id="line2" style="background-color: #333;width:100%;height:0%;position:absolute;right:0%;top:0px;z-index:80;color:white"></div>
+        <%= javascript_include_tag "application" %>
         <script type="text/javascript">
             //<![CDATA[
         var start = -1,end = -1,light=new Array(),ctime = 0,block = 0,temp;
@@ -32,7 +113,8 @@
         }
 
 $(document).ready(function(){
-        /*var light = {0: "橘紅色燈約50% 噴點乾冰",
+        /*
+           var light = {   0: "橘紅色燈約50% 噴點乾冰",
 13: "亮度約80% 顏色可隨著節拍換",
 24: "隨便打",
 103: "燈暗",
@@ -175,93 +257,7 @@ function set(s,e,t){
 }
 //]]>
 </script>
-</head>
-<body >
-    <table width="100%" height="100%">
-        <tr>
-            <td width="60%" height="100%" >
-                <!--
-                <div id="editarea" style="width:990px;height:60px;overflow:hidden;display:none;text-align:center">
-                    <textarea id="lights" cols="80" rows="3"></textarea>
-                </div>
-                -->
-                <div id="outer" style="width:99%;height:100%;min-height:100%;overflow:hidden;">
-                    <div id="circle" style="background-image:url(<%= asset_path "square.png" %>);width:40px;height:40px;position:relative;left:47.7%;z-index:100;font-size:30px;color:white;text-align:center">5</div>
-                    <div id="line" style="height:300px;background-color: #BBBAF4; width:3px;position:relative;left:50%;z-index:50"></div>
-                    <div id="timeline" style="width:100%;height:2550px;position:relative;top:-499px;">
-                        <table width="100%" height="100%">
-                            <tr>
-                                <td width="50%">
-                                    <div id="light" style="height:100%;margin:5%">
-                                    </div>
-                                </td>
-                                <td width="50%">
-                                    <div id="spotlight" style="height:100%;margin:5%">
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
 
-                    </div>
-                </div>
-            </td>
-            <td height="100%">
-                <div id="jquery_jplayer_1" class="jp-jplayer" ></div>
-
-                <div id="jp_container_1" class="jp-audio" style="position:absolute;right:0%;top:0%;z-index:75">
-                    <div class="jp-type-single" >
-                        <div class="jp-gui jp-interface">
-                            <ul class="jp-controls">
-                                <li><a href="javascript:;" class="jp-play" tabindex="1">play</a></li>
-                                <li><a href="javascript:;" class="jp-pause" tabindex="1">pause</a></li>
-                                <li><a href="javascript:;" class="jp-stop" tabindex="1">stop</a></li>
-                                <li><a href="javascript:;" class="jp-mute" tabindex="1" title="mute">mute</a></li>
-                                <li><a href="javascript:;" class="jp-unmute" tabindex="1" title="unmute">unmute</a></li>
-                                <li><a href="javascript:;" class="jp-volume-max" tabindex="1" title="max volume">max volume</a></li>
-                            </ul>
-                            <div class="jp-progress">
-                                <div class="jp-seek-bar">
-                                    <div class="jp-play-bar"></div>
-
-                                </div>
-                            </div>
-                            <div class="jp-volume-bar">
-                                <div class="jp-volume-bar-value"></div>
-                            </div>
-                            <div class="jp-current-time"></div>
-                            <div class="jp-duration"></div>
-                            <ul class="jp-toggles">
-                                <li><a href="javascript:;" class="jp-repeat" tabindex="1" title="repeat">repeat</a></li>
-                                <li><a href="javascript:;" class="jp-repeat-off" tabindex="1" title="repeat off">repeat off</a></li>
-                            </ul>
-                        </div>
-                        <div class="jp-title">
-                            <ul>
-                                <li><h2 id="title">Old Dance</h2></li>
-                            </ul>
-                            <div>
-                                <ul>
-                                    <li><a href="#" id="hip">Hip hop repeat</a></li>
-                                    <li><a href="#" id="lockin">Lockin repeat</a></li>
-                                    <li><a href="#" id="pop"> Popping repeat</a></li>
-                                    <li><a href="#" id="gs">Girl Style repeat</a></li>
-                                    <li><a href="#" id="yn">Yes or No repeat</a></li>
-                                    <li><a href="#" id="battle">Battle repeat</a></li>
-                                    <li><a href="#" id="whole">Whole</a></li>
-                                </ul>
-
-                            </div>
-                        </div>
-                        <div class="jp-no-solution">
-                            <span>Update Required</span>
-                            To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
-                        </div>
-                    </div>
-                </div>
-            </td>
-        </tr>
-    </table>
-    <div id="line2" style="background-color: #333;width:100%;height:0%;position:absolute;right:0%;top:0px;z-index:80;color:white"></div>
 </body>
 
 </html>
