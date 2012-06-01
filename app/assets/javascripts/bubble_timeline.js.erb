@@ -45,7 +45,7 @@ $.each(light,function(k,v){
     $("#spotlight").append('<p class="triangle-border left" style="position:absolute;top:'+t_o(time)+'px; ">'+content+'</p>');
 counter++;
 });
-$("#circle").click(function(){
+$("#circle").click(function(event){
     $("#jquery_jplayer_1").jPlayer("pause");
     $("#spotlight").append('<p id="new_move" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="30" rows="4" id="new_event"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>');
 
@@ -53,12 +53,19 @@ $("#circle").click(function(){
         light.push(new Array(ctime,$("#content").val()));
         $.get("save.php",{"data":light},function(result){
             if(result){
-                $("#new").remove();
+                $("#new_move").remove();
                 load_data();
             }
         },"json");
     });
     $("#cancel").click(function(){
+        $("#new_move").remove();
+    });
+    $("#new_move").click(function(e){
+        e.stopPropagation();
+    });
+    event.stopPropagation()
+    $(document).click(function(){
         $("#new_move").remove();
     });
 });
