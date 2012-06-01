@@ -11,8 +11,9 @@
     <body >
         <div style="display:none">
             <%= form_for @move, :url => { :action => "create" }, :html => {:class => "bubble_form"} do |f| %>
+                <%= f.text_field :activity_id %>
                 <%= f.text_field :time %>
-                <%= f.text_area :move, :size => "35x4" %>
+                <%= f.text_field :move %>
                 <%= f.submit "Create" %>
             <% end %>
         </div>
@@ -83,8 +84,8 @@
                                         <li><a href="#" id="battle">Battle repeat</a></li>
                                         <li><a href="#" id="whole">Whole</a></li>
                                     </ul>
-
                                 </div>
+                                <div><span class="author">powered by purplebleed</span></div>
                             </div>
                             <div class="jp-no-solution">
                                 <span>Update Required</span>

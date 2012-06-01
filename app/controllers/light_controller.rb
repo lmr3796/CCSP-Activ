@@ -19,10 +19,11 @@ class LightController < ApplicationController
     else
     end
     @move = LightScript.new
+    @move.activity_id = params[:act_id]
     render :layout => false
   end
 
   def create 
-    #redirect_to :show
+    redirect_to :show
   end
 end
