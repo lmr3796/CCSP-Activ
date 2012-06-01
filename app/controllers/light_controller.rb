@@ -4,12 +4,18 @@ class LightController < ApplicationController
 	return Activity.find(p[:act_id])
   end
   def param_valid(p)
-      return !p[:act_id].blank?
+    # Test if the passed parameters like activity id is valid
+    return !(p[:act_id].blank? or Activity.find_by_id(p[:act_id]).blank?)
   end
   def show
-    @script =[] 
+    @script = [] 
+    @act_id = params[:act_id]
     if param_valid(params)
-      @script = JSON(find_music_rec(params).light_json)
+      LightScript.select("time, move").where("activity_id = ?", @act_id).order(:time).each { |m|
+        @script.append([m.time, m.move])
+      }
+      #@script = JSON(find_music_rec(params).light_json)
+      @script = JSON(@script.to_json)
       if @script.blank?
           @script = []
       end
@@ -24,6 +30,15 @@ class LightController < ApplicationController
   end
 
   def create 
-    redirect_to :show
+    if not param_valid(params)
+      render :nothing => true, :status => 400
+    end
+    move = LightScript.new params[:light_script]
+    move.activity_id = params[:act_id]
+    if move.save 
+      render :nothing => true
+    else
+      render :nothing => true, :status => 400
+    end
   end
 end

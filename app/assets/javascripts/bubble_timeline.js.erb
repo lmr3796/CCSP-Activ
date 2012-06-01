@@ -1,11 +1,13 @@
 var start = -1,end = -1,light=new Array(),ctime = 0,block = 0,temp;
-var new_move_bubble = '<p id="new_move" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="30" rows="4" id="new_move_content"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>'
+function new_move_bubble(){
+    return '<p id="new_move" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="30" rows="4" id="new_move_content"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>'
+}
 function set_light_and_bubble(){
     var counter = 0;
     //Remove old bubbles
     $(".triangle-border").remove();
 
-    //Render new bubbles
+    //Generate new bubbles
     $.each(light,function(k,v){
         time = v[0];
         content = v[1];
@@ -41,7 +43,7 @@ $(document).ready(function(){
     load_data();
     $("#circle").click(function(event){
         $("#jquery_jplayer_1").jPlayer("pause");
-        $("#spotlight").append(new_move_bubble);
+        $("#spotlight").append(new_move_bubble());
         $("#new_move_content").focus();
         $("#confirm").click(function(){
             var form = $("#new_light_script");
@@ -168,13 +170,14 @@ function add_light_move(time, move){
         data_str += element.name+'='+element.value + '&';
     });
     data_str = data_str.substring(0, data_str.length - 1);
+    console.log(encodeURI(data_str));
     $.ajax({
         type: "POST",
-        url: "light/createjizz",
-        data: data_str,
+        url: "light/create?act_id=" + act_id,
+        data: encodeURI(data_str),
         success: function() {
-            set_light_and_bubble();
             light.push(new Array(time, move));
+            set_light_and_bubble();
         },
         error: function() {
             $("#new_move").append('<span id="create_move_fail" style="color:red">上傳失敗</span>');

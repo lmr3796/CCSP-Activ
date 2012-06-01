@@ -11,7 +11,6 @@
     <body >
         <div style="display:none">
             <%= form_for @move, :url => { :action => "create" }, :html => {:class => "bubble_form"} do |f| %>
-                <%= f.text_field :activity_id %>
                 <%= f.text_field :time %>
                 <%= f.text_field :move %>
                 <%= f.submit "Create" %>
@@ -21,7 +20,7 @@
             <tr>
                 <td width="60%" height="100%" >
                     <div id="outer" style="width:99%;height:100%;min-height:100%;overflow:hidden;">
-                        <div id="circle" style="background-image:url(<%= asset_path "square.png" %>);width:40px;height:40px;position:relative;left:47.5%;z-index:100;font-size:30px;color:white;text-align:center">-</div>
+                        <div id="circle" style="background-image:url(<%= asset_path "square.png" %>);width:40px;height:40px;position:relative;left:48.5%;z-index:100;font-size:30px;color:white;text-align:center">-</div>
                         <div id="line" style="height:300px;background-color: #BBBAF4; width:3px;position:relative;left:50%;z-index:50"></div>
                         <div id="timeline" style="width:100%;height:2550px;position:relative;top:-499px;">
                             <table width="100%" height="100%">
@@ -104,6 +103,7 @@
             var my_mp3   = "<%= raw @mp3 %>";
             var my_oga   = "<%= raw @oga %>";
             var my_m4a   = "<%= raw @m4a %>";
+            var act_id   = "<%= raw @act_id %>";
             </script>
             <%= javascript_include_tag "bubble_timeline" %>
         </body>
