@@ -18,11 +18,11 @@ class LightController < ApplicationController
       @m4a = ""        #find_music_rec(params).music_m4a
     else
     end
+    @move = LightScript.new
     render :layout => false
   end
 
-  def new 
+  def create 
     #redirect_to :show
-    @script = LightScript.new
   end
 end
