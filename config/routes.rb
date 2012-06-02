@@ -1,8 +1,8 @@
 Activ::Application.routes.draw do
 
-  get "light/show"
-  post "light/create"
-  get "light" => "light#show"
+  get    "light" => "light#show"
+  post   "light" => "light#create"
+  delete "light" => "light#delete"
 
   get "/" => "home#index", :as => :home
   post "/" => "home#index"
@@ -12,6 +12,7 @@ Activ::Application.routes.draw do
   match ':controller(/:action(/:id2))(.:format)'
   get "/event" => "event#index" , :as => :event
   post "/event" => "event#index"
+  post "/event/get_ajax" => "event#get_ajax"
   #match "events/:id" => "event#index"
   # The priority is based upon order of creation:
   # first created -> highest priority.

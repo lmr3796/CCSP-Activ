@@ -61,7 +61,7 @@
 			<%@a = Activity.find(p.act_id)%>
 			<%@name = @a.act_name%>
 		<%end%>	
-              	<tr class='tmp' id=<%=p.content%>><td><%=@ps.size-@i+1%> <td><%=p.updated_at%> <td><%=@u.username%> <td>[<%=@name%>] <td><%=p.title%></tr>
+              	<tr class="tmp" id="post<%=p.id%>"><td><%=@ps.size-@i+1%> <td><%=p.updated_at%> <td><%=@u.username%> <td>[<%=@name%>] <td><%=p.title%></tr>
          <%end%>
 	</table>
 <%end%>
@@ -98,7 +98,18 @@
 			self.next().remove();
 			return;
 		}
-		var id = self.attr('id');
-		self.addClass('added').after('<tr class="detail"><td colspan="5">'+id+'</td></tr>');
+		var id = self.attr('id').substr(4); //split 'post'
+		
+		$.ajax({type: "POST", url: "/event/get_ajax", data:{ "id" : id }, dataType: "html", timeout: 5000,
+		success: function(data,textStatus,xhr){
+			self.addClass('added').after('<tr class="detail"><td colspan="5">'+data+'</td></tr>');
+			console.log(data);
+		},
+		error: function(xhr,textStatus,e){
+			console.log("error");
+			console.log(xhr);
+			console.log(textStatus);
+			console.log(e);
+		}});
 	});
 </script>
