@@ -104,9 +104,10 @@
 		success: function(data,textStatus,xhr){
 			self.addClass('added').after('<tr class="detail"><td colspan="5">'+data+'</td></tr>');},
 		error: function(xhr,textStatus,e){
-			console.log("error "+textStatus);
-			console.log(e.meaasge);
-			console.log(e.description);
+			console.log("error");
+			console.log(xhr);
+			console.log(textStatus);
+			console.log(e);
 		}});
 	});
 </script>
