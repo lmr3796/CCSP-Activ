@@ -546,6 +546,6 @@ class EventController < ApplicationController
 	@id = params[:id]
 	@post = Post.find(@id)
 	@c = @post.content
-	render :json => @c
+	render :text => @c
   end
 end
