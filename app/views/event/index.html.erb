@@ -102,12 +102,10 @@
 		
 		$.ajax({type: "POST", url: "/event/get_ajax", data:{ "id" : id }, dataType: "json", timeout: 5000,
 		success: function(data,textStatus,xhr){
-			self.addClass('added').after('<tr class="detail"><td colspan="5">'+data+'</td></tr>');
-		},
+			self.addClass('added').after('<tr class="detail"><td colspan="5">'+data+'</td></tr>');},
 		error: function(xhr,textStatus,errorThrown){
 			console.log("too slow!!!");
 			console.log(errorThrown);
-		}
-		});
+		}});
 	});
 </script>
