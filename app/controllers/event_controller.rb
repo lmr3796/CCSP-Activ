@@ -542,4 +542,10 @@ class EventController < ApplicationController
 		redirect_to :action => :show_act
 	end
   end
+  def get_ajax
+	@id = params[:id]
+	@post = Post.find(@id)
+	@c = @post.content
+	render :json => @c
+  end
 end
