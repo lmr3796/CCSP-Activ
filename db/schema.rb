@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120530162744) do
+ActiveRecord::Schema.define(:version => 20120601180451) do
 
   create_table "activities", :force => true do |t|
     t.string   "act_name"
@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(:version => 20120530162744) do
     t.text     "act_description"
     t.text     "act_image_url"
     t.text     "music_url"
-    t.text     "light_json"
   end
 
   create_table "departments", :force => true do |t|
@@ -50,6 +49,16 @@ ActiveRecord::Schema.define(:version => 20120530162744) do
     t.text     "event_image_url"
     t.string   "event_trailer_url"
   end
+
+  create_table "light_scripts", :force => true do |t|
+    t.integer  "activity_id"
+    t.float    "time"
+    t.string   "move"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "light_scripts", ["activity_id"], :name => "index_light_scripts_on_activity_id"
 
   create_table "organizations", :force => true do |t|
     t.string   "org_name"

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  activity: 
+  time: 1.5
+  move: MyString
+
+two:
+  activity: 
+  time: 1.5
+  move: MyString
