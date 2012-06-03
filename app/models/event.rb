@@ -5,6 +5,7 @@ class Event < ActiveRecord::Base
   belongs_to :organization
   has_many :departments
   has_many :activities
+  has_many :accountings
   validates :event_name, :event_head, :organization_id, :presence => true
   validates :event_name, :uniqueness => true
 end

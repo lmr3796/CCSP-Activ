@@ -194,14 +194,15 @@ class EventController < ApplicationController
 	@acts = @e.activities
 	@dep_type = session[:dep_type] || 0
 	session[:dep_type]=0
-	if @dep_type == 4 || @dep_type == 3#forum&calendar,only members in the activity can see
+	if @dep_type == 4 || @dep_type == 3 || @dep_type == 5 #forum(4)&calendar(3)&accounts(5),only members in the activity can see
 		@tmp = UserDepartment.where(:user_id => @user_id,:department_id =>@d.id).first
 		if @tmp != nil || (@user_id == @e.event_head)
 			@see = 1
 		else
 			@see = 0
 		end
-	elsif @dep_type == 0
+		@depacc = @d.accountings
+	elsif @dep_type == 0 #posts
 		@ps = Post.where(:event_id => @id,:dep_id => @dep_id,:act_id => nil).order("updated_at DESC")
 		@tmp = UserDepartment.where(:user_id => @user_id,:department_id =>@d.id).first
 		if @tmp != nil 
@@ -316,14 +317,15 @@ class EventController < ApplicationController
 	@act_head = User.find(@a.act_head)
 	@act_type = session[:act_type] || 0
 	session[:act_type]=0
-	if @act_type == 4 || @act_type == 3 #calendar&forum,only members in the activity can see
+	if @act_type == 4 || @act_type == 3 || @act_type == 5 #calendar(3)&forum(4)&account(5),only members in the activity can see
 		@tmp = UserActivity.where(:user_id => @user_id,:activity_id =>@a.id).first
 		if @tmp != nil || (@user_id == @e.event_head)
 			@see = 1
 		else
 			@see = 0
 		end
-	elsif @act_type == 0
+		@actacc = @a.accountings
+	elsif @act_type == 0 #posts
 		@ps = Post.where(:event_id => @id,:act_id => @act_id,:dep_id => nil).order("updated_at DESC")
 		@tmp = UserActivity.where(:user_id => @user_id,:activity_id =>@a.id).first
 		if @tmp != nil 
@@ -332,6 +334,7 @@ class EventController < ApplicationController
 			@see = 0
 		end
 	end
+	
   end
   def show_act_aboutus
 	session[:act_type]=1
@@ -440,6 +443,7 @@ class EventController < ApplicationController
 	@acts = @e.activities
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
+	@eacc = @e.accountings
   end
   def edit_event
 	@e = Event.find(@id)
@@ -547,5 +551,17 @@ class EventController < ApplicationController
 	@post = Post.find(@id)
 	@c = @post.content
 	render :text => @c
+  end
+
+  def save_dep_accounting
+  	entry = Accounting.new(:title => params[:title], :balance => params[:balance], :receipt => params[:receipt], :comment => params[:comment], :event_id => session[:id], :department_id => session[:dep_id], :user_id => session[:user_id], :approved => false, :paid => false)
+  	entry.save
+  	redirect_to :action => :show_dep_accounting
+  end
+
+  def save_act_accounting
+  	entry = Accounting.new(:title => params[:title], :balance => params[:balance], :receipt => params[:receipt], :comment => params[:comment], :event_id => session[:id], :activity_id => session[:act_id], :user_id => session[:user_id], :approved => false, :paid => false)
+  	entry.save
+  	redirect_to :action => :show_act_accounting
   end
 end

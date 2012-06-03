@@ -13,6 +13,21 @@
 
 ActiveRecord::Schema.define(:version => 20120601180451) do
 
+  create_table "accountings", :force => true do |t|
+    t.string   "title"
+    t.integer  "balance"
+    t.integer  "event_id"
+    t.integer  "activity_id"
+    t.integer  "department_id"
+    t.integer  "user_id"
+    t.string   "receipt"
+    t.text     "comment"
+    t.boolean  "approved"
+    t.boolean  "paid"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
+  end
+
   create_table "activities", :force => true do |t|
     t.string   "act_name"
     t.integer  "act_head"

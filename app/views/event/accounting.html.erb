@@ -24,6 +24,22 @@
 	<li><a href="/event/accounting/" class="current">活動收支表</a></li>
 	</ul>
 </div>
+<table>
+<tr><th>名目</th><th>金額</th><th>發票</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th><th>檢視</th></tr>
+<% @eacc.each do |acc| %>
+<tr>
+<td><%= acc.title %></td>
+<td><%= acc.balance %></td>
+<td><%= acc.receipt %></td>
+<td><%= acc.user_id %></td>
+<td><%= acc.updated_at %></td>
+<td><%= acc.comment %></td>
+<td><% if acc.approved == false %>FALSE<% else %>TRUE<% end %></td>
+<td><% if acc.paid == false %>FALSE<% else %>TRUE<% end %></td>
+<td></td>
+</tr>
+<% end %>
+</table>
 
 </div>
 <div id="rightcolumn">

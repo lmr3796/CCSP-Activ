@@ -4,4 +4,5 @@ class Activity < ActiveRecord::Base
   belongs_to :event
   has_many :user_activities
   has_many :users, :through => :user_activities 
+  has_many :accountings
 end
