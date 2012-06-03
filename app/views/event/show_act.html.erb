@@ -27,14 +27,20 @@
 	<%if @ps.size == 0%>
                 <h3>目前尚無公告文章。</h3>
         <%else%>
+		<table id="post"><tr><th span="col">編號</th> <th span="col">日期</th> <th span="col">作者</th> <th span="col">文章標題</th><th span="col"></th></tr>
+		<%@i = 0%>
                 <%@ps.each do |p|%>
+			<%@i = @i + 1%>
                         <%@u = User.find(p.user_id)%>
-                        <p><%=p.title%>:<%=p.content%> posted by <%=@u.username%> <%=p.updated_at%>
+			<tr class="tmp" id="post<%=p.id%>"><td><%=@ps.size-@i+1%></td> <td><%=p.updated_at%></td> <td><%=@u.username%></td> <td><%=p.title%></td>
 			<%if @u.id == @user_id%>
-				<%= link_to '刪除',{ :controller => 'event', :action     => 'del_post', :p_id => p.id, :type => "act"},:method => :delete, :confirm => "你確定要刪除此篇文章嗎？"%>
+				<td><%= link_to '刪除',{ :controller => 'event', :action     => 'del_post', :p_id => p.id, :type => "act"},:method => :delete, :confirm => "你確定要刪除此篇文章嗎？"%></td>
+			<%else%>
+				<td></td>
 			<%end%>
-			</p>
+		</tr>
                 <%end%>
+		</table>
         <%end%>
 
         <%if @see == 1%> 
@@ -216,4 +222,28 @@
 
 </div>
 
+<script>
+        $('.tmp').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('added')) {
+                        self.removeClass('added');
+                        self.next().remove();
+                        return;
+                }
+                var id = self.attr('id').substr(4); //split 'post'
+                
+                $.ajax({type: "POST", url: "/event/get_ajax", data:{ "id" : id }, dataType: "html", timeout: 5000,
+                success: function(data,textStatus,xhr){
+                        data = data.split("\n").join("<br />");
+                        self.addClass('added').after('<tr class="detail"><td colspan="5">'+data+'</td></tr>');
+                        //console.log(data);
+                },
+                error: function(xhr,textStatus,e){
+                        console.log("error");
+                        console.log(xhr);
+                        console.log(textStatus);
+                        console.log(e);
+                }});
+        });
+</script>
 
