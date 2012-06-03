@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
 <%= stylesheet_link_tag 'event' %>
+<%= javascript_include_tag "jquery-latest" %>
+<%= javascript_include_tag "jquery.tablesorter" %>
+
 <div id="header">
 <h3><%=@e.organization.org_name%></h3><a href="/event/" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
 </div>
@@ -167,18 +170,26 @@
         </ul>
 </div>
 
-<table>
-	<tr><th>名目</th><th>金額</th><th>發票</th><th>報帳人</th><th>報帳時間</th><th>備註</tr>
+<table id="account" class="tablesorter"><thead>
+	<tr><th>編號</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th></tr></thead>
+	<tbody>
+	<% @i = 0%>
 	<% @actacc.each do |acc| %>
+	<% @i = @i + 1 %>
 	<tr>
+		<td><%=@i%></td>
 		<td><%= acc.title %></td>
 		<td><%= acc.balance %></td>
 		<td><%= acc.receipt %></td>
-		<td><%= acc.user_id %></td>
+		<%u = User.find(acc.user_id)%>
+		<td><%= u.username %></td>
 		<td><%= acc.updated_at %></td>
 		<td><%= acc.comment %></td>
+		<td><% if acc.approved == false %>X<% else %>O<% end %></td>
+ 		<td><% if acc.paid == false %>X<% else %>O<% end %></td>
 	</tr>
 	<% end %>
+	</tbody>
 </table>
 <div class="create">
 	<h2>新增開支</h2>
@@ -250,6 +261,9 @@
 </div>
 
 <script>
+        $(document).ready(function(){ 
+        	$("#account").tablesorter(); 
+    	}); 
         $('.tmp').live('click',function(){
                 var self = $(this);
                 if(self.hasClass('added')) {
@@ -272,5 +286,6 @@
                         console.log(e);
                 }});
         });
+
 </script>
 
