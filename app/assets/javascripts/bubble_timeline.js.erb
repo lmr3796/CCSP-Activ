@@ -9,15 +9,22 @@ function set_light_and_bubble(){
 
     //Generate new bubbles
     $.each(light,function(k,v){
-        time = v[0];
-        content = v[1];
+        script_id = v[0];
+        time = v[1];
+        move = v[2];
         if((counter)%2 ==0){
-            $("#light").append('<p class="triangle-border right" style="position:absolute;top:'+t_o(time)+'px;right:52.5%;">'+content+'</p>');
+            $("#light").append(make_left_bubble(script_id, time, move));
         }else{
-            $("#spotlight").append('<p class="triangle-border left" style="position:absolute;top:'+t_o(time)+'px; ">'+content+'</p>');
+            $("#spotlight").append(make_right_bubble(script_id, time, move));
         }
         counter++;
     });
+}
+function make_left_bubble(id, time, move){
+    return '<p class="triangle-border right" light_script_id="'+script_id+'" style="position:absolute;top:'+t_o(time)+'px;right:52.5%;">'+move+'<span class="close"><a>x</a></span></p>'
+}
+function make_right_bubble(id, time, move){
+    return '<p class="triangle-border left" light_script_id="'+script_id+'" style="position:absolute;top:'+t_o(time)+'px; ">'+move+'<span class="close"><a>x</a></span></p>'
 }
 
 function load_data(){
@@ -49,7 +56,7 @@ $(document).ready(function(){
             var form = $("#new_light_script");
             var move = $("#new_move_content").val();
             $("#create_move_fail").remove();
-            add_light_move(ctime, move);
+            add_light_script(ctime, move);
         });
         $("#cancel").click(function(){
             $("#new_move").remove();
@@ -70,6 +77,18 @@ $(document).ready(function(){
     },function(){
         $("#circle").html(temp);
         block = 0;
+    });
+
+    $(".triangle-border").hover(function(){
+        $(this).find('.close').show();
+    },function(){
+        $(this).find('.close').hide();
+    });
+    $(".triangle-border .close").click(function(){
+        console.log(this.parentNode);
+        script_id = this.parentNode.getAttribute("light_script_id");
+        console.log(script_id);
+        remove_light_script(script_id);
     });
 
     $("#outer").height(document.documentElement.clientHeight-23);
@@ -160,7 +179,7 @@ function light_move_valid(time, move){
     }
     return true;
 }
-function add_light_move(time, move){
+function add_light_script(time, move){
     if(!light_move_valid(time, move)){return;}
     var data_str = "";
     var form = $("#new_light_script");
@@ -173,9 +192,10 @@ function add_light_move(time, move){
     console.log(encodeURI(data_str));
     $.ajax({
         type: "POST",
-        url: "light/create?act_id=" + act_id,
+        url: "light?act_id=" + act_id,
         data: encodeURI(data_str),
         success: function() {
+            // TODO: how to send back script id???
             light.push(new Array(time, move));
             set_light_and_bubble();
         },
@@ -184,6 +204,23 @@ function add_light_move(time, move){
         },
     });
 }
+function remove_light_script(script_id){
+    $.ajax({
+        type: "DELETE",
+        url: "light?act_id=" + act_id + '&script_id=' + script_id,
+        data: '',
+        success: function() {
+            /*light.push(new Array(time, move));
+            set_light_and_bubble();*/
+            alert('succeed');
+        },
+        error: function() {
+            /*$("#new_move").append('<span id="create_move_fail" style="color:red">上傳失敗</span>');*/
+            alert('fail');
+        },
+    });
+}
+
 function t_o(t){
     return t*10-38 ;
 }

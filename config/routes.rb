@@ -1,8 +1,8 @@
 Activ::Application.routes.draw do
 
-  get "light/show"
-  post "light/create"
-  get "light" => "light#show"
+  get    "light" => "light#show"
+  post   "light" => "light#create"
+  delete "light" => "light#delete"
 
   get "/" => "home#index", :as => :home
   post "/" => "home#index"

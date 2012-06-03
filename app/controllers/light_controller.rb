@@ -3,16 +3,16 @@ class LightController < ApplicationController
   def find_music_rec(p)
 	return Activity.find(p[:act_id])
   end
-  def param_valid(p)
+  def param_session_valid(p, s)
     # Test if the passed parameters like activity id is valid
     return !(p[:act_id].blank? or Activity.find_by_id(p[:act_id]).blank?)
   end
   def show
     @script = [] 
     @act_id = params[:act_id]
-    if param_valid(params)
-      LightScript.select("time, move").where("activity_id = ?", @act_id).order(:time).each { |m|
-        @script.append([m.time, m.move])
+    if param_session_valid(params, session)
+      LightScript.select("id, time, move").where("activity_id = ?", @act_id).order(:time).each { |m|
+        @script.append([m.id, m.time, m.move])
       }
       #@script = JSON(find_music_rec(params).light_json)
       @script = JSON(@script.to_json)
@@ -30,12 +30,23 @@ class LightController < ApplicationController
   end
 
   def create 
-    if not param_valid(params)
+    if not param_session_valid(params, session)
       render :nothing => true, :status => 400
     end
     move = LightScript.new params[:light_script]
     move.activity_id = params[:act_id]
     if move.save 
+      render :nothing => true
+    else
+      render :nothing => true, :status => 400
+    end
+  end
+  def delete
+    if not param_session_valid(params, session)
+      render :nothing => true, :status => 400
+    end
+    move = LightScript.find_by_id(params[:script_id])
+    if !move.blank? and move.delete
       render :nothing => true
     else
       render :nothing => true, :status => 400
