@@ -102,8 +102,9 @@
 		
 		$.ajax({type: "POST", url: "/event/get_ajax", data:{ "id" : id }, dataType: "html", timeout: 5000,
 		success: function(data,textStatus,xhr){
+			data = data.split("\n").join("<br />");
 			self.addClass('added').after('<tr class="detail"><td colspan="5">'+data+'</td></tr>');
-			console.log(data);
+			//console.log(data);
 		},
 		error: function(xhr,textStatus,e){
 			console.log("error");
