@@ -26,7 +26,7 @@ function set_light_and_bubble(){
     $(".triangle-border .del_bubble").click(function(){
         bubble = $(this).parents('p')
         script_id = bubble.attr('light_script_id');
-        remove_light_script(script_id, bubble);
+    remove_light_script(script_id, bubble);
     });
 
 }
@@ -51,7 +51,8 @@ function load_data(){
        347: "不同顏色的燈輪流打",
        362: "燈全亮",
        508: "End"
-       };*/
+       };
+     */
     light = my_light;
     set_light_and_bubble();
 }
@@ -144,7 +145,7 @@ $(document).ready(function(){
 
             var change = 0;
             $.each(light,function(k,v){
-                var t = v[0] - event.jPlayer.status.currentTime;
+                var t = v[1] - event.jPlayer.status.currentTime;
 
                 if( t > 0 && change == 0 && block == 0){
                     $("#circle").html(Math.floor(t));
@@ -177,20 +178,23 @@ function light_move_valid(time, move){
     }
     return true;
 }
-function add_light_script(time, move){
-    if(!light_move_valid(time, move)){return;}
+function generate_data_string(form){
     var data_str = "";
-    var form = $("#new_light_script");
-    form.find("#light_script_time").val(time);
-    form.find("#light_script_move").val(move);
     form.find("input").each(function(index, element){
         data_str += element.name+'='+element.value + '&';
     });
     data_str = data_str.substring(0, data_str.length - 1);
+    return encodeURI(data_str)
+}
+function add_light_script(time, move){
+    if(!light_move_valid(time, move)){return;}
+    var form = $("#new_light_script");
+    form.find("#light_script_time").val(time);
+    form.find("#light_script_move").val(move);
     $.ajax({
         type: "POST",
         url: "light?act_id=" + act_id,
-        data: encodeURI(data_str),
+        data: generate_data_string(form),
         success: function(script_id) {
             light.push(new Array(script_id, time, move));
             set_light_and_bubble();
@@ -220,12 +224,26 @@ function remove_light_script(script_id, bubble){
             bubble.remove();
         },
         error: function() {
-            /*$("#new_move").append('<span id="create_move_fail" style="color:red">上傳失敗</span>');*/
             alert('fail');
         },
     });
 }
-
+function update_music_url(){
+    var form = $('form #music_url');
+    $.ajax({
+        type: "POST",
+        url: "light/music?act_id=" + act_id,
+        data: generate_data_string(form),
+        success: function(url) {
+            alert('Updated');
+            location.reload()
+        },
+        error: function() {
+            alert('Failed');
+            $("#new_move").append('<span id="create_move_fail" style="color:red">上傳失敗</span>');
+        },
+    });
+}
 function t_o(t){
     return t*10-38 ;
 }

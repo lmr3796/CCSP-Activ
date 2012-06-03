@@ -28,7 +28,9 @@ class LightController < ApplicationController
     @move.activity_id = params[:act_id]
     render :layout => false
   end
-
+=begin
+  # create and delete works as ajax 
+=end
   def create 
     if not param_session_valid(params, session)
       render :nothing => true, :status => 400
@@ -41,6 +43,7 @@ class LightController < ApplicationController
       render :nothing => true, :status => 400
     end
   end
+
   def delete
     if not param_session_valid(params, session)
       render :nothing => true, :status => 400
@@ -52,5 +55,14 @@ class LightController < ApplicationController
     else
       render :nothing => true, :status => 400
     end
+  end
+
+  def music_url
+    if param_session_valid(params, session)
+      r = find_music_rec(params)
+      r.music_url = params[:music_url] unless params[:music_url].blank?
+      r.save
+    end
+    redirect_to :back
   end
 end

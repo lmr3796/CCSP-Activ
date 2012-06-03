@@ -84,6 +84,10 @@
                                         <li><a href="#" id="whole">Whole</a></li>
                                     </ul>
                                 </div>
+                                <%= form_tag({:controller => "light", :action => "music_url", :act_id => @act_id}, :method => "post", :id => "music_url") do %>
+                                    <%= text_field_tag :music_url, @mp3 %>
+                                    <%= submit_tag "更新音樂網址" %>
+                                <% end %>
                                 <div><span class="author">powered by purplebleed</span></div>
                             </div>
                             <div class="jp-no-solution">
