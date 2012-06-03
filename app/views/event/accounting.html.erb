@@ -1,6 +1,7 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
  <%= stylesheet_link_tag 'event' %>
-<%= javascript_include_tag "jquery-latest" %>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script> 
+<!--%= javascript_include_tag "jquery-latest" %-->
 <%= javascript_include_tag "jquery.tablesorter" %>
 <!--% unless flash[:error].blank? %-->
 	<!--script>alert(<%= flash[:error] -%>)</script-->
@@ -73,7 +74,7 @@
                 <%end%>
 		<br>
 	<%end%>
-<%= link_to @e.event_name, {:controller => 'event',:action => '/'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
+<%= link_to @e.event_name, {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
 
 </div>
 <script>
