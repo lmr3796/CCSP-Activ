@@ -1,6 +1,10 @@
 Activ::Application.routes.draw do
 
-  get    "light" => "light#show"
+  get    "cal" => "calendar#oauth2callback"
+  get    "cal/oauth2authorize" => "calendar#oauth2authorize"
+  get    "cal/oauth2callback"  => "calendar#oauth2callback"
+
+  get    "light" => "light#show", :as => :light
   post   "light" => "light#create"
   delete "light" => "light#delete"
 
@@ -14,6 +18,7 @@ Activ::Application.routes.draw do
   post "/event" => "event#index"
   post "/event/get_ajax" => "event#get_ajax"
   #match "events/:id" => "event#index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

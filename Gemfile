@@ -8,6 +8,7 @@ gem 'rails', '3.2.3'
 gem 'rest-graph'
 gem 'rest-client'
 gem 'json'
+gem 'google-api-client'
 
 group :development do
 	gem 'sqlite3'
