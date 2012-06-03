@@ -1,5 +1,7 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
  <%= stylesheet_link_tag 'event' %>
+<%= javascript_include_tag "jquery-latest" %>
+<%= javascript_include_tag "jquery.tablesorter" %>
 <!--% unless flash[:error].blank? %-->
 	<!--script>alert(<%= flash[:error] -%>)</script-->
 <!--% end %-->
@@ -24,17 +26,18 @@
 	<li><a href="/event/accounting/" class="current">活動收支表</a></li>
 	</ul>
 </div>
-<table id="account">
-<tr><th>編號</th><th>部門/節目</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th></tr>
+<table id="account" class="tablesorter"><thead>
+<tr><th>編號</th><th>部門/節目</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th></tr></thead>
+<tbody>
 <%@i = 0%>
 <% @eacc.each do |acc| %>
 <%@i = @i + 1%>
 <tr>
 <td><%=@i%></td>
 <%if acc.activity == nil%>
-	<td>acc.department.dep_name</td>
+	<td><%=acc.department.dep_name%></td>
 <%else%>
-	<td>acc.activity.act_name</td>
+	<td><%=acc.activity.act_name%></td>
 <%end%>
 <td><%= acc.title %></td>
 <td><%= acc.balance %></td>
@@ -47,6 +50,7 @@
 <td><% if acc.paid == false %>X<% else %>O<% end %></td>
 </tr>
 <% end %>
+</tbody>
 </table>
 
 </div>
@@ -72,5 +76,10 @@
 <%= link_to @e.event_name, {:controller => 'event',:action => '/'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
 
 </div>
-
-
+<script>
+	$(document).ready(function() 
+    { 
+        $("#account").tablesorter(); 
+    } 
+); 
+</script>
