@@ -10,6 +10,7 @@
 		<img src="https://graph.facebook.com/<%=@me["id"]%>/picture?access_token=<%= @access_token %>"></p>
 		</div>
 		<div id="content">
+		<br><br><br>
 		<%=link_to "新增一個活動", {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxl'%>  
 		<br><br>
 		</div>
