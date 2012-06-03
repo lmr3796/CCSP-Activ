@@ -1,8 +1,5 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
 <%= stylesheet_link_tag 'event' %>
-<%= javascript_include_tag "jquery-latest" %>
-<%= javascript_include_tag "jquery.tablesorter" %>
-
 <div id="header">
 <h3><%=@e.organization.org_name%></h3><a href="/event/" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
 </div>
@@ -206,11 +203,6 @@
   		<%= link_to "取消",home_path,:class => "sexybutton sexysimple sexymagenta sexylarge"%>
 	<%end%>
 </div>
-<script>
-        $(document).ready(function(){ 
-        	$("#account").tablesorter(); 
-    	}); 
-</script>
 <%elsif @act_type == 6%>
 <div id="tabs28">
         <ul>
