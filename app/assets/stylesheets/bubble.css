@@ -1394,7 +1394,7 @@ border-radius:240px / 140px;
     display:block; 
 }
 
-.triangle-border .close {
+.triangle-border .del_bubble {
     display: none;
     position: absolute;
     top: -0.7em;
@@ -1408,13 +1408,13 @@ border-radius:240px / 140px;
     cursor: pointer;
 }
 
-.triangle-border .close {
-
-}
-.triangle-border:left .close {
+.triangle-border:left .del_bubble {
     left: -1.3em;
 }
 
-.triangle-border:right .close {
+.triangle-border:right .del_bubble {
     right: 0em;
+}
+.triangle-border:del {
+
 }

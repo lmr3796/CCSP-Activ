@@ -36,7 +36,7 @@ class LightController < ApplicationController
     move = LightScript.new params[:light_script]
     move.activity_id = params[:act_id]
     if move.save 
-      render :nothing => true
+      render :text => move.id 
     else
       render :nothing => true, :status => 400
     end
@@ -46,8 +46,9 @@ class LightController < ApplicationController
       render :nothing => true, :status => 400
     end
     move = LightScript.find_by_id(params[:script_id])
+    id = move.id
     if !move.blank? and move.delete
-      render :nothing => true
+      render :nothing => true 
     else
       render :nothing => true, :status => 400
     end

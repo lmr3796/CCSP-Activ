@@ -3,7 +3,6 @@ function new_move_bubble(){
     return '<p id="new_move" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="30" rows="4" id="new_move_content"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>'
 }
 function set_light_and_bubble(){
-    var counter = 0;
     //Remove old bubbles
     $(".triangle-border").remove();
 
@@ -12,19 +11,30 @@ function set_light_and_bubble(){
         script_id = v[0];
         time = v[1];
         move = v[2];
-        if((counter)%2 ==0){
+        if(k%2 ==0){
             $("#light").append(make_left_bubble(script_id, time, move));
         }else{
             $("#spotlight").append(make_right_bubble(script_id, time, move));
         }
-        counter++;
     });
+
+    $(".triangle-border").hover(function(){
+        $(this).find('.del_bubble').show();
+    },function(){
+        $(this).find('.del_bubble').hide();
+    });
+    $(".triangle-border .del_bubble").click(function(){
+        bubble = $(this).parents('p')
+        script_id = bubble.attr('light_script_id');
+        remove_light_script(script_id, bubble);
+    });
+
 }
 function make_left_bubble(id, time, move){
-    return '<p class="triangle-border right" light_script_id="'+script_id+'" style="position:absolute;top:'+t_o(time)+'px;right:52.5%;">'+move+'<span class="close"><a>x</a></span></p>'
+    return '<p class="triangle-border right" light_script_id="'+script_id+'" style="position:absolute;top:'+t_o(time)+'px;right:52.5%;">'+move+'<span class="del_bubble"><a>x</a></span></p>'
 }
 function make_right_bubble(id, time, move){
-    return '<p class="triangle-border left" light_script_id="'+script_id+'" style="position:absolute;top:'+t_o(time)+'px; ">'+move+'<span class="close"><a>x</a></span></p>'
+    return '<p class="triangle-border left" light_script_id="'+script_id+'" style="position:absolute;top:'+t_o(time)+'px; ">'+move+'<span class="del_bubble"><a>x</a></span></p>'
 }
 
 function load_data(){
@@ -77,18 +87,6 @@ $(document).ready(function(){
     },function(){
         $("#circle").html(temp);
         block = 0;
-    });
-
-    $(".triangle-border").hover(function(){
-        $(this).find('.close').show();
-    },function(){
-        $(this).find('.close').hide();
-    });
-    $(".triangle-border .close").click(function(){
-        console.log(this.parentNode);
-        script_id = this.parentNode.getAttribute("light_script_id");
-        console.log(script_id);
-        remove_light_script(script_id);
     });
 
     $("#outer").height(document.documentElement.clientHeight-23);
@@ -189,14 +187,12 @@ function add_light_script(time, move){
         data_str += element.name+'='+element.value + '&';
     });
     data_str = data_str.substring(0, data_str.length - 1);
-    console.log(encodeURI(data_str));
     $.ajax({
         type: "POST",
         url: "light?act_id=" + act_id,
         data: encodeURI(data_str),
-        success: function() {
-            // TODO: how to send back script id???
-            light.push(new Array(time, move));
+        success: function(script_id) {
+            light.push(new Array(script_id, time, move));
             set_light_and_bubble();
         },
         error: function() {
@@ -204,15 +200,24 @@ function add_light_script(time, move){
         },
     });
 }
-function remove_light_script(script_id){
+function remove_light_script(script_id, bubble){
+    console.log(bubble);
+    close_button = bubble.find(".del_bubble");
+    console.log(close_button);
+    close_button.hide();
+    bubble.css({'opacity' : 0.5}).end().css({'opacity' : 0.5});
     $.ajax({
         type: "DELETE",
         url: "light?act_id=" + act_id + '&script_id=' + script_id,
         data: '',
         success: function() {
-            /*light.push(new Array(time, move));
-            set_light_and_bubble();*/
-            alert('succeed');
+            for(i = 0 ; i < light.length ; i++){
+                if(light[i][0] == bubble.attr('light_script_id')){
+                    light.splice(i, 1);
+                    break;
+                }
+            }
+            bubble.remove();
         },
         error: function() {
             /*$("#new_move").append('<span id="create_move_fail" style="color:red">上傳失敗</span>');*/
