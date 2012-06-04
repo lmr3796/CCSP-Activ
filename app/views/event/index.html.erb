@@ -3,11 +3,11 @@
 <!--% unless flash[:error].blank? %-->
 	<!--script>alert(<%= flash[:error] -%>)</script-->
 <!--% end %-->
-<div id="banner">
+<!--div id="banner">
 	Activ	
-</div>
+</div-->
 <div id="header">
-<h3><%=@e.organization.org_name%></h3><a href="/event" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
+<a href="/event" style="text-decoration:none"><h1><%=@e.event_name%></h1></a><h3><%=@e.organization.org_name%></h3>
 
 </div>
 <div id="userinfo">
@@ -71,7 +71,6 @@
 
 </div>
 <div id="rightcolumn">
-<p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
 <p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
 	<% @deps.each do |d|%>
  		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
@@ -90,7 +89,8 @@
                 <%end%>
 		<br>
 	<%end%>
-<%= link_to @e.event_name, {:controller => 'event',:action => '/'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
+<%= link_to @e.event_name, {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
+<%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %>
 </div>
 
 <script>
