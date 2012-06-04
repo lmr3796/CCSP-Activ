@@ -323,7 +323,7 @@ class EventController < ApplicationController
 			@see = 1
 		else
 			@see = 0
-		end
+		end	
 		@actacc = @a.accountings
 	elsif @act_type == 0 #posts
 		@ps = Post.where(:event_id => @id,:act_id => @act_id,:dep_id => nil).order("updated_at DESC")
@@ -334,7 +334,7 @@ class EventController < ApplicationController
 			@see = 0
 		end
 	end
-	
+	session[:user_id] = @user_id
   end
   def show_act_aboutus
 	session[:act_type]=1
