@@ -72,7 +72,7 @@
 </div>
 <div id="rightcolumn">
 <!--%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %-->
-
+	<br><br>
 	<% @deps.each do |d|%>
  		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
                 	<%= hidden_field_tag(:dep_id, d.id) %>
