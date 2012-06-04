@@ -26,7 +26,7 @@ class GoogleController < ApplicationController
     #Constants
     CLIENT_ID = '750890957735.apps.googleusercontent.com'
     CLIENT_SECRET = 'Z8h9EIp5NJrG7BWOQYcGNXgC'
-    REDIRECT_URI = 'http://localhost:3000/cal/oauth2callback'
+    REDIRECT_CALLBACK = '/oauth2callback'
     API_SCOPES = [
         'https://www.googleapis.com/auth/calendar',
         'https://www.googleapis.com/auth/drive.file'
@@ -34,11 +34,18 @@ class GoogleController < ApplicationController
     protected
     before_filter :set_google_client
     def set_google_client
+        /^(?<api_path>\/[^\/]*)/ =~ request.path_info
+        unless api_path.blank?
+            result = api_path
+        else
+            result = 'jizz'
+        end
+        redirect_uri = root_url[0...-1] + api_path + REDIRECT_CALLBACK
         @client = Google::APIClient.new
         @client.authorization.client_id = CLIENT_ID
         @client.authorization.client_secret = CLIENT_SECRET
         @client.authorization.scope = API_SCOPES
-        @client.authorization.redirect_uri = REDIRECT_URI
+        @client.authorization.redirect_uri = redirect_uri
         @client.authorization.code = params[:code] if params[:code]
         if session[:token_id]
             # Load the access token here if it's available
@@ -51,7 +58,7 @@ class GoogleController < ApplicationController
         @cal_api = @client.discovered_api('calendar', 'v3')
         @drive_api = @client.discovered_api('drive', 'v1')
         unless @client.authorization.access_token || request.path_info =~ /\/oauth2/
-            redirect_to '/cal/oauth2authorize'
+            redirect_to  api_path + '/oauth2authorize'
         end
     end
 

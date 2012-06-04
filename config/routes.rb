@@ -10,6 +10,7 @@ Activ::Application.routes.draw do
 
   get "/" => "home#index", :as => :home
   post "/" => "home#index"
+
   post "/login" => "home#login"
   get "/login" => "home#login"
   post "home/create_event" => 'home#create_event_done'
@@ -68,7 +69,7 @@ Activ::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"
 
