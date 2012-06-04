@@ -15,7 +15,7 @@
        <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>" width=30><br>
        您的身份為：<br>
 	<%if @user_id == @e.event_head%>
-		<div id="identity">"活動負責人<br></div>
+		<div id="identity">活動負責人<br></div>
 	<%end%>
 	<%@dep_me.each do |d|%>
 		<%if @user_id == d.dep_head%>
