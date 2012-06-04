@@ -62,8 +62,8 @@ class CalendarController < ApplicationController
 
     def oauth2callback
         @client.authorization.fetch_access_token!
-        result = @client.execute(:api_method => @calendar.events.list,
-                                 :parameters => {'calendarId' => 'primary'})
+        result = @client.execute(:api_method => @calendar.calendar_list.list)
+                                 #:parameters => {'calendarId' => 'primary'})
         render :json => result.data.to_json
         #redirect_to '/cal'
     end
