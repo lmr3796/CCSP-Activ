@@ -72,12 +72,12 @@
 </div>
 <div id="rightcolumn">
 <!--%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %-->
-	<br><br>
+	<br>
 	<% @deps.each do |d|%>
  		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
                 	<%= hidden_field_tag(:dep_id, d.id) %>
                         <!--%= submit_tag(d.dep_name) %-->
-			<%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxl", :type => "submit"%>
+			<%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxxl", :type => "submit"%>
                 <%end%>
 	<%end%>
 
@@ -85,11 +85,11 @@
  		<%=form_tag :controller => 'event', :action => 'show_act' do %>
                 	<%= hidden_field_tag(:act_id, a.id) %>
                         <!--%= submit_tag(a.act_name) %-->
-			<%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxl", :type => "submit"%>
+			<%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxxl", :type => "submit"%>
                 <%end%>
 	<%end%>
-<%= link_to @e.event_name, {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
-<%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %>
+<%= link_to @e.event_name, {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %>
+<%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %>
 </div>
 
 <script>
