@@ -22,17 +22,21 @@ class TokenPair
 end
 
 class CalendarController < ApplicationController
+    #Constants
     CLIENT_ID = '750890957735.apps.googleusercontent.com'
     CLIENT_SECRET = 'Z8h9EIp5NJrG7BWOQYcGNXgC'
     REDIRECT_URI = 'http://localhost:3000/cal/oauth2callback'
-    API_SCOPE = 'https://www.googleapis.com/auth/calendar'
-    before_filter :set_google_client
+    API_SCOPES = [
+        'https://www.googleapis.com/auth/calendar',
+        'https://www.googleapis.com/auth/drive.file'
+    ]
+    before_filter :set_google_calendar_client
     private
-    def set_google_client
+    def set_google_calendar_client
         @client = Google::APIClient.new
         @client.authorization.client_id = CLIENT_ID
         @client.authorization.client_secret = CLIENT_SECRET
-        @client.authorization.scope = API_SCOPE
+        @client.authorization.scope = API_SCOPES
         @client.authorization.redirect_uri = REDIRECT_URI
         @client.authorization.code = params[:code] if params[:code]
         if session[:token_id]
