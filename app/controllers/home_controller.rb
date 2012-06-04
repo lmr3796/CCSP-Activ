@@ -81,6 +81,7 @@ class HomeController < ApplicationController
 private
 	def login_facebook
 		reset_session
+		
 		rest_graph_setup(:auto_authorize => true,
 				 :auto_authorize_scope => 'email',
 				 :ensure_authorized => true,
