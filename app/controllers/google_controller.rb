@@ -64,8 +64,6 @@ class GoogleController < ApplicationController
         if @client.authorization.refresh_token && @client.authorization.expired?
             @client.authorization.fetch_access_token!
         end
-        @cal_api = @client.discovered_api('calendar', 'v3')
-        @drive_api = @client.discovered_api('drive', 'v1')
         unless @client.authorization.access_token || request.path_info =~ /\/oauth2/
             redirect_to  api_path + '/oauth2authorize'
         end

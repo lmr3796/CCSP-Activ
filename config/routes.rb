@@ -4,6 +4,10 @@ Activ::Application.routes.draw do
   get    "cal/oauth2authorize" => "calendar#oauth2authorize"
   get    "cal/oauth2callback"  => "calendar#oauth2callback"
 
+  #get    "drive" => "drive#oauth2callback"
+  #get    "drive/oauth2authorize" => "drive#oauth2authorize"
+  #get    "drive/oauth2callback"  => "drive#oauth2callback"
+
   get    "light" => "light#show", :as => :light
   post   "light" => "light#create"
   delete "light" => "light#delete"
