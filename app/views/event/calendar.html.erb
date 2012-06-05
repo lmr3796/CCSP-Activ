@@ -66,7 +66,9 @@
         <%end%>
 <%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
 <%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
-<!--%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%-->
+<%if @user_id == @e.event_head%>
+<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage_event'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
+<%end%>
 
 </div>
 
