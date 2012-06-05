@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
 <%= stylesheet_link_tag 'event' %>
+<!--script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script-->
+<!--%= javascript_include_tag "jquery.tablesorter" %-->
+
 <div id="header">
 <h3><%=@e.organization.org_name%></h3><a href="/event/" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
 </div>
@@ -27,14 +30,20 @@
 	<%if @ps.size == 0%>
                 <h3>目前尚無公告文章。</h3>
         <%else%>
+		<table id="post"><tr><th span="col">編號</th> <th span="col">日期</th> <th span="col">作者</th> <th span="col">文章標題</th><th span="col"></th></tr>
+		<%@i = 0%>
                 <%@ps.each do |p|%>
+			<%@i = @i + 1%>
                         <%@u = User.find(p.user_id)%>
-                        <p><%=p.title%>:<%=p.content%> posted by <%=@u.username%> <%=p.updated_at%>
+			<tr class="tmp" id="post<%=p.id%>"><td><%=@ps.size-@i+1%></td> <td><%=p.updated_at%></td> <td><%=@u.username%></td> <td><%=p.title%></td>
 			<%if @u.id == @user_id%>
-				<%= link_to '刪除',{ :controller => 'event', :action     => 'del_post', :p_id => p.id, :type => "act"},:method => :delete, :confirm => "你確定要刪除此篇文章嗎？"%>
+				<td><%= link_to '刪除',{ :controller => 'event', :action     => 'del_post', :p_id => p.id, :type => "act"},:method => :delete, :confirm => "你確定要刪除此篇文章嗎？"%></td>
+			<%else%>
+				<td></td>
 			<%end%>
-			</p>
+		</tr>
                 <%end%>
+		</table>
         <%end%>
 
         <%if @see == 1%> 
@@ -160,6 +169,43 @@
         <li><a href="/event/show_act_script/" >劇本</a></li>
         </ul>
 </div>
+
+<table id="account" class="tablesorter"><thead>
+	<tr><th>編號</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th></tr></thead>
+	<tbody>
+	<% @i = 0%>
+	<% @actacc.each do |acc| %>
+	<% @i = @i + 1 %>
+	<tr>
+		<td><%=@i%></td>
+		<td><%= acc.title %></td>
+		<td><%= acc.balance %></td>
+		<td><%= acc.receipt %></td>
+		<%u = User.find(acc.user_id)%>
+		<td><%= u.username %></td>
+		<td><%= acc.updated_at %></td>
+		<td><%= acc.comment %></td>
+		<td><% if acc.approved == false %>X<% else %>O<% end %></td>
+ 		<td><% if acc.paid == false %>X<% else %>O<% end %></td>
+	</tr>
+	<% end %>
+	</tbody>
+</table>
+<div class="create">
+	<h2>新增開支</h2>
+	<%=form_tag :action => 'save_act_accounting' do %>
+		<%= label_tag :title,"名目" %>:
+		<%= text_field_tag :title %><br />
+		<%= label_tag :balance,"金額" %>:
+		<%= text_field_tag :balance %><br />
+  		<%= label_tag :receipt,"發票" %>:
+		<%= text_field_tag :receipt %><br />
+		<%= label_tag :comment,"備註" %>:
+  		<%= text_area_tag :comment %><br />
+  		<%= button_tag "完成",:class => "sexybutton sexysimple sexymagenta sexylarge", :type => "submit"%>
+  		<%= link_to "取消",home_path,:class => "sexybutton sexysimple sexymagenta sexylarge"%>
+	<%end%>
+</div>
 <%elsif @act_type == 6%>
 <div id="tabs28">
         <ul>
@@ -173,9 +219,7 @@
         <li><a href="/event/show_act_script/" >劇本</a></li>
         </ul>
 </div>
-<%if @a.light_json != nil%>
  <iframe class="light" src="/light?act_id=<%=@a.id%>" frameborder="0" allowfullscreen></iframe>
-<%end%>
 <%elsif @act_type == 7%>
 <div id="tabs28">
         <ul>
@@ -216,4 +260,32 @@
 
 </div>
 
+<script>
+	/*$(document).ready(function(){
+		$('#account').tablesorter();
+	});*/
+        $('.tmp').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('added')) {
+                        self.removeClass('added');
+                        self.next().remove();
+                        return;
+                }
+                var id = self.attr('id').substr(4); //split 'post'
+                
+                $.ajax({type: "POST", url: "/event/get_ajax", data:{ "id" : id }, dataType: "html", timeout: 5000,
+                success: function(data,textStatus,xhr){
+                        data = data.split("\n").join("<br />");
+                        self.addClass('added').after('<tr class="detail"><td colspan="5">'+data+'</td></tr>');
+                        //console.log(data);
+                },
+                error: function(xhr,textStatus,e){
+                        console.log("error");
+                        console.log(xhr);
+                        console.log(textStatus);
+                        console.log(e);
+                }});
+        });
+
+</script>
 

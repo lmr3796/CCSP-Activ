@@ -1,4 +1,6 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
+ <%= stylesheet_link_tag 'home' %>
+
 <div id="header"><h1>Activ</h1></div>
 <% if @type == 1 #new%> 
 	<div id="userinfo">
@@ -29,8 +31,8 @@
   <%= check_box_tag(:org,"0") %>
   <%= label_tag(:org_notexist, "組織尚未存在，請輸入組織名稱") %>
   <%= text_field_tag :org_name_new %><br />
-  <%= button_tag "完成",:class => "sexybutton sexysimple sexymagenta sexylarge", :type => "submit"%>
-  <%= link_to "取消",home_path,:class => "sexybutton sexysimple sexymagenta sexylarge"%>
+  <%= button_tag "完成",:class => "sexybutton sexysimple  sexylarge", :type => "submit"%>
+  <%= link_to "取消",home_path,:class => "sexybutton sexysimple  sexylarge"%>
 <%end%>
 
 </div>

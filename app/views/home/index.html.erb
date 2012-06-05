@@ -1,22 +1,21 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
+<link href='http://fonts.googleapis.com/css?family=Unkempt' rel='stylesheet' type='text/css'>
+<%= stylesheet_link_tag 'home' %>
 <% if @access_token%>
 <div id="header">
-<h1>Activ
-<%=image_tag('activman.png',:width=>80)%></h1>
+<h1>Activ.
+<!--%=image_tag('activman.png',:width=>80)%--></h1>
 </div>
 	<% if @type == 1 #new%> 
 		<div id="userinfo">
-		<p>Welcome to join us, <%= @me["name"] %><br>
-		<img src="https://graph.facebook.com/<%=@me["id"]%>/picture?access_token=<%= @access_token %>"></p>
+		Welcome to join us, <%= @me["name"] %>
+		<img src="https://graph.facebook.com/<%=@me["id"]%>/picture?access_token=<%= @access_token %>" width=30><br>
 		</div>
 		<div id="content">
-		<%=link_to "新增一個活動", {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxl'%>  
-		<br><br>
-		</div>
 	<% else #old%>
 		<div id="userinfo">
-		<p>Hello, <%= @user.username %><br>
-		<img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>"></p>
+		Hello, <%= @user.username %>
+		<img src="https://graph.facebook.com/<%=@user.fb_id%>/picture?access_token=<%= @access_token %>" width=30><br>
 		</div>
 		<% if @events.size > 0 %>
 		<div id="content">
@@ -25,18 +24,82 @@
 				<%=form_tag :controller => 'event', :action => 'index' do %>
 			<!--%=button_to e.event_name,  {:controller => 'event', :action => 'index', :user_id => @user.id, :id => e.id}%-->
 					<%= hidden_field_tag(:id, e.id) %>
-					<%= button_tag e.event_name,:class => "sexybutton sexysimple sexygreen sexylarge", :type => "submit"%>
+					<%= button_tag content_tag(:span,e.event_name,:class => "heart"),:class => "sexybutton sexysimple sexyteal sexyxxl", :type => "submit"%>
 				<%end%>
 				<br>
 			<%end%>
-		<br><br>
-		<%=link_to "新增一個活動", {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxl'%>  
-		<br><br>
-		</div>
 		<%end%>
 	<%end%>
+		<br><br><br>
+		<%=link_to content_tag(:span,"新增一個活動",:class=>"edit"), {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl'%>  
+		<br><br>
+		<%if @create == 1%>
+			<div class="create">
+			<h2>新增活動</h2>
+<%=form_tag ('/home/create_event') do %>
+  <%= label_tag :event_name,"活動名稱" %>: 
+  <%= text_field_tag :event_name %><br />
+  <%= label_tag :event_start,"活動開始日期" %>: 
+  <%= date_select(:event_start, :event_start )%><br />
+  <%= label_tag :event_end,"活動結束日期" %>: 
+  <%= date_select(:event_end, :event_end )%><br />
+  <%= label_tag :org_name,"請選擇活動隸屬於哪個組織" %>:<br / >
+  <%= check_box_tag(:org) %>
+  <%= label_tag(:org_exist, "組織已存在,請選擇") %>
+  <%= select_tag :org_name, options_from_collection_for_select(@o, :org_name, :org_name) %><br />
+  <%= check_box_tag(:org,"0") %>
+  <%= label_tag(:org_notexist, "組織尚未存在， ") %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <br>請輸入組織名稱 
+  <%= text_field_tag :org_name_new %><br />
+  <%= button_tag "完成",:class => "sexybutton sexysimple  sexylarge", :type => "submit"%>
+  <%= link_to "取消",home_path,:class => "sexybutton sexysimple  sexylarge"%>
+<%end%>
+</div>
+<%end%>
+</div>
 	<div id="rightcolumn">
-	<h3>熱門與最新活動</h3>
+	<h3>最近的活動</h3>
+	<%if @incoming.size >0%>
+	<%@cnt=0%>
+        <%@incoming.each do |i|%>
+                <%if Time.now < i.event_start%>
+                        <%@cnt = @cnt + 1%>
+                        <%if @cnt <= 5%>
+				<%@head = User.find(i.event_head)%>
+                                <%=i.event_name%>&nbsp;<a href=http://www.facebook.com/profile.php?id=<%=@head.fb_id%>><img class="img" src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>" width=20 title=<%=@head.username%>></a><br>
+				<%if i.event_start== i.event_end%>
+                                	<%=i.event_start%><br>
+				<%else%>
+                                	<%=i.event_start%> ~ <%=i.event_end%><br>
+				<%end%>
+				<%if i.event_image_url != nil%>
+                                <%=image_tag(i.event_image_url,:width=>50)%><br>
+				<%end%><br>
+                        <%end%>
+                <%end%>     
+        <%end%> 
+	<%end%>
+	</div>
+	<div id="rightcolumn">
+	<h3>新建立的活動</h3>
+	<%if @new.size > 0%>
+	<%@cnt=0%>
+	<%@new.each do |n|%>
+		<%@cnt = @cnt+1%>
+		<%if @cnt <=5%>
+			<%@head = User.find(n.event_head)%>
+                        <%=n.event_name%>&nbsp;<a href=http://www.facebook.com/profile.php?id=<%=@head.fb_id%>><img class="img" src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>" width=20 title=<%=@head.username%>></a><br>
+			<%if n.event_start== n.event_end%>
+                                <%=n.event_start%><br>
+			<%else%>
+                                <%=n.event_start%> ~ <%=n.event_end%><br>
+			<%end%>
+			<%if n.event_image_url != nil%>
+                        	<%=image_tag(n.event_image_url,:width=>50)%><br>
+			<%end%><br>
+		<%end%>
+	<%end%>
+	<%end%>
 	</div>
 <% else %>
    <p align="center"><%= link_to image_tag("activ.png", :width=>480), login_path %></p>

@@ -28,7 +28,9 @@ class LightController < ApplicationController
     @move.activity_id = params[:act_id]
     render :layout => false
   end
-
+=begin
+  # create and delete works as ajax 
+=end
   def create 
     if not param_session_valid(params, session)
       render :nothing => true, :status => 400
@@ -36,20 +38,31 @@ class LightController < ApplicationController
     move = LightScript.new params[:light_script]
     move.activity_id = params[:act_id]
     if move.save 
-      render :nothing => true
+      render :text => move.id 
     else
       render :nothing => true, :status => 400
     end
   end
+
   def delete
     if not param_session_valid(params, session)
       render :nothing => true, :status => 400
     end
     move = LightScript.find_by_id(params[:script_id])
+    id = move.id
     if !move.blank? and move.delete
-      render :nothing => true
+      render :nothing => true 
     else
       render :nothing => true, :status => 400
     end
+  end
+
+  def music_url
+    if param_session_valid(params, session)
+      r = find_music_rec(params)
+      r.music_url = params[:music_url] unless params[:music_url].blank?
+      r.save
+    end
+    redirect_to :back
   end
 end

@@ -4,5 +4,6 @@ class Department < ActiveRecord::Base
   belongs_to :event
   has_many :user_departments
   has_many :users, :through => :user_departments 
+  has_many :accountings
   
 end
