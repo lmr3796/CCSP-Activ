@@ -1,7 +1,5 @@
 class CalendarController < GoogleController
     def oauth2callback
-        @client.authorization.fetch_access_token!
-
         cal = @cal_api.calendars.insert.request_schema.new
         cal.summary = "Jizz"
         # insert a new calendar
