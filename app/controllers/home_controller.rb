@@ -32,6 +32,11 @@ class HomeController < ApplicationController
 		session[:type] = @type
 		session[:me] = @me
 		session[:user] = @user
+		@new = Event.order("created_at DESC")
+		@incoming = Event.order("event_start")
+		@create = session[:create] || 0
+		session[:create] = 0
+		@o = Organization.all
 	end
   end
   def login
@@ -45,6 +50,8 @@ class HomeController < ApplicationController
 	@type = session[:type]
 	@me = session[:me]
 	@user = session[:user]
+	session[:create]=1
+	redirect_to home_path
   end
   def create_event_done
 	@event_name = params[:event_name]

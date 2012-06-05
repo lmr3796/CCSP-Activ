@@ -6,16 +6,22 @@ h1 {
 	position:relative;
 	//color:#544C4A;
 	color:maroon;
-	font-family:"Warnock Pro";
+	//font-family:"Warnock Pro";
+	//font-family: 'Black Ops One', cursive;
+	font-family: 'Unkempt', cursive;
+}
+h3 {
+	color:yellow;
 }
 
 #content {
 	float:left;
 	color:white;
-	width:80%;
+	width:60%;
 	height:350px;
 	display:inline;
 	text-align:center;
+
 }	
 
 #userinfo {
@@ -45,10 +51,11 @@ h1 {
 }
 
 .create {
-	color:maroon;
+	//color:maroon;
+	color:#232323;
 	padding:10px 0 10px;
-	margin:0 250px 0 250px;
-	background-color:orange;	
+	margin:0 200px 0 200px;
+	background-color:#fff8cc;	
 	-moz-border-radius: 15px;
 	border-radius: 15px;
 }
