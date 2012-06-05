@@ -1,8 +1,16 @@
 Activ::Application.routes.draw do
 
-  get    "cal" => "calendar#oauth2callback"
-  get    "cal/oauth2authorize" => "calendar#oauth2authorize"
-  get    "cal/oauth2callback"  => "calendar#oauth2callback"
+  match  "/calendar/oauth2callback"
+
+  get    "/calendar"      => "calendar#cal"
+
+  get    "/calendar"      => "calendar#get_cal"
+  get    "/calendar/list" => "calendar#create_list"
+  delete "/calendar"      => "calendar#delete_cal"
+  delete "/calendar/list" => "calendar#delete_list"
+
+  get    "/calendar/get_list"
+  get    "/calendar/create_list"
 
   #get    "drive" => "drive#oauth2callback"
   #get    "drive/oauth2authorize" => "drive#oauth2authorize"
