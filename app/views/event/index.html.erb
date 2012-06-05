@@ -1,14 +1,7 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
  <%= stylesheet_link_tag 'event' %>
-<!--% unless flash[:error].blank? %-->
-	<!--script>alert(<%= flash[:error] -%>)</script-->
-<!--% end %-->
-<!--div id="banner">
-	Activ	
-</div-->
 <div id="header">
 <a href="/event" style="text-decoration:none"><h1><%=@e.event_name%></h1></a><h3><%=@e.organization.org_name%></h3>
-
 </div>
 <div id="userinfo">
        Hello, <%= @uu.username %>
@@ -72,7 +65,6 @@
 
 </div>
 <div id="rightcolumn">
-<!--%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %-->
 	<br>
 	<% @deps.each do |d|%>
  		<%=form_tag :controller => 'event', :action => 'show_dep' do %>
@@ -89,8 +81,9 @@
 			<%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxxl", :type => "submit"%>
                 <%end%>
 	<%end%>
-<%= link_to @e.event_name, {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %>
-<%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %>
+<%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
+<%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
+<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
 </div>
 
 <script>
