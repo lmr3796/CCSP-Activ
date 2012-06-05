@@ -1,3 +1,4 @@
+# encoding: utf-8
 class EventController < ApplicationController
   before_filter :set_some_session_variable
 
@@ -61,7 +62,7 @@ class EventController < ApplicationController
 		end
 	end
 	
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end
   def destroy_depuser
 	@d_id = params[:d_id]
@@ -76,7 +77,11 @@ class EventController < ApplicationController
 	@d.destroy
 	@ds = UserDepartment.where(:department_id => @d_id)
 	@ds.destroy_all
-	redirect_to :action => :manage
+	@p = Post.where(:dep_id => @d_id)
+	@p.destroy_all
+	@acc = Accounting.where(:department_id => @d_id)
+	@acc.destroy_all
+	redirect_to :action => :manage_event
   end
   def destroy_actuser
 	@d_id = params[:d_id]
@@ -91,7 +96,11 @@ class EventController < ApplicationController
 	@a.destroy
 	@as = UserActivity.where(:activity_id => @d_id)
 	@as.destroy_all
-	redirect_to :action => :manage
+	@p = Post.where(:act_id => @d_id)
+	@p.destroy_all
+	@acc = Accounting.where(:activity_id => @d_id)
+	@acc.destroy_all
+	redirect_to :action => :manage_event
   end
   def create
 	@email = params[:email]
@@ -102,27 +111,27 @@ class EventController < ApplicationController
 	end
 	@t = UserEvent.where(:user_id => @u.id, :event_id => @id).first
 	if @t != nil
-		flash[:notice] = "user has already joined the event!\n"
+		flash[:notice] = "成員已經在此活動中囉。\n"
 	else
 		@a = UserEvent.new(:user_id => @u.id, :event_id => @id)
 		@a.save
 	end
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end
   def create_depuser
 	@dep_id = params[:dep_id]
 	@email = params[:email]
 	@u = User.where(:email => @email).first
 	if @u == nil
-		flash[:notice] = "dep user must join the event first!\n"
+		flash[:notice] = "部門成員必須先加入此活動才行，請至新增活動成員將其加入。\n"
 	else
 		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
 		if @t == nil
-			flash[:notice] = "dep user must join the event first!\n"
+			flash[:notice] = "部門成員必須先加入此活動才行，請至新增活動成員將其加入。\n"
 		else
 			@tt = UserDepartment.where(:user_id => @u.id, :department_id => @dep_id).first
 			if @tt != nil
-				flash[:notice] = "user has already joined the department!\n"
+				flash[:notice] = "成員已經在此部門中囉。\n"
 			else
 				@a = UserDepartment.new(:user_id => @u.id, :department_id => @dep_id)
 				@a.save
@@ -136,11 +145,11 @@ class EventController < ApplicationController
 	@email = params[:email]
 	@u = User.where(:email => @email).first
 	if @u == nil
-		flash[:notice] = "dep admin must join the event first!\n"
+		flash[:notice] = "部門負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 	else
 		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
 		if @t == nil
-			flash[:notice] = "dep admin must join the event first!\n"
+			flash[:notice] = "部門負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 		else
 			@dep_head = @u.id
 			@d = Department.new(:dep_name => @dep_name, :dep_head => @dep_head, :event_id => @id)
@@ -157,18 +166,18 @@ class EventController < ApplicationController
 	@d = Department.find(@dep_id)
 	@d.dep_name = @dep_name_new
 	@d.save
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end	
   def edit_dephead
 	@dep_id = params[:e_id]	
 	@dep_head_new = params[:dep_head_new]
 	@u = User.where(:email => @dep_head_new).first
 	if @u == nil
-		flash[:notice] = "dep admin must join the event first!\n"
+		flash[:notice] = "部門負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 	else
 		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
 		if @t == nil
-			flash[:notice] = "dep admin must join the event first!\n"
+			flash[:notice] = "部門負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 		else
 			@d = Department.find(@dep_id)
 			@d.dep_head = @u.id
@@ -180,7 +189,7 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end	
   def show_dep
 	@dep_id = params[:dep_id] || session[:dep_id]
@@ -239,15 +248,15 @@ class EventController < ApplicationController
 	@email = params[:email]
 	@u = User.where(:email => @email).first
 	if @u == nil
-		flash[:notice] = "act user must join the event first!\n"
+		flash[:notice] = "節目成員必須先加入此活動才行，請至新增活動成員將其加入。\n"
 	else
 		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
 		if @t == nil
-			flash[:notice] = "act user must join the event first!\n"
+			flash[:notice] = "節目成員必須先加入此活動才行，請至新增活動成員將其加入。\n"
 		else
 			@tt = UserActivity.where(:user_id => @u.id, :activity_id => @act_id).first
 			if @tt != nil
-				flash[:notice] = "user has already joined the activity!\n"
+				flash[:notice] = "成員已經此本節目中囉。\n"
 			else
 				@a = UserActivity.new(:user_id => @u.id, :activity_id => @act_id)
 				@a.save
@@ -261,11 +270,11 @@ class EventController < ApplicationController
 	@email = params[:email]
 	@u = User.where(:email => @email).first
 	if @u == nil
-		flash[:notice] = "act admin must join the event first!\n"
+		flash[:notice] = "節目負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 	else
 		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
 		if @t == nil
-			flash[:notice] = "act admin must join the event first!\n"
+			flash[:notice] = "節目負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 		else
 			@act_head = @u.id
 			@a = Activity.new(:act_name => @act_name, :act_head => @act_head, :event_id => @id)
@@ -282,18 +291,18 @@ class EventController < ApplicationController
 	@a = Activity.find(@act_id)
 	@a.act_name = @act_name_new
 	@a.save
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end	
   def edit_acthead
 	@act_id = params[:e_id]	
 	@act_head_new = params[:act_head_new]
 	@u = User.where(:email => @act_head_new).first
 	if @u == nil
-		flash[:notice] = "act admin must join the event first!\n"
+		flash[:notice] = "節目負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 	else
 		@t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
 		if @t == nil
-			flash[:notice] = "act admin must join the event first!\n"
+			flash[:notice] = "節目負責人必須先加入此活動才行，請至新增活動成員將其加入。\n"
 		else
 			@d = Activity.find(@act_id)
 			@d.act_head = @u.id
@@ -305,7 +314,7 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end	
   def show_act
 	@act_id = params[:act_id] || session[:act_id]
@@ -380,7 +389,7 @@ class EventController < ApplicationController
 	@dep_me = @deps.where(:dep_head => @user_id)
 	@act_me = @acts.where(:act_head => @user_id)
 	@manage_type = session[:manage_type] || 0
-	session[:manage_type] = 0
+	#session[:manage_type] = 0
   end
   def manage_user 
 	session[:manage_type] = 1
@@ -395,7 +404,9 @@ class EventController < ApplicationController
 	redirect_to :action => :manage
   end
   def manage_event
+	@a = flash[:notice]
 	session[:manage_type] = 4
+	flash[:notice] =  @a
 	redirect_to :action => :manage
   end
   def members
@@ -484,7 +495,7 @@ class EventController < ApplicationController
 	@e.event_image_url = @event_new_imgurl
 	@e.event_trailer_url = @event_new_trailerurl
 	@e.save
-	redirect_to :action => :manage
+	redirect_to event_path
   end
   def edit_dep
 	@d = Department.find(params[:e_id])

@@ -6,7 +6,8 @@ h1 {
 	position:relative;
 	//color:#544C4A;
 	//color:#7d1b7e;
-	color: maroon;
+	//color: maroon;
+	color:orange;
 }
 
 h2 {
@@ -208,4 +209,20 @@ height:100%;
 }
 #account th{
 	cursor:pointer;
+}
+.create {
+	//color:maroon;
+	color:#232323;
+	padding:10px 0 10px;
+	margin:0 200px 0 200px;
+	background-color:#fff8cc;	
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+.alert {
+	background-color:red;
+	padding:10px 0 10px;
+	margin:0 200px 0 200px;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
 }

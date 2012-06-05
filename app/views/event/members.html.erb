@@ -46,7 +46,7 @@
 
 負責人: 
 <div class="grid_item">
-<a href=http://www.facebook.com/profile.php?id=<%=@head.fb_id%>>
+<a href=http://www.facebook.com/profile.php?id=<%=@head.fb_id%> title=<%=@head.email%>>
 <img class="img" src="https://graph.facebook.com/<%=@head.fb_id%>/picture?access_token=<%= @access_token %>"><div class="name"><%=@head.username%></div>
 </a></div>
 
@@ -54,7 +54,7 @@
 <% @users.each do |u|%>
 	<% if u.username != nil%>
 <div class="grid_item">
-	<a href=http://www.facebook.com/profile.php?id=<%=u.fb_id%>><img class="img" src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"><div class="name"><%=u.username%></div></a>
+	<a href=http://www.facebook.com/profile.php?id=<%=u.fb_id%> title=<%=u.email%>><img class="img" src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>"><div class="name"><%=u.username%></div></a>
 </div>
 	<%end%>
 <%end%>
@@ -85,8 +85,9 @@
 	<%end%>
 <%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
 <%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
-<!--%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%-->
-
+<%if @user_id == @e.event_head%>
+<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage_event'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
+<%end%>
 </div>
 
 
