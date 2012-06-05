@@ -8,6 +8,13 @@ class CalendarController < GoogleController
     end
     public
     def cal
-        render :json => @cal_wrapper.create_cal(params[:name])
+        result = @cal_wrapper.create_cal(params[:name])
+        if result[:cal].id and result[:acl].id
+            render :text => result[:cal].id
+        elsif not result[:cal].id
+            render :json => { :message => "Failed to create calendar" }, :status => 404
+        elsif not result[:acl].id
+            render :json => { :message => "Failed setting of access rights" }, :status => 404
+        end
     end
 end
