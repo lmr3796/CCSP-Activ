@@ -211,6 +211,8 @@ class EventController < ApplicationController
 			@see = 0
 		end
 	end
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
   end
   def show_dep_aboutus
 	session[:dep_type]=1
@@ -335,6 +337,8 @@ class EventController < ApplicationController
 		end
 	end
 	session[:user_id] = @user_id
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
   end
   def show_act_aboutus
 	session[:act_type]=1
@@ -403,6 +407,8 @@ class EventController < ApplicationController
 	@acts = @e.activities
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
   end
   def aboutus
 	@e = Event.find(@id)
@@ -413,6 +419,8 @@ class EventController < ApplicationController
 	@acts = @e.activities
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
   end
   def forum
 	@e = Event.find(@id)
@@ -423,6 +431,8 @@ class EventController < ApplicationController
 	@acts = @e.activities
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
   end
   def calendar
 	@e = Event.find(@id)
@@ -433,6 +443,8 @@ class EventController < ApplicationController
 	@acts = @e.activities
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
   end
   def accounting
 	@e = Event.find(@id)
@@ -444,6 +456,8 @@ class EventController < ApplicationController
 	@uu = User.find(@user_id)
 	@access_token = session[:access_token]
 	@eacc = @e.accountings
+	@dep_me = @deps.where(:dep_head => @user_id)
+	@act_me = @acts.where(:act_head => @user_id)
   end
   def edit_event
 	@e = Event.find(@id)

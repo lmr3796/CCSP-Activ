@@ -4,14 +4,35 @@
 <!--%= javascript_include_tag "jquery.tablesorter" %-->
 
 <div id="header">
-<h3><%=@e.organization.org_name%></h3><a href="/event/" style="text-decoration:none"><h1><%=@e.event_name%></h1></a>
+<a href="/event" style="text-decoration:none"><h1><%=@e.event_name%></h1></a><h3><%=@e.organization.org_name%></h3>
 </div>
 <div id="userinfo">
-       <p>Hello, <%= @uu.username %><br>
-       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>"></p>
-
-<p><%= link_to '回活動列表', home_path,:class => 'sexybutton sexysimple sexygreen sexyxl' %></p>
-<p><%= link_to '管理', {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyyellow sexyxl' %></p>
+       Hello, <%= @uu.username %>
+       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>" width=30><br>
+       您的身份為：<br>
+        <%if @user_id == @e.event_head%>
+                <div id="identity">活動負責人<br></div>
+        <%end%>
+        <%@dep_me.each do |d|%>
+                <%if @user_id == d.dep_head%>
+                        <div id="identity"><%=d.dep_name%>負責人<br></div>
+                <%end%>
+        <%end%>
+        <%@act_me.each do |a|%>
+                <%if @user_id == a.act_head%>
+                        <div id="identity"><%=a.act_name%>負責人<br></div>
+                <%end%>
+        <%end%>
+        <%@uu.departments.where(:event_id => @e.id).each do |d|%>
+                <%if @user_id != d.dep_head%>
+                        <div id="identity"><%=d.dep_name%>成員<br></div>
+                <%end%>
+        <%end%>
+        <%@uu.activities.where(:event_id => @e.id).each do |a|%>
+                <%if @user_id != a.act_head%>
+                        <div id="identity"><%=a.act_name%>成員<br></div>
+                <%end%>
+        <%end%>
 </div>
 <div id="content">
 <%if @act_type == 0%>
@@ -238,28 +259,27 @@
 
 
 <div id="rightcolumn">
-        <br><br><br>
+        <br>
         <% @deps.each do |d|%>
                 <%=form_tag :controller => 'event', :action => 'show_dep' do %>
                         <%= hidden_field_tag(:dep_id, d.id) %>
                         <!--%= submit_tag(d.dep_name) %-->
-                        <%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxl", :type => "submit"%>
+                        <%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxxl", :type => "submit"%>
                 <%end%>
-                <br>
         <%end%>
 
         <% @acts.each do |a|%>
                 <%=form_tag :controller => 'event', :action => 'show_act' do %>
                         <%= hidden_field_tag(:act_id, a.id) %>
                         <!--%= submit_tag(a.act_name) %-->
-                        <%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxl", :type => "submit"%>
+                        <%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxxl", :type => "submit"%>
                 <%end%>
-                <br>
         <%end%>
-<%= link_to @e.event_name, {:controller => 'event',:action => '/'},:class => 'sexybutton sexysimple sexymagenta sexyxl' %>
+<%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
+<%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
+<!--%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%-->
 
 </div>
-
 <script>
 	/*$(document).ready(function(){
 		$('#account').tablesorter();
