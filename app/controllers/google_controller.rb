@@ -43,6 +43,8 @@ class GoogleController < ApplicationController
         unless @client.authorization.access_token || request.path_info =~ /\/oauth2callback$/
             session[:google_callback] = request.url 
             redirect_to @client.authorization.authorization_uri.to_s
+            @redirected = true
+            return
         end
         if request.path_info =~ /\/oauth2callback/
             persist_token()
