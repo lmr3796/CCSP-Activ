@@ -1,12 +1,21 @@
 Activ::Application.routes.draw do
 
-  get    "light" => "light#show"
+  get    "cal" => "calendar#oauth2callback"
+  get    "cal/oauth2authorize" => "calendar#oauth2authorize"
+  get    "cal/oauth2callback"  => "calendar#oauth2callback"
+
+  #get    "drive" => "drive#oauth2callback"
+  #get    "drive/oauth2authorize" => "drive#oauth2authorize"
+  #get    "drive/oauth2callback"  => "drive#oauth2callback"
+
+  get    "light" => "light#show", :as => :light
   post   "light" => "light#create"
   delete "light" => "light#delete"
   post   "light/music" => "light#music_url"
 
   get "/" => "home#index", :as => :home
   post "/" => "home#index"
+
   post "/login" => "home#login"
   get "/login" => "home#login"
   post "home/create_event" => 'home#create_event_done'
@@ -15,6 +24,7 @@ Activ::Application.routes.draw do
   post "/event" => "event#index"
   post "/event/get_ajax" => "event#get_ajax"
   #match "events/:id" => "event#index"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
@@ -64,7 +74,7 @@ Activ::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
+  root :to => 'home#index'
 
   # See how all your routes lay out with "rake routes"
 
