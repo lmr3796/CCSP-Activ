@@ -24,6 +24,15 @@ class CalendarController < GoogleController
             render :json => { :message => "Failed to create calendar" }, :status => 404
         end
     end
+
+    def create_acl
+        if @redirected
+            return
+        end
+        result = @cal_wrapper.create_acl(params[:cal_id], params[:email])
+        render :json => result.data, :status => result.status
+    end
+
     def delete_acl
         if @redirected
             return

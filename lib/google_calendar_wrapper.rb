@@ -11,7 +11,7 @@ class GoogleCalendarWrapper
     def create_list(calendar_id)
         result = @client.execute(:api_method => @service.calendar_list.insert,
                                  :body_object => {:id => calendar_id})
-        return result
+        return result.data
     end
 
     def create_cal(summary, boss_email)
@@ -30,6 +30,15 @@ class GoogleCalendarWrapper
                                    :parameters => {'calendarId' => cal.data.id},
                                    :body_object => rule)
         return {:cal => cal.data, :public => acl_public.data, :boss => acl_boss.data} 
+    end
+
+    def create_acl(calendar_id, boss_email, role='owner')
+        rule = {:scope => {:type => 'user', :value => boss_email},
+                :role => 'owner'}
+        result = client.execute(:api_method  => @service.acl.insert,
+                                :parameters  => {:calendarId => calendar_id},
+                                :body_object => rule)
+        return result
     end
 
     def delete_acl(calendar_id, email)
