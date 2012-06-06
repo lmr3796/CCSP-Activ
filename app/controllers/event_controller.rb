@@ -495,7 +495,7 @@ class EventController < ApplicationController
 	@e.event_image_url = @event_new_imgurl
 	@e.event_trailer_url = @event_new_trailerurl
 	@e.save
-	redirect_to event_path
+	redirect_to :action => :manage_event
   end
   def edit_dep
 	@d = Department.find(params[:e_id])
