@@ -79,7 +79,7 @@ class HomeController < ApplicationController
 		@u.save
 		session[:user_id] = @u.id
 	end
-	@e = Event.new(:event_name => @event_name, :event_start => @start_date, :event_end => @end_date, :event_head => session[:user_id],:organization_id=> @org_id)
+	@e = Event.new(:event_name => @event_name, :event_start => @start_date, :event_end => @end_date, :event_head => session[:user_id],:organization_id=> @org_id, :accounting_manager_id => session[:user_id])
 	@e.save
 	@a = UserEvent.new(:user_id => session[:user_id], :event_id => @e.id)
 	@a.save

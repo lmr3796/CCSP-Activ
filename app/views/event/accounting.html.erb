@@ -76,24 +76,50 @@
 <td><%= acc.updated_at %></td>
 <td><%= acc.comment %></td>
 <td><% if acc.approved == false %>
-        <%= link_to "核可", {:controller => 'event', :action => 'acc_approve', :accid => acc.id} %>
+        X
+	<%if @user_id == @e.accounting_manager_id%>
+	<%= link_to "核可", {:controller => 'event', :action => 'acc_approve', :accid => acc.id} %>
+	<%end%>
         <% else %>O<% end %>
 </td>
 <td><% if acc.approved == false %>X
         <% else %>
         <% if acc.paid == false %>
-                 <%= link_to "付款", {:controller => 'event', :action => 'acc_pay', :accid => acc.id} %>
+                 X
+	<%if @user_id == @e.accounting_manager_id%>
+	<%= link_to "付款", {:controller => 'event', :action => 'acc_pay', :accid => acc.id} %>
+	<%end%>
         <% else %>O<% end %>
 <% end %></td>
 </tr>
 <% end %>
 </tbody>
 </table>
-<h3>表面帳額: <%= @sum %></h3>
-<h3>實際帳額: <%= @asum %></h3>
-<h3>已付帳額: <%= @psum %></h3>
-<h3>記帳管理者: </h3>
-
+<h3 id="accounting_sum">表面帳額: <%= @sum %></h3>
+<h3 id="accounting_sum">實際帳額: <%= @asum %></h3>
+<h3 id="accounting_sum">已付帳額: <%= @psum %></h3>
+<h3 id="accounting_sum">記帳管理者: 
+<% @m = User.find(@e.accounting_manager_id)%>
+<%if @m.username == nil%>
+	<%= @m.email%>
+<%else%>
+	<img src="https://graph.facebook.com/<%=@m.fb_id%>/picture?access_token=<%= @access_token %>" width=30 title=<%=@m.username%>>
+<%end%>
+</h3>
+<%if flash[:notice] != nil%>
+	<div class="alert">
+	<h2><%=flash[:notice]%></h2>
+	</div>
+<%end%>
+<%if @user_id == @e.event_head%>
+	<div id="accounting_sum">
+	編輯記帳管理者(請輸入fb email)
+	<%= form_tag(:controller => "event", :action => "edit_account_manager") do %>
+		<%= text_field_tag(:new_account_manager,@m.email)%>
+		<%= submit_tag("完成",:class=>"sexybutton sexysimple sexylarge")%>
+	<%end%>
+	</div>
+<%end%>
 
 </div>
 <div id="rightcolumn">

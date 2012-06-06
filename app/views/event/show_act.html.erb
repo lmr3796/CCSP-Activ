@@ -221,7 +221,7 @@
 </div>
 
 <table id="account" class="tablesorter"><thead>
-	<tr><th>編號</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th></tr></thead>
+	<tr><th>編號</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th><th></th></tr></thead>
 	<tbody>
 	<% @i = 0%>
 	<% @actacc.each do |acc| %>
@@ -237,6 +237,12 @@
 		<td><%= acc.comment %></td>
 		<td><% if acc.approved == false %>X<% else %>O<% end %></td>
  		<td><% if acc.paid == false %>X<% else %>O<% end %></td>
+		<td>             
+                        <%if acc.user_id == @user_id%>
+                        <%= link_to '刪除',{ :controller => 'event', :action=> 'del_account', :acc_id => acc.id, :type => "act"},:method => :delete, :confirm => "你確定要刪除此開支嗎？"%>
+                        <%end%>
+                </td>
+
 	</tr>
 	<% end %>
 	</tbody>

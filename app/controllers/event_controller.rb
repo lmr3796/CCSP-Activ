@@ -627,5 +627,34 @@ class EventController < ApplicationController
         entry.save
         redirect_to :action => :accounting
   end
+  def edit_account_manager
+	@email = params[:new_account_manager]
+        @e = Event.find(@id)
+	@u = User.where(:email => @email).first
+        if @u == nil 
+                flash[:notice] = "該成員必須先加入此活動才行，請至右側 管理->增刪活動成員 將其加入。\n"
+        else
+                @t = UserEvent.where(:user_id => @u.id,:event_id => @id).first
+                if @t == nil 
+                	flash[:notice] = "該成員必須先加入此活動才行，請至右側 管理->增刪活動成員 將其加入。\n"
+                else
+			@e.accounting_manager_id = @u.id
+			@e.save
+                end 
+        end
+	redirect_to :action => :accounting
+		
+  end
+  def del_account
+	@acc_id = params[:acc_id]
+	@type = params[:type]
+	@acc = Accounting.find(@acc_id)
+	@acc.destroy
+	if @type == "dep"
+		redirect_to :action => :show_dep
+	elsif @type == "act"
+		redirect_to :action => :show_act
+	end
+  end
 
 end
