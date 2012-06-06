@@ -41,6 +41,9 @@
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+	<%if @user_id == @d.dep_head%>
+        <li><a href="/event/show_dep_manage/" >管理部門</a></li>
+	<%end%>
         </ul>
 	</div>
 	
@@ -81,6 +84,9 @@
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+	<%if @user_id == @d.dep_head%>
+        <li><a href="/event/show_dep_manage/" >管理部門</a></li>
+	<%end%>
         </ul>
 </div>
 <%if @d.dep_subtitle == nil && @d.dep_description == nil && @d.dep_image_url == nil%>
@@ -107,6 +113,9 @@
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+	<%if @user_id == @d.dep_head%>
+        <li><a href="/event/show_dep_manage/" >管理部門</a></li>
+	<%end%>
         </ul>
 </div>
 負責人: 
@@ -144,6 +153,9 @@
         <li><a href="/event/show_dep_calendar/"class="current" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+	<%if @user_id == @d.dep_head%>
+        <li><a href="/event/show_dep_manage/" >管理部門</a></li>
+	<%end%>
         </ul>
 </div>
 <%if @see == 1%> 
@@ -160,6 +172,9 @@
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/"class="current" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+	<%if @user_id == @d.dep_head%>
+        <li><a href="/event/show_dep_manage/" >管理部門</a></li>
+	<%end%>
         </ul>
 </div>
 <%if @see == 1%> 
@@ -179,6 +194,9 @@
         <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
         <li><a href="/event/show_dep_forum/" >討論區</a></li>
         <li><a href="/event/show_dep_accounting/" class="current">收支表</a></li>
+	<%if @user_id == @d.dep_head%>
+        <li><a href="/event/show_dep_manage/" >管理部門</a></li>
+	<%end%>
         </ul>
 </div>
 <table id="account" class="tablesorter"><thead>
@@ -203,6 +221,7 @@
 	<% end %>
 	</tbody>
 </table>
+<br>
 <div class="create">
 <h2>新增開支</h2>
 <%=form_tag :action => 'save_dep_accounting' do %>
@@ -218,10 +237,68 @@
   <%= link_to "取消",home_path,:class => "sexybutton sexysimple sexymagenta sexylarge"%>
 <%end%>
 </div>
+
+
+<%elsif @dep_type == 6 && @user_id == @d.dep_head%>
+<div id="tabs25">
+        <ul>
+        <li><a href="/event/show_dep" ><%=@d.dep_name%></a></li>
+        <li><a href="/event/show_dep_aboutus/" >部門介紹</a></li>
+        <li><a href="/event/show_dep_members/" >成員</a></li>
+        <li><a href="/event/show_dep_calendar/" >行事曆</a></li>
+        <li><a href="/event/show_dep_forum/" >討論區</a></li>
+        <li><a href="/event/show_dep_accounting/" >收支表</a></li>
+        <li><a href="/event/show_dep_manage/" class="current">管理部門</a></li>
+        </ul>
+</div>
+
+<br>
+<%if flash[:notice] != nil%>
+<div class="alert">
+<h2><%=flash[:notice]%></h2>
+</div>
 <%end%>
+<div class="create">
+	<div id="edit_dep_info"><h2>編輯部門資訊</h2></div>
+	<%if false%>
+        	<%= form_tag(:controller => 'event', :action => 'edit_dep',:e_id => d.id) do %>
+                	<h3>部門名稱&nbsp;&nbsp;<%= text_field_tag(:dep_new_name,d.dep_name)%></h3>
+                	<h3>部門副標題&nbsp;&nbsp;<%= text_field_tag(:dep_new_sub,d.dep_subtitle)%></h3>
+               	 	<h3>部門敘述</h3><h3><%= text_area_tag(:dep_new_desc,d.dep_description,:size=>"50x10")%></h3>
+                	<h3>部門圖片（請貼圖片網站連結）<%= text_field_tag(:dep_new_imgurl,d.dep_image_url,:size=>"50x10")%></h3>
+                	<%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%>
+        	<%end%>
+	<%end%>
+</div>
+<br>
+<div class="create">
+	<div id="edit_dep_member"><h2>編輯部門成員</h2></div>
+	<%if false%>
+	<h3>新增部門成員</h3>
+        	<%= form_tag(:controller => 'event', :action => 'create_depuser',:dep_id => d.id) do %>
+                	請輸入fb email<%= text_field_tag(:email)%>
+                        <%= submit_tag("新增",:class=>"sexybutton sexysimple sexylarge")%>
+                <%end%>
+	<h3>刪除部門成員</h3>
+	請點擊成員之大頭貼，無大頭貼者請點擊email。<br>
+        	<% d.users.each do |u|%>
+			<% if u.username != nil && u.id != @user_id%>
+                        	<%=link_to image_tag("https://graph.facebook.com/"+u.fb_id+"/picture?access_token="+@access_token),{:controller=>'event',:action=>'destroy_depuser',:d_id => u.id,:dep_id => d.id},:method => :delete,:confirm => "你確定要將此成員從這個部門刪除嗎？",:title => ""+u.username+","+u.email%>
+			<%end%>
+		<%end%>
+                <br>
+        	<% d.users.each do |u|%>
+			<% if u.username == nil %>
+				 <%= link_to u.email,{ :controller => 'event', :action => 'destroy_depuser', :d_id => u.id,:dep_id => d.id},:method => :delete, :confirm => "你確定要將此成員從這個部門刪除嗎？"%>
+                        <%end%>
+                <%end%>
+	<%end%>
+</div>
 
 
 
+
+<%end%>
 </div>
 <div id="rightcolumn">
         <br>
@@ -271,5 +348,30 @@
                         console.log(e);
                 }});
         });
+	$('#edit_dep_info').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('add_info')){
+                        self.removeClass('add_info');
+                        $('#text_info').remove();
+                        return;
+                }
+		<%d= @d%>
+		var str = '<div id="text_info"><%= form_tag(:controller => "event", :action => "edit_dep",:e_id => d.id) do %><h3>部門名稱&nbsp;&nbsp;<%= text_field_tag(:dep_new_name,d.dep_name)%></h3><h3>部門副標題&nbsp;&nbsp;<%= text_field_tag(:dep_new_sub,d.dep_subtitle)%></h3><h3>部門敘述</h3><h3>';
+		str += '<%= text_area_tag(:dep_new_desc,d.dep_description,:size=>"50x10").lines.map{|line| line.strip}.join.html_safe %>';
+		str += '</h3><h3>部門圖片（請貼圖片網站連結）<%= text_field_tag(:dep_new_imgurl,d.dep_image_url,:size=>"50x10")%></h3><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%></div>';
+                self.addClass('add_info').after(str);
+	});
+	$('#edit_dep_member').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('add_member')){
+                        self.removeClass('add_member');
+                        $('#text_member').remove();
+                        return;
+                }
+		<%d= @d%>
+		var str = '<div id="text_member"><h3>新增部門成員</h3><%= form_tag(:controller => "event", :action => "create_depuser",:dep_id => d.id) do %>請輸入fb email<%= text_field_tag(:email)%><%= submit_tag("新增",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>刪除部門成員</h3>請點擊成員之大頭貼，無大頭貼者請點擊email。<br><% d.users.each do |u|%><% if u.username != nil && u.id != @user_id%><%=link_to image_tag("https://graph.facebook.com/"+u.fb_id+"/picture?access_token="+@access_token),{:controller=>"event",:action=>"destroy_depuser",:d_id => u.id,:dep_id => d.id},:method => :delete,:confirm => "你確定要將此成員從這個部門刪除嗎？",:title => ""+u.username+","+u.email%><%end%><%end%><br><% d.users.each do |u|%><% if u.username == nil %><%= link_to u.email,{ :controller => "event", :action => "destroy_depuser", :d_id => u.id,:dep_id => d.id},:method => :delete, :confirm => "你確定要將此成員從這個部門刪除嗎？"%><%end%><%end%></div>';
+                self.addClass('add_member').after(str);
+	});
+
 </script>
 
