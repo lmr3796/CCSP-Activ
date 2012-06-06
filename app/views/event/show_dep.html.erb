@@ -57,7 +57,10 @@
 			<%@u = User.find(p.user_id)%>
 			<tr class="tmp" id="post<%=p.id%>"><td><%=@ps.size-@i+1%></td> <td><%=p.updated_at%></td> <td><%=@u.username%></td> <td><%=p.title%></td>
 			<%if @u.id == @user_id%>
-                                 <td><%= link_to '刪除',{ :controller => 'event', :action     => 'del_post', :p_id => p.id, :type => "dep"},:method => :delete, :confirm => "你確定要刪除此篇文章嗎？"%></td>
+                                 <td>
+					<%= link_to '刪除',{ :controller => 'event', :action=> 'del_post', :p_id => p.id, :type => "dep"},:method => :delete, :confirm => "你確定要刪除此篇文章嗎？"%>
+					<div class="edit_post", id="post<%=p.id%>">編輯</div>
+				</td>
                         <%else%>
 				<td></td>
 			<%end%>
@@ -69,7 +72,8 @@
 	<%if @see == 1%>
 	<br>
 	<div class="create_b">
-	<h2>新增文章</h2>
+        <div id="new_post"><h2>新增文章</h2></div>
+	<%if false%>
         <%= form_tag(:controller => 'event', :action => 'create_post',:type => 'dep',:e_id => @d.id) do %>
                 <h3>文章標題&nbsp;&nbsp;<%= text_field_tag(:post_title)%></h3>
                 <h3>文章內容</h3><h3><%= text_area_tag(:post_content,nil,:size=>"50x10",:border=>"0")%></h3>
@@ -77,6 +81,7 @@
 		<br>
 		<br>
         <%end%>
+	<%end%>
 	</div>
 	<%end%>
 
@@ -206,7 +211,7 @@
         </ul>
 </div>
 <table id="account" class="tablesorter"><thead>
-	<tr><th>編號</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th></tr></thead>
+	<tr><th>編號</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th><th></th></tr></thead>
 	<tbody>
 	<%@i = 0%>
 	<% @depacc.each do |acc| %>
@@ -222,6 +227,11 @@
 		<td><%= acc.comment %></td>
 		<td><% if acc.approved == false %>X<% else %>O<% end %></td>
                 <td><% if acc.paid == false %>X<% else %>O<% end %></td>
+		<td>
+			<%if acc.user_id == @user_id%>		
+			<%= link_to '刪除',{ :controller => 'event', :action=> 'del_account', :acc_id => acc.id, :type => "dep"},:method => :delete, :confirm => "你確定要刪除此開支嗎？"%>
+			<%end%>
+		</td>
 
 	</tr>
 	<% end %>
@@ -230,7 +240,8 @@
 <%if @see == 1%>
 <br>
 <div class="create">
-<h2>新增開支</h2>
+<div id="new_account"><h2>新增開支</h2></div>
+<%if false%>
 <%=form_tag :action => 'save_dep_accounting' do %>
   <%= label_tag :title,"名目" %>:
   <%= text_field_tag :title %><br />
@@ -242,6 +253,7 @@
   <%= text_area_tag :comment %><br />
   <%= button_tag "完成",:class => "sexybutton sexysimple sexylarge", :type => "submit"%>
   <%= link_to "取消",home_path,:class => "sexybutton sexysimple  sexylarge"%>
+<%end%>
 <%end%>
 </div>
 <%end%>
@@ -355,6 +367,36 @@
                         console.log(e);
                 }});
         });
+	$('.edit_post').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('added_post')) {
+                        self.removeClass('added_post');
+                        //self.next().remove();
+			self.parent().parent().next().remove();
+                        return;
+                }
+                var id = self.attr('id').substr(4); //split 'post'
+                
+                $.ajax({type: "POST", url: "/event/get_ajax", data:{ "id" : id }, dataType: "html", timeout: 5000,
+                success: function(data,textStatus,xhr){
+                        //data = data.split("\n").join("<br />");
+			var str = '<tr class="detail"><td colspan="5">';
+			str += '<form accept-charset="UTF-8" action="/event/edit_post" method="get">';
+			str += '<input type="hidden" name="e_id" value='+id+'>';
+			str += '<input type="hidden" name="type" value="dep">';
+			str += '<textarea cols="50" id="post_content" name="post_content" rows="10">'+data+'</textarea>';
+			str += '<%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%></form></td></tr>';
+                        self.addClass('added_post').parent().parent().after(str);
+                        //console.log(data);
+                },
+                error: function(xhr,textStatus,e){
+                        console.log("error");
+                        console.log(xhr);
+                        console.log(textStatus);
+                        console.log(e);
+                }});
+        });
+
 	$('#edit_dep_info').live('click',function(){
                 var self = $(this);
                 if(self.hasClass('add_info')){
@@ -379,6 +421,34 @@
 		var str = '<div id="text_member"><h3>新增部門成員</h3><%= form_tag(:controller => "event", :action => "create_depuser",:dep_id => d.id) do %>請輸入fb email<%= text_field_tag(:email)%><%= submit_tag("新增",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>刪除部門成員</h3>請點擊成員之大頭貼，無大頭貼者請點擊email。<br><% d.users.each do |u|%><% if u.username != nil && u.id != @user_id%><%=link_to image_tag("https://graph.facebook.com/"+u.fb_id+"/picture?access_token="+@access_token),{:controller=>"event",:action=>"destroy_depuser",:d_id => u.id,:dep_id => d.id},:method => :delete,:confirm => "你確定要將此成員從這個部門刪除嗎？",:title => ""+u.username+","+u.email%><%end%><%end%><br><% d.users.each do |u|%><% if u.username == nil %><%= link_to u.email,{ :controller => "event", :action => "destroy_depuser", :d_id => u.id,:dep_id => d.id},:method => :delete, :confirm => "你確定要將此成員從這個部門刪除嗎？"%><%end%><%end%></div>';
                 self.addClass('add_member').after(str);
 	});
+	$('#new_post').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('add_post')){
+                        self.removeClass('add_post');
+                        $('#text_post').remove();
+                        return;
+                }
+		var str = '<div id="text_post"><%= form_tag(:controller => "event", :action => "create_post",:type => "dep",:e_id => @d.id) do %><h3>文章標題&nbsp;&nbsp;<%= text_field_tag(:post_title)%></h3><h3>文章內容</h3><h3>';
+		str += '<%= text_area_tag(:post_content,nil,:size=>"50x10",:border=>"0").lines.map{|line| line.strip}.join.html_safe %>';
+		str += '</h3><%= submit_tag("完成",:class=>"sexybutton sexysimple sexylarge")%><br><br><%end%></div>';
+		
+                self.addClass('add_post').after(str);
+	});
+	$('#new_account').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('add_account')){
+                        self.removeClass('add_account');
+                        $('#text_account').remove();
+                        return;
+                }
+		var str = '<div id="text_account"><%=form_tag :action => "save_dep_accounting" do %><%= label_tag :title,"名目" %>:<%= text_field_tag :title %><br /><%= label_tag :balance,"金額" %>:<%= text_field_tag :balance %><br /><%= label_tag :receipt,"發票" %>:<%= text_field_tag :receipt %><br /><%= label_tag :comment,"備註" %>:';
+		str += '<%= text_area_tag( :comment).lines.map{|line| line.strip}.join.html_safe %>';
+		str += '<br /><%= button_tag "完成",:class => "sexybutton sexysimple sexylarge", :type => "submit"%><%end%><div>';
+
+                self.addClass('add_account').after(str);
+	});
+
+</script>
 
 </script>
 
