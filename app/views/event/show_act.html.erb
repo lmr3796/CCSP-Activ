@@ -46,6 +46,9 @@
         <li><a href="/event/show_act_accounting/" >收支表</a></li>
         <li><a href="/event/show_act_light/" >燈音表</a></li>
         <li><a href="/event/show_act_script/" >劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
 	<%if @ps.size == 0%>
@@ -86,6 +89,9 @@
         <li><a href="/event/show_act_accounting/" >收支表</a></li>
         <li><a href="/event/show_act_light/" >燈音表</a></li>
         <li><a href="/event/show_act_script/" >劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
 
@@ -114,6 +120,9 @@
         <li><a href="/event/show_act_accounting/" >收支表</a></li>
         <li><a href="/event/show_act_light/" >燈音表</a></li>
         <li><a href="/event/show_act_script/" >劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
 負責人:
@@ -153,6 +162,9 @@
         <li><a href="/event/show_act_accounting/" >收支表</a></li>
         <li><a href="/event/show_act_light/" >燈音表</a></li>
         <li><a href="/event/show_act_script/" >劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
 <%if @see == 1%>
@@ -170,6 +182,9 @@
         <li><a href="/event/show_act_accounting/"  >收支表</a></li>
         <li><a href="/event/show_act_light/" >燈音表</a></li>
         <li><a href="/event/show_act_script/" >劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
 <%if @see == 1%>
@@ -188,6 +203,9 @@
         <li><a href="/event/show_act_accounting/" class="current" >收支表</a></li>
         <li><a href="/event/show_act_light/" >燈音表</a></li>
         <li><a href="/event/show_act_script/" >劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
 
@@ -212,6 +230,7 @@
 	<% end %>
 	</tbody>
 </table>
+<br>
 <div class="create">
 	<h2>新增開支</h2>
 	<%=form_tag :action => 'save_act_accounting' do %>
@@ -238,6 +257,9 @@
         <li><a href="/event/show_act_accounting/"  >收支表</a></li>
         <li><a href="/event/show_act_light/"class="current" >燈音表</a></li>
         <li><a href="/event/show_act_script/" >劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
  <iframe class="light" src="/light?act_id=<%=@a.id%>" frameborder="0" allowfullscreen></iframe>
@@ -252,8 +274,43 @@
         <li><a href="/event/show_act_accounting/" >收支表</a></li>
         <li><a href="/event/show_act_light/" >燈音表</a></li>
         <li><a href="/event/show_act_script/" class="current">劇本</a></li>
+	<%if @user_id == @a.act_head%>
+        <li><a href="/event/show_act_manage/" >管理節目</a></li>
+	<%end%>
         </ul>
 </div>
+
+<%elsif @act_type == 8 && @user_id == @a.act_head%>
+<div id="tabs28">
+        <ul>
+        <li><a href="/event/show_act" ><%=@a.act_name%></a></li>
+        <li><a href="/event/show_act_aboutus/" >節目介紹</a></li>
+        <li><a href="/event/show_act_members/" >成員</a></li>
+        <li><a href="/event/show_act_calendar/" >行事曆</a></li>
+        <li><a href="/event/show_act_forum/" >討論區</a></li>
+        <li><a href="/event/show_act_accounting/" >收支表</a></li>
+        <li><a href="/event/show_act_light/" >燈音表</a></li>
+        <li><a href="/event/show_act_script/" >劇本</a></li>
+        <li><a href="/event/show_act_manage/" class="current">管理節目</a></li>
+        </ul>
+</div>
+
+
+<br>
+<%if flash[:notice] != nil%>
+<div class="alert">
+<h2><%=flash[:notice]%></h2>
+</div>
+<%end%>
+<div class="create">
+        <div id="edit_act_info"><h2>編輯節目資訊</h2></div>
+</div>
+<br>
+<div class="create">
+        <div id="edit_act_member"><h2>編輯節目成員</h2></div>
+</div>
+
+
 <%end%>
 </div>
 
@@ -309,6 +366,31 @@
                         console.log(e);
                 }});
         });
+        $('#edit_act_info').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('add_info')){
+                        self.removeClass('add_info');
+                        $('#text_info').remove();
+                        return;
+                }
+                <%a= @a%>
+                var str = '<div id="text_info"><%= form_tag(:controller => "event", :action => "edit_act",:e_id => a.id) do %><h3>節目名稱&nbsp;&nbsp;<%= text_field_tag(:act_new_name,a.act_name)%></h3><h3>節目副標題&nbsp;&nbsp;<%= text_field_tag(:act_new_sub,a.act_subtitle)%></h3><h3>節目敘述</h3><h3>';
+                str += '<%= text_area_tag(:act_new_desc,a.act_description,:size=>"50x10").lines.map{|line| line.strip}.join.html_safe %>';
+                str += '</h3><h3>節目圖片（請貼圖片網站連結）<%= text_field_tag(:act_new_imgurl,a.act_image_url,:size=>"50x10")%></h3><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%></div>';
+                self.addClass('add_info').after(str);
+        });
+        $('#edit_act_member').live('click',function(){
+                var self = $(this);
+                if(self.hasClass('add_member')){
+                        self.removeClass('add_member');
+                        $('#text_member').remove();
+                        return;
+                }
+                <%a= @a%>
+                var str = '<div id="text_member"><h3>新增節目成員</h3><%= form_tag(:controller => "event", :action => "create_actuser",:act_id => a.id) do %>請輸入fb email<%= text_field_tag(:email)%><%= submit_tag("新增",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>刪除節目成員</h3>請點擊成員之大頭貼，無大頭貼者請點擊email。<br><% a.users.each do |u|%><% if u.username != nil && u.id != @user_id%><%=link_to image_tag("https://graph.facebook.com/"+u.fb_id+"/picture?access_token="+@access_token),{:controller=>"event",:action=>"destroy_actuser",:d_id => u.id,:act_id => a.id},:method => :delete,:confirm => "你確定要將此成員從這個節目刪除嗎？",:title => ""+u.username+","+u.email%><%end%><%end%><br><% a.users.each do |u|%><% if u.username == nil %><%= link_to u.email,{ :controller => "event", :action => "destroy_actuser", :d_id => u.id,:act_id => a.id},:method => :delete, :confirm => "你確定要將此成員從這個節目刪除嗎？"%><%end%><%end%></div>';
+                self.addClass('add_member').after(str);
+        });
+
 
 </script>
 

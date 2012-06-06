@@ -69,7 +69,7 @@ class EventController < ApplicationController
 	@dep_id = params[:dep_id]
 	@d = UserDepartment.where(:user_id => @d_id, :department_id => @dep_id).first
 	@d.destroy
-	redirect_to :action => :manage
+	redirect_to :action => :show_dep_manage
   end
   def destroy_dep
 	@d_id = params[:d_id]
@@ -88,7 +88,7 @@ class EventController < ApplicationController
 	@act_id = params[:act_id]
 	@a = UserActivity.where(:user_id => @d_id, :activity_id => @act_id).first
 	@a.destroy
-	redirect_to :action => :manage
+	redirect_to :action => :show_act_manage
   end
   def destroy_act
 	@d_id = params[:d_id]
@@ -138,7 +138,7 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :manage
+	redirect_to :action => :show_dep_manage
   end
   def create_dep
 	@dep_name = params[:dep_name]
@@ -158,7 +158,7 @@ class EventController < ApplicationController
 			@a.save
 		end
 	end
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end
   def edit_depname
 	@dep_id = params[:e_id]		
@@ -243,6 +243,12 @@ class EventController < ApplicationController
 	session[:dep_type]=5
 	redirect_to :action => :show_dep
   end
+  def show_dep_manage
+	session[:dep_type]=6
+	@f = flash[:notice]	
+	flash[:notice] = @f
+	redirect_to :action => :show_dep
+  end
   def create_actuser
 	@act_id = params[:act_id]
 	@email = params[:email]
@@ -263,7 +269,7 @@ class EventController < ApplicationController
 			end
 		end
 	end
-	redirect_to :action => :manage
+	redirect_to :action => :show_act_manage
   end
   def create_act
 	@act_name = params[:act_name]
@@ -283,7 +289,7 @@ class EventController < ApplicationController
 			@a2.save
 		end
 	end
-	redirect_to :action => :manage
+	redirect_to :action => :manage_event
   end
   def edit_actname
 	@act_id = params[:e_id]		
@@ -367,6 +373,12 @@ class EventController < ApplicationController
   end
   def show_act_accounting
 	session[:act_type]=5
+	redirect_to :action => :show_act
+  end
+  def show_act_manage
+	session[:act_type]=8
+	@f = flash[:notice]	
+	flash[:notice] = @f
 	redirect_to :action => :show_act
   end
   def show_act_light
@@ -495,7 +507,7 @@ class EventController < ApplicationController
 	@e.event_image_url = @event_new_imgurl
 	@e.event_trailer_url = @event_new_trailerurl
 	@e.save
-	redirect_to event_path
+	redirect_to :action => :manage_event
   end
   def edit_dep
 	@d = Department.find(params[:e_id])
@@ -517,7 +529,7 @@ class EventController < ApplicationController
 	@d.dep_description = @dep_new_desc
 	@d.dep_image_url = @dep_new_imgurl
 	@d.save
-	redirect_to :action => :manage
+	redirect_to :action => :show_dep_manage
   end
   def edit_act
 	@a = Activity.find(params[:e_id])
@@ -539,7 +551,7 @@ class EventController < ApplicationController
 	@a.act_description = @act_new_desc
 	@a.act_image_url = @act_new_imgurl
 	@a.save
-	redirect_to :action => :manage
+	redirect_to :action => :show_act_manage
   end
   def create_post
 	@title = params[:post_title]

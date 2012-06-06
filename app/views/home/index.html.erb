@@ -32,32 +32,7 @@
 		<%end%>
 	<%end%>
 		<br><br><br>
-		<%=link_to content_tag(:span,"新增一個活動",:class=>"edit"), {:controller => 'home',:action => 'create_event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl'%>  
-		<!--%=button_tag content_tag(:span,"新增一個活動",:class=>"edit"),:class => 'sexybutton sexysimple sexymagenta sexyxxl ',:id=>'create_event'%-->  
-		<br><br>
-		<%if @create == 1%>
-			<div class="create">
-				<h2>新增活動</h2>
-				<%=form_tag ('/home/create_event') do %>
-			 	<%= label_tag :event_name,"活動名稱" %>: 
-				<%= text_field_tag :event_name %><br />
-  				<%= label_tag :event_start,"活動開始日期" %>: 
-  				<%= date_select(:event_start, :event_start )%><br />
-				<%= label_tag :event_end,"活動結束日期" %>: 
-  				<%= date_select(:event_end, :event_end )%><br />
-  				<%= label_tag :org_name,"請選擇活動隸屬於哪個組織" %>:<br / >
-  				<%= check_box_tag(:org) %>
-  				<%= label_tag(:org_exist, "組織已存在,請選擇") %>
-  				<%= select_tag :org_name, options_from_collection_for_select(@o, :org_name, :org_name) %><br />
-  				<%= check_box_tag(:org,"0") %>
-  				<%= label_tag(:org_notexist, "組織尚未存在， ") %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  				<br>請輸入組織名稱 
-  				<%= text_field_tag :org_name_new %><br />
-  				<%= button_tag "完成",:class => "sexybutton sexysimple  sexylarge", :type => "submit"%>
-  				<%= link_to "取消",home_path,:class => "sexybutton sexysimple  sexylarge"%>
-				<%end%>
-			</div>
-		<%end%>
+		<%=button_tag content_tag(:span,"新增一個活動",:class=>"edit"),:class => 'sexybutton sexysimple sexymagenta sexyxxl ',:id=>'create_event'%>  
 	</div>
 	<div id="rightcolumn">
 	<h3>最近的活動</h3>
@@ -107,13 +82,31 @@
    <p align="center"><%= link_to image_tag("activ.png", :width=>480), login_path %></p>
 <%end%>
 <script type="text/javascript" charset="utf-8">
-	$('#create_event').live('click',function(){
-		var self=$(this);
-		if(self.hasClass('added')){
-			self.removeClass('added');
-			$('.create').remove();
-			return;
-		}
-
+$('#create_event').live('click',function(){
+	var self=$(this);
+	if(self.hasClass('added')){
+		self.removeClass('added');
+		$('.create').remove();
+		return;
+	}
+	var str = '<br><br><div class="create">';
+	str += '<h2>新增活動</h2><%=form_tag ("/home/create_event") do %><%= label_tag :event_name,"活動名稱" %><%= text_field_tag :event_name %><br /><%= label_tag :event_start,"活動開始日期" %>: ';
+	str += '<%= date_select(:event_start, :event_start ).lines.map{|line| line.strip}.join.html_safe %>';
+		
+	str += '<br ><%= label_tag :event_end,"活動結束日期" %>: ';
+	str += '<%= date_select(:event_end, :event_end ).lines.map{|line| line.strip}.join.html_safe %>';
+	<%if @o != nil%>
+	str += '<br /><%= label_tag :org_name,"請選擇活動隸屬於哪個組織" %>:<br / ><%= check_box_tag(:org) %> <%= label_tag(:org_exist, "組織已存在,請選擇") %>';
+		
+		str += '<%= select_tag :org_name, options_from_collection_for_select(@o, :org_name, :org_name).lines.map{|line| line.strip}.join.html_safe %>';
+	<%end%>
+	str += '<br /><%= check_box_tag(:org,"0") %><%= label_tag(:org_notexist, "組織尚未存在， ") %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>請輸入組織名稱<%= text_field_tag :org_name_new %><br /><%= button_tag "完成",:class => "sexybutton sexysimple  sexylarge", :type => "submit"%><%=button_tag "取消",:class =>"sexybutton sexysimple sexylarge",:id=>"cancel"%><%end%></div>';
+	
+	self.addClass('added').after(str);
+});
+	
+$('#cancel').live('click',function(){
+	$('#create_event').removeClass('added');
+	$('.create').remove();
 });
 </script>
