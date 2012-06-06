@@ -24,12 +24,7 @@ class GoogleCalendarWrapper
                                      :parameters => {'calendarId' => cal.data.id},
                                      :body_object => rule)
 
-        rule = {:scope => {:type => 'user', :value => boss_email},
-                :role => 'owner'}
-        acl_boss = @client.execute(:api_method => @service.acl.insert,
-                                   :parameters => {'calendarId' => cal.data.id},
-                                   :body_object => rule)
-        return {:cal => cal.data, :public => acl_public.data, :boss => acl_boss.data} 
+        return {:cal => cal.data, :public => acl_public.data} 
     end
 
     def create_acl(calendar_id, boss_email, role='owner')

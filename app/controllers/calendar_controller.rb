@@ -11,10 +11,10 @@ class CalendarController < GoogleController
         if @redirected
             return
         end
-        result = @cal_wrapper.create_cal(params[:title], params[:email])
+        result = @cal_wrapper.create_cal(params[:title])
         if result[:cal].id
             session[:calendar_id] = result[:cal].id
-            if result[:public].id and result[:boss].id
+            if result[:public].id
                 render :text => result[:cal].id
                 #render :json => result[:cal]
             else
