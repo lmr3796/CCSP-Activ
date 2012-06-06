@@ -17,7 +17,11 @@ Activ::Application.routes.draw do
   get    "light" => "light#show", :as => :light
   post   "light" => "light#create"
   delete "light" => "light#delete"
+
   post   "light/music" => "light#music_url"
+
+  post   "light/repeat" => "light#create_repeat"
+  delete "light/repeat" => "light#delete_repeat"
 
   get "/" => "home#index", :as => :home
   post "/" => "home#index"

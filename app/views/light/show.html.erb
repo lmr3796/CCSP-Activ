@@ -71,20 +71,31 @@
                                 </ul>
                             </div>
                             <div class="jp-title">
-                                <ul>
-                                    <li><h2 id="title"><%= @act_name %></h2></li>
-                                </ul>
-                                <ul id=repeat_list>
+                                <div><h2 id="act_name"><%= @act_name %></h2></div>
+                                <ul id="repeat_list" style="margin-bottom:20px">
                                     <% @repeats.each do |r| %>
                                         <li><a href="#" class="repeat_item" name="<%=r[:name]%>" start=<%=r[:start]%> end=<%=r[:end]%>>
                                             <%=r[:name]%> repeat
                                         </a></li>
                                     <% end %>
                                 </ul>
-                                <div>
+                                <%= form_for @single_repeat,
+                                    :method => 'post',
+                                    :url => '/light/repeat',
+                                    :html => {:class => "new_repeat_form"} do |f|%>
+                                        段落名稱:
+                                        <%= f.text_field :name, :size => "10x1" %><br/>
+                                        從
+                                        <%= f.text_field :start, :size => "4x1" %>
+                                        秒到
+                                        <%= f.text_field :end, :size => "4x1" %>
+                                        秒
+                                        <%= text_field_tag :act_id, @act_id, :style => "display:none"%>
+                                        <%= f.submit "新增段落" %>
+                                    <% end %>
                                     <%= form_tag({:controller => "light", :action => "music_url", :act_id => @act_id}, :method => "post", :id => "music_url") do %>
                                         <%= text_field_tag :music_url, @mp3 %>
-                                        <%= submit_tag "更新音樂網址" %>
+                                        <%= submit_tag "更新" %>
                                     <% end %>
                                     <span class="author">powered by purplebleed</span>
                                 </div>

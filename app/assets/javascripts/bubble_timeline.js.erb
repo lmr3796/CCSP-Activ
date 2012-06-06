@@ -83,11 +83,8 @@ $(document).ready(function(){
 
     $.each($("#repeat_list").find(".repeat_item"), function(k,v){
         var repeat_item = $(v);
-        var start = parseFloat(repeat_item.attr("start"));
-        var end = parseFloat(repeat_item.attr("end"));
-        var title = repeat_item.attr("name");
         repeat_item.click(function(){
-            set(start, end, title);
+            set(parseFloat(repeat_item.attr("start")), parseFloat(repeat_item.attr("end")), repeat_item.attr("name"));
         });
     });
 
@@ -101,34 +98,10 @@ $(document).ready(function(){
         },
         timeupdate:function(event){
             ctime = event.jPlayer.status.currentTime;
-            if(start != -1 && end != -1){
-                current = Math.floor(event.jPlayer.status.currentTime);
-                if(current > end + 1 || current < start - 1){
-                    start = -1;
-                    end = -1;
-                }
-                else{
-                    if(current == end || current == end + 1){
-                        $("#jquery_jplayer_1").jPlayer("play", start);
-                    }
-                }
-            }
+            if(start != -1 && end != -1 && ctime > end || ctime < start)
+                $("#jquery_jplayer_1").jPlayer("play", start);
 
             update_timer_circle();
-            /*
-               var change = 0;
-               $.each(light,function(k,v){
-               var t = v[1] - event.jPlayer.status.currentTime;
-
-               if( t > 0 && change == 0 && block == 0){
-               $("#circle").html(Math.floor(t));
-               change = 1;
-               return;
-               }
-               });
-               if(change == 0 && block == 0)
-               $("#circle").html("");
-             */
 
             var time = (Math.floor(event.jPlayer.status.currentTime*10)/10)*10;
             $("#timeline").offset({top : -time + (document.documentElement.clientHeight-23)/2});
@@ -242,8 +215,11 @@ function t_o(t){
 function set(s,e,t){
     start = s;
     end = e;
-    if(s != -1)
+    console.log(start);
+    console.log(end);
+    if(s != -1){
         $("#jquery_jplayer_1").jPlayer("play", start);
+    }
     $("#title").html(t);
 }
 function sort_light(){
