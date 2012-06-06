@@ -67,11 +67,17 @@
 	<%end%>
 
 	<%if @see == 1%>
+	<br>
+	<div class="create_b">
+	<h2>新增文章</h2>
         <%= form_tag(:controller => 'event', :action => 'create_post',:type => 'dep',:e_id => @d.id) do %>
                 <h3>文章標題&nbsp;&nbsp;<%= text_field_tag(:post_title)%></h3>
-                <h3>文章內容</h3><h3><%= text_area_tag(:post_content,nil,:size=>"25x10",:border=>"0")%></h3>
-                <%= submit_tag("完成")%>
+                <h3>文章內容</h3><h3><%= text_area_tag(:post_content,nil,:size=>"50x10",:border=>"0")%></h3>
+                <%= submit_tag("完成",:class=>"sexybutton sexysimple sexylarge")%>
+		<br>
+		<br>
         <%end%>
+	</div>
 	<%end%>
 
 
@@ -221,6 +227,7 @@
 	<% end %>
 	</tbody>
 </table>
+<%if @see == 1%>
 <br>
 <div class="create">
 <h2>新增開支</h2>
@@ -233,11 +240,11 @@
   <%= text_field_tag :receipt %><br />
   <%= label_tag :comment,"備註" %>:
   <%= text_area_tag :comment %><br />
-  <%= button_tag "完成",:class => "sexybutton sexysimple sexymagenta sexylarge", :type => "submit"%>
-  <%= link_to "取消",home_path,:class => "sexybutton sexysimple sexymagenta sexylarge"%>
+  <%= button_tag "完成",:class => "sexybutton sexysimple sexylarge", :type => "submit"%>
+  <%= link_to "取消",home_path,:class => "sexybutton sexysimple  sexylarge"%>
 <%end%>
 </div>
-
+<%end%>
 
 <%elsif @dep_type == 6 && @user_id == @d.dep_head%>
 <div id="tabs25">

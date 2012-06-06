@@ -63,15 +63,6 @@ h2 {
 	background-color:yellow;
 }
 
-.create {
-	color:maroon;
-	padding:10px 0 10px;
-	margin:0 250px 0 250px;
-	background-color:orange;	
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-}
-
 /* ---------------------- Redslate nav ---------------------- */
 #tabs27{position:relative;display:block;height:42px;width:95%;text-align:center;font-size:16px;background:transparent url('redslate_background.gif') repeat-x top left;text-transform:uppercase;margin:15px;}
 #tabs27 ul{margin:0px;padding:0;list-style-type:none;width:auto;}
@@ -109,7 +100,7 @@ img {
 	border:0;
 }
 .name {
-	font-size:10px;
+	font-size:8px;
 	color:maroon;
 	overflow:hidden;
 	padding-top:2px;
@@ -219,13 +210,25 @@ height:100%;
 	-moz-border-radius: 15px;
 	border-radius: 15px;
 }
+.create h2 {
+	cursor:pointer;
+}
+.create_b {
+	//color:maroon;
+	color:white;
+	padding:10px 0 10px;
+	margin:0 200px 0 200px;
+	background-color:#232323;	
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+}
+.create_b h2 {
+	cursor:pointer;
+}
 .alert {
 	background-color:red;
 	padding:10px 0 10px;
 	margin:0 200px 0 200px;
 	-moz-border-radius: 15px;
 	border-radius: 15px;
-}
-.create h2 {
-	cursor:pointer;
 }
