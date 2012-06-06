@@ -1,5 +1,14 @@
 Activ::Application.routes.draw do
 
+  get "manage/new" => "manage#manage_event"
+  get "manage/new/oauth2callback" => "manage#manage_event"
+  get "manage/manage" => "manage#manage"
+ 
+
+  get "new_event/new" => "new_event#new"
+  get "new_event/new/oauth2callback" => "new_event#new"
+  post "new_event/new" => "new_event#done"
+
   match  "/calendar/oauth2callback"
 
   get    "/calendar"      => "calendar#create_cal"

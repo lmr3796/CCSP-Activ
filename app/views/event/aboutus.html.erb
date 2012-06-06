@@ -45,7 +45,7 @@
 	</ul>
 </div>
 <%if @e.event_subtitle == nil && @e.event_description == nil && @e.event_image_url == nil && @e.event_trailer_url == nil%>
-	<h3>尚未建立任何介紹內容，活動負責人可於 管理->管理活動 修改。</h3>
+	<h3>尚未建立任何介紹內容，活動負責人可於右側 管理->編輯活動資訊 修改。</h3>
 <%else%>
 	<h2><%=@e.event_name%><%if @e.event_subtitle != nil%> - <%=@e.event_subtitle%><%end%>
 	</h2>
@@ -82,7 +82,7 @@
 <%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
 <%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
 <%if @user_id == @e.event_head%>
-<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage_event'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
+<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'manage',:action => 'new'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
 <%end%>
 
 </div>

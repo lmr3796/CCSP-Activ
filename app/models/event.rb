@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  attr_accessible :event_end, :event_head, :event_name, :event_start, :organization_id
+  attr_accessible :event_end, :event_head, :event_name, :event_start, :organization_id,:accounting_manager_id, :calendar_id
   has_many :user_events
   has_many :users, :through => :user_events
   belongs_to :organization

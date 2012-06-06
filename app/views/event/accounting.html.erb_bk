@@ -1,5 +1,8 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
  <%= stylesheet_link_tag 'event' %>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script> 
+<!--%= javascript_include_tag "jquery-latest" %-->
+<%= javascript_include_tag "jquery.tablesorter" %>
 <div id="header">
 <a href="/event" style="text-decoration:none"><h1><%=@e.event_name%></h1></a><h3><%=@e.organization.org_name%></h3>
 </div>
@@ -38,12 +41,86 @@
 	<li><a href="/event/" >活動首頁</a></li>
 	<li><a href="/event/aboutus/" >活動介紹</a></li>
 	<li><a href="/event/members/" >活動成員</a></li>
-	<li><a href="/event/calendar/"class="current" >活動行事曆</a></li>
-	<li><a href="/event/forum/" >活動討論區</a></li>
-	<li><a href="/event/accounting/" >活動收支表</a></li>
+	<li><a href="/event/calendar/" >活動行事曆</a></li>
+	<li><a href="/event/forum/"  >活動討論區</a></li>
+	<li><a href="/event/accounting/" class="current">活動收支表</a></li>
 	</ul>
 </div>
-<iframe src="https://www.google.com/calendar/embed?title=<%=@e.event_name%>&height=600&amp;wkst=1&amp;bgcolor=%23ff6600&amp;src=<%=@e.calendar_id%>&amp;color=%23875509&amp;ctz=Asia%2FTaipei" style=" border-width:0 " width="800" height="600" frameborder="0" scrolling="no"></iframe>
+<table id="account" class="tablesorter"><thead>
+<tr><th>▼ 編號</th><th>▼ 部門/節目</th><th>▼ 款項</th><th>▼ 金額</th><th>▼ 統一發票號碼</th><th>▼ 報帳人</th><th>▼ 報帳時間</th><th>▼ 備註</th><th>▼ 核銷</th><th>▼ 撥款</th></tr></thead>
+
+<tbody>
+<% @sum = 0 %><% @asum = 0 %><% @psum = 0 %>
+<%@i = 0%>
+<% @eacc.each do |acc| %>
+<%@i = @i + 1%>
+<tr>
+<td><%=@i%></td>
+<%if acc.activity == nil%>
+	<td><%=acc.department.dep_name%></td>
+<%else%>
+	<td><%=acc.activity.act_name%></td>
+<%end%>
+<td><%= acc.title %></td>
+<td><%= acc.balance %></td>
+<% @sum += acc.balance %>
+        <% if acc.approved == true %>
+                <% @asum += acc.balance %>
+                <% if acc.approved == true %>
+                        <% @psum += acc.balance %>
+                <% end %>
+        <% end %>
+<td><%= acc.receipt %></td>
+<%u = User.find(acc.user_id)%>
+<td><%= u.username %></td>
+<td><%= acc.updated_at %></td>
+<td><%= acc.comment %></td>
+<td><% if acc.approved == false %>
+        X
+	<%if @user_id == @e.accounting_manager_id%>
+	<%= link_to "核可", {:controller => 'event', :action => 'acc_approve', :accid => acc.id} %>
+	<%end%>
+        <% else %>O<% end %>
+</td>
+<td><% if acc.approved == false %>X
+        <% else %>
+        <% if acc.paid == false %>
+                 X
+	<%if @user_id == @e.accounting_manager_id%>
+	<%= link_to "付款", {:controller => 'event', :action => 'acc_pay', :accid => acc.id} %>
+	<%end%>
+        <% else %>O<% end %>
+<% end %></td>
+</tr>
+<% end %>
+</tbody>
+</table>
+<h3 id="accounting_sum">表面帳額: <%= @sum %></h3>
+<h3 id="accounting_sum">實際帳額: <%= @asum %></h3>
+<h3 id="accounting_sum">已付帳額: <%= @psum %></h3>
+<h3 id="accounting_sum">記帳管理者: 
+<% @m = User.find(@e.accounting_manager_id)%>
+<%if @m.username == nil%>
+	<%= @m.email%>
+<%else%>
+	<img src="https://graph.facebook.com/<%=@m.fb_id%>/picture?access_token=<%= @access_token %>" width=30 title=<%=@m.username%>>
+<%end%>
+</h3>
+<%if flash[:notice] != nil%>
+	<div class="alert">
+	<h2><%=flash[:notice]%></h2>
+	</div>
+<%end%>
+<%if @user_id == @e.event_head%>
+	<div id="accounting_sum">
+	編輯記帳管理者(請輸入fb email)
+	<%= form_tag(:controller => "event", :action => "edit_account_manager") do %>
+		<%= text_field_tag(:new_account_manager,@m.email)%>
+		<%= submit_tag("完成",:class=>"sexybutton sexysimple sexylarge")%>
+	<%end%>
+	</div>
+<%end%>
+
 </div>
 <div id="rightcolumn">
         <br>
@@ -67,8 +144,11 @@
 <%if @user_id == @e.event_head%>
 <%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'manage',:action => 'new'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
 <%end%>
-
 </div>
-
-
-
+<script>
+	$(document).ready(function() 
+    { 
+        $("#account").tablesorter(); 
+    } 
+); 
+</script>

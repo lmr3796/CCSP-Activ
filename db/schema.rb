@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120606174046) do
+ActiveRecord::Schema.define(:version => 20120606223908) do
 
   create_table "accountings", :force => true do |t|
     t.string   "title"
@@ -38,6 +38,8 @@ ActiveRecord::Schema.define(:version => 20120606174046) do
     t.text     "act_description"
     t.text     "act_image_url"
     t.text     "music_url"
+    t.string   "calendar_id"
+    t.text     "doc_link"
   end
 
   create_table "departments", :force => true do |t|
@@ -49,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20120606174046) do
     t.string   "dep_subtitle"
     t.text     "dep_description"
     t.text     "dep_image_url"
+    t.string   "calendar_id"
   end
 
   create_table "events", :force => true do |t|
@@ -64,6 +67,7 @@ ActiveRecord::Schema.define(:version => 20120606174046) do
     t.text     "event_image_url"
     t.string   "event_trailer_url"
     t.integer  "accounting_manager_id"
+    t.string   "calendar_id"
   end
 
   create_table "light_repeats", :force => true do |t|

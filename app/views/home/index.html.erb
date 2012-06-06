@@ -31,8 +31,10 @@
 			<%end%>
 		<%end%>
 	<%end%>
-		<br><br><br>
-		<%=button_tag content_tag(:span,"新增一個活動",:class=>"edit"),:class => 'sexybutton sexysimple sexymagenta sexyxxl ',:id=>'create_event'%>  
+    <br><br>
+        
+                    <!--%=button_tag content_tag(:span,"新增一個活動",:class=>"edit"),:class => 'sexybutton sexysimple sexymagenta sexyxxl ',:id=>'create_event'%-->  
+                    <%=link_to content_tag(:span,"新增一個活動",:class=>"edit"),'/new_event/new',:class => 'sexybutton sexysimple sexymagenta sexyxxl ',:id=>'create_event'%>  
 	</div>
 	<div id="rightcolumn">
 	<h3>最近的活動</h3>
@@ -100,6 +102,7 @@ $('#create_event').live('click',function(){
 		
 		str += '<%= select_tag :org_name, options_from_collection_for_select(@o, :org_name, :org_name).lines.map{|line| line.strip}.join.html_safe %>';
 	<%end%>
+    ); 
 	str += '<br /><%= check_box_tag(:org,"0") %><%= label_tag(:org_notexist, "組織尚未存在， ") %>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>請輸入組織名稱<%= text_field_tag :org_name_new %><br /><%= button_tag "完成",:class => "sexybutton sexysimple  sexylarge", :type => "submit"%><%=button_tag "取消",:class =>"sexybutton sexysimple sexylarge",:id=>"cancel"%><%end%></div>';
 	
 	self.addClass('added').after(str);

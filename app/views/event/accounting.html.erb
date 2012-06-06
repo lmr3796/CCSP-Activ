@@ -1,154 +1,190 @@
 <link rel="stylesheet" href="http://sexybuttons.googlecode.com/svn-history/r4/trunk/sexybuttons.css" type="text/css">
- <%= stylesheet_link_tag 'event' %>
+<%= stylesheet_link_tag 'event' %>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script> 
 <!--%= javascript_include_tag "jquery-latest" %-->
 <%= javascript_include_tag "jquery.tablesorter" %>
+<%= javascript_include_tag "jquery-ui-1.8.21.custom.min" %>
+<%= stylesheet_link_tag 'jquery-ui-1.8.21.custom' %>
 <div id="header">
-<a href="/event" style="text-decoration:none"><h1><%=@e.event_name%></h1></a><h3><%=@e.organization.org_name%></h3>
+    <a href="/event" style="text-decoration:none"><h1><%=@e.event_name%></h1></a><h3><%=@e.organization.org_name%></h3>
 </div>
 <div id="userinfo">
-       Hello, <%= @uu.username %>
-       <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>" width=30><br>
-       您的身份為：<br>
-        <%if @user_id == @e.event_head%>
-                <div id="identity">活動負責人<br></div>
+    Hello, <%= @uu.username %>
+    <img src="https://graph.facebook.com/<%=@uu.fb_id%>/picture?access_token=<%= @access_token %>" width=30><br>
+    您的身份為：<br>
+    <%if @user_id == @e.event_head%>
+        <div id="identity">活動負責人<br></div>
+    <%end%>
+    <%@dep_me.each do |d|%>
+        <%if @user_id == d.dep_head%>
+            <div id="identity"><%=d.dep_name%>負責人<br></div>
         <%end%>
-        <%@dep_me.each do |d|%>
-                <%if @user_id == d.dep_head%>
-                        <div id="identity"><%=d.dep_name%>負責人<br></div>
-                <%end%>
+    <%end%>
+    <%@act_me.each do |a|%>
+        <%if @user_id == a.act_head%>
+            <div id="identity"><%=a.act_name%>負責人<br></div>
         <%end%>
-        <%@act_me.each do |a|%>
-                <%if @user_id == a.act_head%>
-                        <div id="identity"><%=a.act_name%>負責人<br></div>
-                <%end%>
+    <%end%>
+    <%@uu.departments.where(:event_id => @e.id).each do |d|%>
+        <%if @user_id != d.dep_head%>
+            <div id="identity"><%=d.dep_name%>成員<br></div>
         <%end%>
-        <%@uu.departments.where(:event_id => @e.id).each do |d|%>
-                <%if @user_id != d.dep_head%>
-                        <div id="identity"><%=d.dep_name%>成員<br></div>
-                <%end%>
+    <%end%>
+    <%@uu.activities.where(:event_id => @e.id).each do |a|%>
+        <%if @user_id != a.act_head%>
+            <div id="identity"><%=a.act_name%>成員<br></div>
         <%end%>
-        <%@uu.activities.where(:event_id => @e.id).each do |a|%>
-                <%if @user_id != a.act_head%>
-                        <div id="identity"><%=a.act_name%>成員<br></div>
-                <%end%>
-        <%end%>
+    <%end%>
 
 </div>
 <div id="content">
-<div id="tabs27">
-	<ul>
-	<li><a href="/event/" >活動首頁</a></li>
-	<li><a href="/event/aboutus/" >活動介紹</a></li>
-	<li><a href="/event/members/" >活動成員</a></li>
-	<li><a href="/event/calendar/" >活動行事曆</a></li>
-	<li><a href="/event/forum/"  >活動討論區</a></li>
-	<li><a href="/event/accounting/" class="current">活動收支表</a></li>
-	</ul>
-</div>
-<table id="account" class="tablesorter"><thead>
-<tr><th>▼ 編號</th><th>▼ 部門/節目</th><th>▼ 款項</th><th>▼ 金額</th><th>▼ 統一發票號碼</th><th>▼ 報帳人</th><th>▼ 報帳時間</th><th>▼ 備註</th><th>▼ 核銷</th><th>▼ 撥款</th></tr></thead>
+    <div id="tabs27">
+        <ul>
+            <li><a href="/event/" >活動首頁</a></li>
+            <li><a href="/event/aboutus/" >活動介紹</a></li>
+            <li><a href="/event/members/" >活動成員</a></li>
+            <li><a href="/event/calendar/" >活動行事曆</a></li>
+            <li><a href="/event/forum/"  >活動討論區</a></li>
+            <li><a href="/event/accounting/" class="current">活動收支表</a></li>
+        </ul>
+    </div>
+    <table id="account" class="tablesorter"><thead>
+            <tr><th>▼ 編號</th><th>▼ 部門/節目</th><th>▼ 款項</th><th>▼ 金額</th><th>▼ 統一發票號碼</th><th>▼ 報帳人</th><th>▼ 報帳時間</th><th>▼ 備註</th><th>▼ 核銷</th><th>▼ 撥款</th></tr></thead>
 
-<tbody>
-<% @sum = 0 %><% @asum = 0 %><% @psum = 0 %>
-<%@i = 0%>
-<% @eacc.each do |acc| %>
-<%@i = @i + 1%>
-<tr>
-<td><%=@i%></td>
-<%if acc.activity == nil%>
-	<td><%=acc.department.dep_name%></td>
-<%else%>
-	<td><%=acc.activity.act_name%></td>
-<%end%>
-<td><%= acc.title %></td>
-<td><%= acc.balance %></td>
-<% @sum += acc.balance %>
-        <% if acc.approved == true %>
-                <% @asum += acc.balance %>
-                <% if acc.approved == true %>
-                        <% @psum += acc.balance %>
-                <% end %>
-        <% end %>
-<td><%= acc.receipt %></td>
-<%u = User.find(acc.user_id)%>
-<td><%= u.username %></td>
-<td><%= acc.updated_at %></td>
-<td><%= acc.comment %></td>
-<td><% if acc.approved == false %>
-        X
-	<%if @user_id == @e.accounting_manager_id%>
-	<%= link_to "核可", {:controller => 'event', :action => 'acc_approve', :accid => acc.id} %>
-	<%end%>
-        <% else %>O<% end %>
-</td>
-<td><% if acc.approved == false %>X
-        <% else %>
-        <% if acc.paid == false %>
-                 X
-	<%if @user_id == @e.accounting_manager_id%>
-	<%= link_to "付款", {:controller => 'event', :action => 'acc_pay', :accid => acc.id} %>
-	<%end%>
-        <% else %>O<% end %>
-<% end %></td>
-</tr>
-<% end %>
-</tbody>
-</table>
-<h3 id="accounting_sum">表面帳額: <%= @sum %></h3>
-<h3 id="accounting_sum">實際帳額: <%= @asum %></h3>
-<h3 id="accounting_sum">已付帳額: <%= @psum %></h3>
-<h3 id="accounting_sum">記帳管理者: 
-<% @m = User.find(@e.accounting_manager_id)%>
-<%if @m.username == nil%>
-	<%= @m.email%>
-<%else%>
-	<img src="https://graph.facebook.com/<%=@m.fb_id%>/picture?access_token=<%= @access_token %>" width=30 title=<%=@m.username%>>
-<%end%>
-</h3>
-<%if flash[:notice] != nil%>
-	<div class="alert">
-	<h2><%=flash[:notice]%></h2>
-	</div>
-<%end%>
-<%if @user_id == @e.event_head%>
-	<div id="accounting_sum">
-	編輯記帳管理者(請輸入fb email)
-	<%= form_tag(:controller => "event", :action => "edit_account_manager") do %>
-		<%= text_field_tag(:new_account_manager,@m.email)%>
-		<%= submit_tag("完成",:class=>"sexybutton sexysimple sexylarge")%>
-	<%end%>
-	</div>
-<%end%>
+        <tbody>
+            <% @sum = 0 %><% @asum = 0 %><% @psum = 0 %>
+            <%@i = 0%>
+            <% @eacc.each do |acc| %>
+                <%@i = @i + 1%>
+                <tr>
+                    <td><%=@i%></td>
+                    <%if acc.activity == nil%>
+                        <td><%=acc.department.dep_name%></td>
+                    <%else%>
+                        <td><%=acc.activity.act_name%></td>
+                    <%end%>
+                    <td><%= acc.title %></td>
+                    <%if false%>
+                    <td>
+                        <a onClick="show_dialog(<%=@i%>);" style="cursor: pointer; cursor: hand;"><%= acc.title %></a>
+                        <div id="dialog<%= @i %>" title="更改款項">
+                            <%= form_tag(:action => "acc_edit") do %>
+                                <%= hidden_field_tag(:accid, acc.id) %>
+                                <p><%= label_tag(:title, "款項") %><br>
+                                <%= text_field_tag(:title, acc.title) %></p>
+                                <p><%= label_tag(:balance, "金額") %><br>
+                                <%= text_field_tag(:balance, acc.balance) %></p>
+                                <p><%= label_tag(:receipt, "統一發票號碼") %><br>
+                                <%= text_field_tag(:receipt, acc.receipt) %></p>
+                                <p><%= label_tag(:comment, "備註") %><br>
+                                <%= text_area_tag(:comment, acc.comment) %></p>
+                                <p><%= submit_tag("Submit") %></p>
+                            <% end %>
+                        </div>
+                    </td>
+                <%end%>
+                    <td><%= acc.balance %></td>
+                    <% @sum += acc.balance %>
+                    <% if acc.approved == true %>
+                        <% @asum += acc.balance %>
+                        <% if acc.approved == true %>
+                            <% @psum += acc.balance %>
+                        <% end %>
+                    <% end %>
+                    <td><%= acc.receipt %></td>
+                    <%u = User.find(acc.user_id)%>
+                    <td><%= u.username %></td>
+                    <td><%= acc.updated_at %></td>
+                    <td><%= acc.comment %></td>
+                    <td><% if acc.approved == false %> X
+                            <%-# if @user_id == @e.accounting_manager_id -%>
+                            <%= link_to "核可", {:controller => 'event', :action => 'acc_approve', :accid => acc.id} %>
+                            <%-#end-%>
+                        <% else %> O
+                            <%-# if @user_id == @e.accounting_manager_id && acc.paid == false-%>
+                            <% if acc.paid == false %>
+                                <%= link_to "取消", {:controller => 'event', :action => 'acc_disapprove', :accid => acc.id} %>
+                            <%end%>
+                        <% end %>
+                    </td>
+                    <td>
+                        <% if acc.approved == false %> X
+                        <% else %>
+                            <% if acc.paid == false %> X
+                                <%-# if @user_id == @e.accounting_manager_id -%>
+                                <%= link_to "付款", {:controller => 'event', :action => 'acc_pay', :accid => acc.id} %>
+                                <%-#end-%>
+                            <% else %> O
+                                <%-# if @user_id == @e.accounting_manager_id -%>
+                                <%= link_to "取消", {:controller => 'event', :action => 'acc_unpay', :accid => acc.id} %>
+                                <%-#end-%>
+                            <% end %>
+                        <% end %>
+                    </td> 
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+    <h3 id="accounting_sum">表面帳額: <%= @sum %></h3>
+    <h3 id="accounting_sum">實際帳額: <%= @asum %></h3>
+    <h3 id="accounting_sum">已付帳額: <%= @psum %></h3>
+    <h3 id="accounting_sum">記帳管理者: 
+        <% @m = User.find(@e.accounting_manager_id)%>
+        <%if @m.username == nil%>
+            <%= @m.email%>
+        <%else%>
+            <img src="https://graph.facebook.com/<%=@m.fb_id%>/picture?access_token=<%= @access_token %>" width=30 title=<%=@m.username%>>
+        <%end%>
+    </h3>
+    <%if flash[:notice] != nil%>
+        <div class="alert">
+            <h2><%=flash[:notice]%></h2>
+        </div>
+    <%end%>
+    <%if @user_id == @e.event_head%>
+        <div id="accounting_sum">
+            編輯記帳管理者(請輸入fb email)
+            <%= form_tag(:controller => "event", :action => "edit_account_manager") do %>
+                <%= text_field_tag(:new_account_manager,@m.email)%>
+                <%= submit_tag("完成",:class=>"sexybutton sexysimple sexylarge")%>
+            <%end%>
+        </div>
+    <%end%>
 
 </div>
 <div id="rightcolumn">
-        <br>
-        <% @deps.each do |d|%>
-                <%=form_tag :controller => 'event', :action => 'show_dep' do %>
-                        <%= hidden_field_tag(:dep_id, d.id) %>
-                        <!--%= submit_tag(d.dep_name) %-->
-                        <%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxxl", :type => "submit"%>
-                <%end%>
+    <br>
+    <% @deps.each do |d|%>
+        <%=form_tag :controller => 'event', :action => 'show_dep' do %>
+            <%= hidden_field_tag(:dep_id, d.id) %>
+            <!--%= submit_tag(d.dep_name) %-->
+            <%= button_tag d.dep_name,:class => "sexybutton sexysimple sexyblue sexyxxl", :type => "submit"%>
         <%end%>
+    <%end%>
 
-        <% @acts.each do |a|%>
-                <%=form_tag :controller => 'event', :action => 'show_act' do %>
-                        <%= hidden_field_tag(:act_id, a.id) %>
-                        <!--%= submit_tag(a.act_name) %-->
-                        <%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxxl", :type => "submit"%>
-                <%end%>
+    <% @acts.each do |a|%>
+        <%=form_tag :controller => 'event', :action => 'show_act' do %>
+            <%= hidden_field_tag(:act_id, a.id) %>
+            <!--%= submit_tag(a.act_name) %-->
+            <%= button_tag a.act_name,:class => "sexybutton sexysimple sexypurple sexyxxl", :type => "submit"%>
         <%end%>
-<%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
-<%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
-<%if @user_id == @e.event_head%>
-<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage_event'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
-<%end%>
+    <%end%>
+    <%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
+    <%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
+    <%if @user_id == @e.event_head%>
+        <%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'manage',:action => 'new'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
+    <%end%>
 </div>
 <script>
-	$(document).ready(function() 
+    $(document).ready(function() 
     { 
-        $("#account").tablesorter(); 
-    } 
-); 
+        $("#account").tablesorter();
+        for(i=1;i<= <%= @i %>;i++){
+            $("#dialog"+i).dialog({autoOpen:false, modal:true, width:'auto', height:'auto'});
+        }
+
+    }); 
+    function show_dialog(id){
+        $("#dialog"+id).dialog( "open" );
+    }; 
 </script>

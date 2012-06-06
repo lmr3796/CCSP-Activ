@@ -66,7 +66,7 @@
 			<%=u.email%> #<%=u.id%>
 		<%end%>
 		<%if u.id != @e.event_head%>
-			<%= link_to '刪除',{ :controller => 'event', :action => 'destroy', :d_id => u.id},:method => :delete, :confirm => "你確定要將此成員從本活動刪除嗎？這會使他無法在瀏覽任何關於本活動的資訊。若此成員為某節目或部門負責人，則該節目或部門之負責人將先交由本活動之負責人管理。"%>
+			<%= link_to '刪除',{ :controller => 'manage', :action => 'destroy', :d_id => u.id},:method => :delete, :confirm => "你確定要將此成員從本活動刪除嗎？這會使他無法在瀏覽任何關於本活動的資訊。若此成員為某節目或部門負責人，則該節目或部門之負責人將先交由本活動之負責人管理。"%>
 		<%end%>
 	</li>
 <%end%>
@@ -74,7 +74,7 @@
 
 	
 <h3>新增成員</h3>
-	<%= form_tag(:controller => 'event', :action => 'create') do %>
+	<%= form_tag(:controller => 'manage', :action => 'create') do %>
 	請輸入fb email<%= text_field_tag(:email)%>
 	<%= submit_tag("新增")%>
 	<%end%>
@@ -92,13 +92,13 @@
                 <%=@u.email%>
 		dep_id = <%=d.id%>
 		<% if @user_id == @e.event_head%>
-			<%= link_to '刪除部門', :controller => 'event', :action => 'destroy_dep',:d_id => d.id%>
+			<%= link_to '刪除部門', :controller => 'manage', :action => 'destroy_dep',:d_id => d.id%>
 		
-			<%= form_tag(:controller => 'event', :action => 'edit_depname',:e_id => d.id) do %>
+			<%= form_tag(:controller => 'manage', :action => 'edit_depname',:e_id => d.id) do %>
 				更改部門名稱<%= text_field_tag(:dep_name_new)%>
 				<%= submit_tag("確定")%>
 			<%end%>
-			<%= form_tag(:controller => 'event', :action => 'edit_dephead',:e_id => d.id) do %>
+			<%= form_tag(:controller => 'manage', :action => 'edit_dephead',:e_id => d.id) do %>
 				更改部門負責人(fb_email)<%= text_field_tag(:dep_head_new)%>
 				<%= submit_tag("確定")%>
 			<%end%>
@@ -110,13 +110,13 @@
 					<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>">
 					<%=u.username%> <%=u.email%> #<%=u.id%>
 					<% if @user_id == d.dep_head && u.id != d.dep_head %>
-						<%= link_to '刪除部門成員', :controller => 'event', :action => 'destroy_depuser', :d_id => u.id, :dep_id => d.id%>
+						<%= link_to '刪除部門成員', :controller => 'manage', :action => 'destroy_depuser', :d_id => u.id, :dep_id => d.id%>
 					<%end%>
 				</li>
 			<%end%>
 			<% if @user_id == d.dep_head %>
 			<li>
-				<%= form_tag(:controller => 'event', :action => 'create_depuser',:dep_id => d.id) do %>
+				<%= form_tag(:controller => 'manage', :action => 'create_depuser',:dep_id => d.id) do %>
 					fb email<%= text_field_tag(:email)%>
 					<%= submit_tag("新增部門成員")%>
 				<%end%>
@@ -130,7 +130,7 @@
 
 <% if @user_id == @e.event_head %>
 <h2> 新增部門</h2><h3>(default template: google 行事曆, 約練討論區, 收支記帳表,部門介紹單,檔案連結區)</h3>
-	<%= form_tag(:controller => 'event', :action => 'create_dep') do %>
+	<%= form_tag(:controller => 'manage', :action => 'create_dep') do %>
 	部門名稱<%= text_field_tag(:dep_name)%><br>
 	部門負責人fb email<%= text_field_tag(:email)%>
 	<%= submit_tag("新增")%>
@@ -140,7 +140,7 @@
 <%if @dep_me.size > 0%>
 <h2>編輯部門資訊</h2>
 <% @dep_me.each do |d|%>
-	<%= form_tag(:controller => 'event', :action => 'edit_dep',:e_id => d.id) do %>
+	<%= form_tag(:controller => 'manage', :action => 'edit_dep',:e_id => d.id) do %>
 		<h3>部門名稱&nbsp;&nbsp;<%= text_field_tag(:dep_new_name,d.dep_name)%></h3>
 		<h3>部門副標題&nbsp;&nbsp;<%= text_field_tag(:dep_new_sub,d.dep_subtitle)%></h3>
 		<h3>部門敘述</h3><h3><%= text_area_tag(:dep_new_desc,d.dep_description,:size=>"25x10")%></h3>
@@ -163,12 +163,12 @@
                 <%=@u.email%>
 		act_id = <%=a.id%>
 		<% if @user_id == @e.event_head%>
-			<%= link_to '刪除節目', :controller => 'event', :action => 'destroy_act', :d_id => a.id%>
-			<%= form_tag(:controller => 'event', :action => 'edit_actname',:e_id => a.id) do %>
+			<%= link_to '刪除節目', :controller => 'manage', :action => 'destroy_act', :d_id => a.id%>
+			<%= form_tag(:controller => 'manage', :action => 'edit_actname',:e_id => a.id) do %>
 				更改節目名稱<%= text_field_tag(:act_name_new)%>
 				<%= submit_tag("確定")%>
 			<%end%>
-			<%= form_tag(:controller => 'event', :action => 'edit_acthead',:e_id => a.id) do %>
+			<%= form_tag(:controller => 'manage', :action => 'edit_acthead',:e_id => a.id) do %>
 				更改節目負責人(fb_email)<%= text_field_tag(:act_head_new)%>
 				<%= submit_tag("確定")%>
 			<%end%>
@@ -179,13 +179,13 @@
 					<img src="https://graph.facebook.com/<%=u.fb_id%>/picture?access_token=<%= @access_token %>">
 					<%=u.username%> <%=u.email%> #<%=u.id%>
 					<% if @user_id == a.act_head && u.id != a.act_head %>
-						<%= link_to '刪除節目成員', :controller => 'event', :action => 'destroy_actuser', :d_id => u.id, :act_id => a.id%>
+						<%= link_to '刪除節目成員', :controller => 'manage', :action => 'destroy_actuser', :d_id => u.id, :act_id => a.id%>
 					<%end%>
 				</li>
 			<%end%>
 			<% if @user_id == a.act_head %>
 			<li>
-				<%= form_tag(:controller => 'event', :action => 'create_actuser',:act_id => a.id) do %>
+				<%= form_tag(:controller => 'manage', :action => 'create_actuser',:act_id => a.id) do %>
 					fb email<%= text_field_tag(:email)%>
 					<%= submit_tag("新增節目成員")%>
 				<%end%>
@@ -199,7 +199,7 @@
 
 <% if @user_id == @e.event_head %>
 <h2> 新增節目</h2><h3>(default template: google 行事曆, 約練討論區, 收支記帳表,節目介紹單,檔案連結區)</h3>
-	<%= form_tag(:controller => 'event', :action => 'create_act') do %>
+	<%= form_tag(:controller => 'manage', :action => 'create_act') do %>
 	節目名稱<%= text_field_tag(:act_name)%><br>
 	節目負責人fb email<%= text_field_tag(:email)%><br>
 	<!--其他樣板-->
@@ -214,7 +214,7 @@
 <%if @act_me.size > 0%>
 <h2>編輯節目資訊</h2>
 <% @act_me.each do |a|%>
-	<%= form_tag(:controller => 'event', :action => 'edit_act',:e_id => a.id) do %>
+	<%= form_tag(:controller => 'manage', :action => 'edit_act',:e_id => a.id) do %>
 		<h3>節目名稱&nbsp;&nbsp;<%= text_field_tag(:act_new_name,a.act_name)%></h3>
 		<h3>節目副標題&nbsp;&nbsp;<%= text_field_tag(:act_new_sub,a.act_subtitle)%></h3>
 		<h3>節目敘述</h3><h3><%= text_area_tag(:act_new_desc,a.act_description,:size=>"25x10")%></h3>
@@ -236,7 +236,7 @@
 <%if false%>
 <div class="create">
 <h2>編輯活動資訊</h2>
-	<%= form_tag(:controller => 'event', :action => 'edit_event') do %>
+	<%= form_tag(:controller => 'manage', :action => 'edit_event') do %>
 		<h3>活動名稱&nbsp;&nbsp;<%= text_field_tag(:event_new_name,@e.event_name)%></h3>
 		<h3>活動副標題&nbsp;&nbsp;<%= text_field_tag(:event_new_sub,@e.event_subtitle)%></h3>
 		<h3>活動敘述</h3><h3><%= text_area_tag(:event_new_desc,@e.event_description,:size=>"50x10")%></h3>
@@ -259,7 +259,7 @@
 <div class="create">
 <h2>增刪活動成員</h2>
 <h3>新增活動成員</h3>
-        <%= form_tag(:controller => 'event', :action => 'create') do %>
+        <%= form_tag(:controller => 'manage', :action => 'create') do %>
         	請輸入fb email<%= text_field_tag(:email)%>
         	<%= submit_tag("新增",:class=>"sexybutton sexysimple sexylarge")%>
         <%end%>
@@ -366,7 +366,7 @@
 <%= link_to content_tag(:span,@e.event_name,:class=>"heart"), {:controller => 'event'},:class => 'sexybutton sexysimple sexymagenta sexyxxl' %><br>
 <%= link_to content_tag(:span,'回活動列表',:class=>"home"), home_path,:class => 'sexybutton sexysimple sexygreen sexyxxl' %><br>
 <%if @user_id == @e.event_head%>
-<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'manage',:action => 'new'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
+<%= link_to content_tag(:span,"管理",:class=>"settings"), {:controller => 'event',:action => 'manage_event'},:class => 'sexybutton sexysimple sexyorange sexyxxl'%>
 <%end%>
 </div>
 
@@ -378,7 +378,7 @@
 			$('#text_event').remove();
 			return;
 		}
-		var str ='<div id="text_event"><%= form_tag(:controller => "event", :action => "edit_event") do %><h3>活動名稱&nbsp;&nbsp;<%= text_field_tag(:event_new_name,@e.event_name)%></h3><h3>活動副標題&nbsp;&nbsp;<%= text_field_tag(:event_new_sub,@e.event_subtitle)%></h3><h3>活動敘述</h3><h3>';
+		var str ='<div id="text_event"><%= form_tag(:controller => "manage", :action => "edit_event") do %><h3>活動名稱&nbsp;&nbsp;<%= text_field_tag(:event_new_name,@e.event_name)%></h3><h3>活動副標題&nbsp;&nbsp;<%= text_field_tag(:event_new_sub,@e.event_subtitle)%></h3><h3>活動敘述</h3><h3>';
 		str += '<%= text_area_tag(:event_new_desc,@e.event_description,:size=>"50x10").lines.map{|line| line.strip}.join.html_safe %>';
 		str += '</h3><h3>活動海報（請貼圖片網站連結）<%= text_field_tag(:event_new_imgurl,@e.event_image_url,:size=>"50x10")%></h3><h3>活動預告片（請貼youtube影片連結之英數代碼 ex.v=xxxxx）<%= text_field_tag(:event_new_trailerurl,@e.event_trailer_url)%></h3><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%></div>';
 		self.addClass('add_event').after(str);
@@ -391,7 +391,7 @@
 			$('#text_member').remove();
 			return;
 		}
-		var str='<div id="text_member"><h3>新增活動成員</h3><%= form_tag(:controller => "event", :action => "create") do %>請輸入fb email<%= text_field_tag(:email)%><%= submit_tag("新增",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>刪除活動成員</h3>請點擊成員之大頭貼，無大頭貼者請點擊email。<br><% @users.each do |u|%><% if u.username != nil && u.id != @user_id%><%=link_to image_tag("https://graph.facebook.com/"+u.fb_id+"/picture?access_token="+@access_token),{:controller=>"event",:action=>"destroy",:d_id => u.id},:method => :delete,:confirm => "你確定要將此成員從本活動刪除嗎？這會使他無法在瀏覽任何關於本活動的資訊。若此成員為某節目或部門負責人，則該節目或部門之負責人將先交由本活動之負>責人管理。",:title => ""+u.username+","+u.email%><%end%><%end%><br><% @users.each do |u|%><% if u.username == nil%><%= link_to u.email,{ :controller => "event", :action => "destroy", :d_id => u.id},:method => :delete, :confirm => "你確定要將此成員從本活動刪除嗎？這會使他無法在瀏覽任何關於本活動的資訊。若此成員為某節目或部門負責人，則該節目或部門之負責人將先交由本活動之負>責人管理。"%><br><%end%><%end%></div>';
+		var str='<div id="text_member"><h3>新增活動成員</h3><%= form_tag(:controller => "manage", :action => "create") do %>請輸入fb email<%= text_field_tag(:email)%><%= submit_tag("新增",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>刪除活動成員</h3>請點擊成員之大頭貼，無大頭貼者請點擊email。<br><% @users.each do |u|%><% if u.username != nil && u.id != @user_id%><%=link_to image_tag("https://graph.facebook.com/"+u.fb_id+"/picture?access_token="+@access_token),{:controller=>"manage",:action=>"destroy",:d_id => u.id},:method => :delete,:confirm => "你確定要將此成員從本活動刪除嗎？這會使他無法在瀏覽任何關於本活動的資訊。若此成員為某節目或部門負責人，則該節目或部門之負責人將先交由本活動之負>責人管理。",:title => ""+u.username+","+u.email%><%end%><%end%><br><% @users.each do |u|%><% if u.username == nil%><%= link_to u.email,{ :controller => "manage", :action => "destroy", :d_id => u.id},:method => :delete, :confirm => "你確定要將此成員從本活動刪除嗎？這會使他無法在瀏覽任何關於本活動的資訊。若此成員為某節目或部門負責人，則該節目或部門之負責人將先交由本活動之負>責人管理。"%><br><%end%><%end%></div>';
 
 		self.addClass('add_member').after(str);
 	});
@@ -402,7 +402,7 @@
 			$('#text_depact').remove();
 			return;
 		}
-		var str = '<div id="text_depact"><h3>新增部門<br>(擁有文章公告區,行事曆,討論區,收支表等樣板)</h3><%= form_tag(:controller => "event", :action => "create_dep") do %>部門名稱<%= text_field_tag(:dep_name)%><br>部門負責人fb email<%= text_field_tag(:email)%><%= submit_tag("新增部門",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>新增節目<br>(擁有文章公告區,行事曆,討論區,收支表,燈音表,劇本等樣板)</h3><%= form_tag(:controller => "event", :action => "create_act") do %>節目名稱<%= text_field_tag(:act_name)%><br>節目負責人fb email<%= text_field_tag(:email)%><%= submit_tag("新增節目",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>編輯/刪除部門</h3><ul><% @deps.each do |d|%><li><%@u = User.find(d.dep_head)%><h3><%= d.dep_name%>(負責人 <%=@u.username%>)<%= link_to "刪除部門", {:controller => "event", :action => "destroy_dep",:d_id => d.id},:method => :delete, :confirm => "你確定要刪除此部門嗎？這同時會把所以公告文章，討論區，收支紀錄，行事曆等全部都刪除。"%></h3><%= form_tag(:controller => "event", :action => "edit_depname",:e_id => d.id) do %>更改部門名稱<%= text_field_tag(:dep_name_new,d.dep_name)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><%= form_tag(:controller => "event", :action => "edit_dephead",:e_id => d.id) do %>更改部門負責人(fb_email)<%= text_field_tag(:dep_head_new,@u.email)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><br></li><%end%></ul><h3>編輯/刪除節目</h3><ul><% @acts.each do |a|%><li><%@u = User.find(a.act_head)%><h3><%= a.act_name%>(負責人 <%=@u.username%>)<%= link_to "刪除節目", {:controller => "event", :action => "destroy_act", :d_id => a.id},:method => :delete, :confirm => "你確定要刪除此部門嗎？這同時會把所以公告文章，討論區，收支紀錄，行事曆等全部都刪除。"%></h3><%= form_tag(:controller => "event", :action => "edit_actname",:e_id => a.id) do %>更改節目名稱<%= text_field_tag(:act_name_new,a.act_name)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><%= form_tag(:controller => "event", :action => "edit_acthead",:e_id => a.id) do %>更改節目負責人(fb_email)<%= text_field_tag(:act_head_new,@u.email)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><br></li><%end%></ul></div>';
+		var str = '<div id="text_depact"><h3>新增部門<br>(擁有文章公告區,行事曆,討論區,收支表等樣板)</h3><%= form_tag(:controller => "manage", :action => "create_dep") do %>部門名稱<%= text_field_tag(:dep_name)%><br>部門負責人fb email<%= text_field_tag(:email)%><%= submit_tag("新增部門",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>新增節目<br>(擁有文章公告區,行事曆,討論區,收支表,燈音表,劇本等樣板)</h3><%= form_tag(:controller => "manage", :action => "create_act") do %>節目名稱<%= text_field_tag(:act_name)%><br>節目負責人fb email<%= text_field_tag(:email)%><%= submit_tag("新增節目",:class=>"sexybutton sexysimple sexylarge")%><%end%><h3>編輯/刪除部門</h3><ul><% @deps.each do |d|%><li><%@u = User.find(d.dep_head)%><h3><%= d.dep_name%>(負責人 <%=@u.username%>)<%= link_to "刪除部門", {:controller => "manage", :action => "destroy_dep",:d_id => d.id},:method => :delete, :confirm => "你確定要刪除此部門嗎？這同時會把所以公告文章，討論區，收支紀錄，行事曆等全部都刪除。"%></h3><%= form_tag(:controller => "manage", :action => "edit_depname",:e_id => d.id) do %>更改部門名稱<%= text_field_tag(:dep_name_new,d.dep_name)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><%= form_tag(:controller => "manage", :action => "edit_dephead",:e_id => d.id) do %>更改部門負責人(fb_email)<%= text_field_tag(:dep_head_new,@u.email)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><br></li><%end%></ul><h3>編輯/刪除節目</h3><ul><% @acts.each do |a|%><li><%@u = User.find(a.act_head)%><h3><%= a.act_name%>(負責人 <%=@u.username%>)<%= link_to "刪除節目", {:controller => "manage", :action => "destroy_act", :d_id => a.id},:method => :delete, :confirm => "你確定要刪除此部門嗎？這同時會把所以公告文章，討論區，收支紀錄，行事曆等全部都刪除。"%></h3><%= form_tag(:controller => "manage", :action => "edit_actname",:e_id => a.id) do %>更改節目名稱<%= text_field_tag(:act_name_new,a.act_name)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><%= form_tag(:controller => "manage", :action => "edit_acthead",:e_id => a.id) do %>更改節目負責人(fb_email)<%= text_field_tag(:act_head_new,@u.email)%><%= submit_tag("確定",:class=>"sexybutton sexysimple sexylarge")%><%end%><br></li><%end%></ul></div>';
 		self.addClass('add_depact').after(str);
 	});
 </script>

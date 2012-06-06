@@ -14,7 +14,7 @@ class GoogleCalendarWrapper
         return result.data
     end
 
-    def create_cal(summary, boss_email)
+    def create_cal(summary)
         cal = @client.execute(:api_method => @service.calendars.insert,
                               :body_object => {:summary => summary})
 
