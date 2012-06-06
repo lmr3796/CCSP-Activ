@@ -394,7 +394,7 @@
     $(document).ready(function() 
     { 
         $("#account").tablesorter();
-        for(i=1;i<= <%= @i %>;i++){
+        for(i=1;i<= '<%= @i %>';i++){
             $("#dialog"+i).dialog({autoOpen:false, modal:true, width:'auto', height:'auto'});
         }
 
