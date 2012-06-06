@@ -26,7 +26,7 @@ function set_light_and_bubble(){
     $(".triangle-border .del_bubble").click(function(){
         bubble = $(this).parents('p')
         script_id = bubble.attr('light_script_id');
-        remove_light_script(script_id, bubble);
+    remove_light_script(script_id, bubble);
     });
 
 }
@@ -143,18 +143,21 @@ $(document).ready(function(){
                 }
             }
 
-            var change = 0;
-            $.each(light,function(k,v){
-                var t = v[1] - event.jPlayer.status.currentTime;
+            update_timer_circle();
+            /*
+               var change = 0;
+               $.each(light,function(k,v){
+               var t = v[1] - event.jPlayer.status.currentTime;
 
-                if( t > 0 && change == 0 && block == 0){
-                    $("#circle").html(Math.floor(t));
-                    change = 1;
-                    return;
-                }
-            });
-            if(change == 0 && block == 0)
-                $("#circle").html("");
+               if( t > 0 && change == 0 && block == 0){
+               $("#circle").html(Math.floor(t));
+               change = 1;
+               return;
+               }
+               });
+               if(change == 0 && block == 0)
+               $("#circle").html("");
+             */
 
             var time = (Math.floor(event.jPlayer.status.currentTime*10)/10)*10;
             $("#timeline").offset({top : -time + (document.documentElement.clientHeight-23)/2});
@@ -198,6 +201,8 @@ function add_light_script(time, move){
         success: function(script_id) {
             light.push(new Array(script_id, time, move));
             set_light_and_bubble();
+            sort_light();
+            update_timer_circle();
         },
         error: function() {
             $("#new_move").append('<span id="create_move_fail" style="color:red">上傳失敗</span>');
@@ -222,6 +227,8 @@ function remove_light_script(script_id, bubble){
                 }
             }
             bubble.remove();
+            sort_light();
+            update_timer_circle();
         },
         error: function() {
             alert('fail');
@@ -244,8 +251,22 @@ function update_music_url(){
         },
     });
 }
+function update_timer_circle(){
+    var change = 0;
+    $.each(light,function(k,v){
+        var t = v[1] - ctime;
+
+        if( t > 0 && change == 0 && block == 0){
+            $("#circle").html(Math.floor(t));
+            change = 1;
+            return;
+        }
+    });
+    if(change == 0 && block == 0)
+        $("#circle").html("");
+}
 function t_o(t){
-    return t*10-38 ;
+    return t*10-38;
 }
 function set(s,e,t){
     start = s;
@@ -253,4 +274,9 @@ function set(s,e,t){
     if(s != -1)
         $("#jquery_jplayer_1").jPlayer("play", start);
     $("#title").html(t);
+}
+function sort_light(){
+    light.sort(function(a, b){
+        return a[1] - b[1];
+    });
 }
