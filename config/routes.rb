@@ -2,12 +2,8 @@ Activ::Application.routes.draw do
 
   match  "/calendar/oauth2callback"
 
-  get    "/calendar"      => "calendar#cal"
-
-  get    "/calendar"      => "calendar#get_cal"
-  get    "/calendar/list" => "calendar#create_list"
-  delete "/calendar"      => "calendar#delete_cal"
-  delete "/calendar/list" => "calendar#delete_list"
+  get    "/calendar"      => "calendar#create"
+  delete "/calendar/acl"  => "calendar#delete_acl"
 
   get    "/calendar/get_list"
   get    "/calendar/create_list"
