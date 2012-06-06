@@ -38,21 +38,6 @@ function make_right_bubble(id, time, move){
 }
 
 function load_data(){
-    /*
-       var light = {   0: "橘紅色燈約50% 噴點乾冰",
-       13: "亮度約80% 顏色可隨著節拍換",
-       24: "隨便打",
-       103: "燈暗",
-       267: "燈慢慢變亮(到半亮)",
-       275: "燈半亮、spot light 打往前走的人",
-       288: "一閃一閃的感覺但不要魔鬼燈",
-       292: "燈全亮",
-       342: "燈微亮，spot light亂打",
-       347: "不同顏色的燈輪流打",
-       362: "燈全亮",
-       508: "End"
-       };
-     */
     light = my_light;
     set_light_and_bubble();
 }
@@ -96,29 +81,15 @@ $(document).ready(function(){
     $("#circle").css("top",(document.documentElement.clientHeight-23)/2-16);
     $("#line").height(document.documentElement.clientHeight-23);
 
-
-    $("#hip").click(function(){
-        set(0,105,"Hiphop");
+    $.each($("#repeat_list").find(".repeat_item"), function(k,v){
+        var repeat_item = $(v);
+        var start = parseFloat(repeat_item.attr("start"));
+        var end = parseFloat(repeat_item.attr("end"));
+        var title = repeat_item.attr("name");
+        repeat_item.click(function(){
+            set(start, end, title);
+        });
     });
-    $("#lockin").click(function(){
-        set(106,207,"Lockin");
-    });
-    $("#pop").click(function(){
-        set(208,266,"Poppin");
-    });
-    $("#gs").click(function(){
-        set(266,345,"Girl Style");
-    });
-    $("#yn").click(function(){
-        set(344,434,"House");
-    });
-    $("#battle").click(function(){
-        set(436,508,"Battle");
-    });
-    $("#whole").click(function(){
-        set(-1,-1,"Old Dance");
-    });
-
 
     $("#jquery_jplayer_1").jPlayer({
         ready: function (event) {

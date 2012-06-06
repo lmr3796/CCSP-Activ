@@ -43,7 +43,7 @@
                 <td height="100%">
                     <div id="jquery_jplayer_1" class="jp-jplayer" ></div>
 
-                    <div id="jp_container_1" class="jp-audio" style="position:absolute;right:0%;top:0%;z-index:75">
+                    <div id="jp_container_1" class="jp-audio" style="height:100%;position:absolute;right:0%;top:0%;z-index:75">
                         <div class="jp-type-single" >
                             <div class="jp-gui jp-interface">
                                 <ul class="jp-controls">
@@ -72,24 +72,22 @@
                             </div>
                             <div class="jp-title">
                                 <ul>
-                                    <li><h2 id="title">Old Dance</h2></li>
+                                    <li><h2 id="title"><%= @act_name %></h2></li>
+                                </ul>
+                                <ul id=repeat_list>
+                                    <% @repeats.each do |r| %>
+                                        <li><a href="#" class="repeat_item" name="<%=r[:name]%>" start=<%=r[:start]%> end=<%=r[:end]%>>
+                                            <%=r[:name]%> repeat
+                                        </a></li>
+                                    <% end %>
                                 </ul>
                                 <div>
-                                    <ul>
-                                        <li><a href="#" id="hip">Hip hop repeat</a></li>
-                                        <li><a href="#" id="lockin">Lockin repeat</a></li>
-                                        <li><a href="#" id="pop"> Popping repeat</a></li>
-                                        <li><a href="#" id="gs">Girl Style repeat</a></li>
-                                        <li><a href="#" id="yn">Yes or No repeat</a></li>
-                                        <li><a href="#" id="battle">Battle repeat</a></li>
-                                        <li><a href="#" id="whole">Whole</a></li>
-                                    </ul>
+                                    <%= form_tag({:controller => "light", :action => "music_url", :act_id => @act_id}, :method => "post", :id => "music_url") do %>
+                                        <%= text_field_tag :music_url, @mp3 %>
+                                        <%= submit_tag "更新音樂網址" %>
+                                    <% end %>
+                                    <span class="author">powered by purplebleed</span>
                                 </div>
-                                <%= form_tag({:controller => "light", :action => "music_url", :act_id => @act_id}, :method => "post", :id => "music_url") do %>
-                                    <%= text_field_tag :music_url, @mp3 %>
-                                    <%= submit_tag "更新音樂網址" %>
-                                <% end %>
-                                <div><span class="author">powered by purplebleed</span></div>
                             </div>
                             <div class="jp-no-solution">
                                 <span>Update Required</span>
