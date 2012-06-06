@@ -8,14 +8,15 @@ class LightController < ApplicationController
     return !(p[:act_id].blank? or Activity.find_by_id(p[:act_id]).blank?)
   end
   def show
-    @script = [] 
     @act_id = params[:act_id]
     if param_session_valid(params, session)
-      LightScript.select("id, time, move").where("activity_id = ?", @act_id).order(:time).each { |m|
-        @script.append([m.id, m.time, m.move])
+      @act_name = Activity.find(@act_id).act_name
+      @repeats = LightRepeat.select("name, start, end").where("activity_id = ?", @act_id).map{|r|
+          {:name => r[:name], :start => r[:start], :end => r[:end]}
       }
-      #@script = JSON(find_music_rec(params).light_json)
-      @script = JSON(@script.to_json)
+      @script = LightScript.select("id, time, move").where("activity_id = ?", @act_id).order(:time).map{ |m|
+        [m.id, m.time, m.move]
+      }
       if @script.blank?
           @script = []
       end

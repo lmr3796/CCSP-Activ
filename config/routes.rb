@@ -5,7 +5,7 @@ Activ::Application.routes.draw do
   get    "/calendar"      => "calendar#create_cal"
 
   delete "/calendar/acl"  => "calendar#delete_acl"
-  get   "/calendar/acl"  => "calendar#create_acl"
+  post   "/calendar/acl"  => "calendar#create_acl"
 
   #get    "/calendar/get_list"
   #get    "/calendar/create_list"

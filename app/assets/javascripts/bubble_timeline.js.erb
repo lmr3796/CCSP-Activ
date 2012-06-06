@@ -26,7 +26,7 @@ function set_light_and_bubble(){
     $(".triangle-border .del_bubble").click(function(){
         bubble = $(this).parents('p')
         script_id = bubble.attr('light_script_id');
-        remove_light_script(script_id, bubble);
+    remove_light_script(script_id, bubble);
     });
 
 }
@@ -38,21 +38,6 @@ function make_right_bubble(id, time, move){
 }
 
 function load_data(){
-    /*
-       var light = {   0: "橘紅色燈約50% 噴點乾冰",
-       13: "亮度約80% 顏色可隨著節拍換",
-       24: "隨便打",
-       103: "燈暗",
-       267: "燈慢慢變亮(到半亮)",
-       275: "燈半亮、spot light 打往前走的人",
-       288: "一閃一閃的感覺但不要魔鬼燈",
-       292: "燈全亮",
-       342: "燈微亮，spot light亂打",
-       347: "不同顏色的燈輪流打",
-       362: "燈全亮",
-       508: "End"
-       };
-     */
     light = my_light;
     set_light_and_bubble();
 }
@@ -96,29 +81,15 @@ $(document).ready(function(){
     $("#circle").css("top",(document.documentElement.clientHeight-23)/2-16);
     $("#line").height(document.documentElement.clientHeight-23);
 
-
-    $("#hip").click(function(){
-        set(0,105,"Hiphop");
+    $.each($("#repeat_list").find(".repeat_item"), function(k,v){
+        var repeat_item = $(v);
+        var start = parseFloat(repeat_item.attr("start"));
+        var end = parseFloat(repeat_item.attr("end"));
+        var title = repeat_item.attr("name");
+        repeat_item.click(function(){
+            set(start, end, title);
+        });
     });
-    $("#lockin").click(function(){
-        set(106,207,"Lockin");
-    });
-    $("#pop").click(function(){
-        set(208,266,"Poppin");
-    });
-    $("#gs").click(function(){
-        set(266,345,"Girl Style");
-    });
-    $("#yn").click(function(){
-        set(344,434,"House");
-    });
-    $("#battle").click(function(){
-        set(436,508,"Battle");
-    });
-    $("#whole").click(function(){
-        set(-1,-1,"Old Dance");
-    });
-
 
     $("#jquery_jplayer_1").jPlayer({
         ready: function (event) {
@@ -143,18 +114,21 @@ $(document).ready(function(){
                 }
             }
 
-            var change = 0;
-            $.each(light,function(k,v){
-                var t = v[1] - event.jPlayer.status.currentTime;
+            update_timer_circle();
+            /*
+               var change = 0;
+               $.each(light,function(k,v){
+               var t = v[1] - event.jPlayer.status.currentTime;
 
-                if( t > 0 && change == 0 && block == 0){
-                    $("#circle").html(Math.floor(t));
-                    change = 1;
-                    return;
-                }
-            });
-            if(change == 0 && block == 0)
-                $("#circle").html("");
+               if( t > 0 && change == 0 && block == 0){
+               $("#circle").html(Math.floor(t));
+               change = 1;
+               return;
+               }
+               });
+               if(change == 0 && block == 0)
+               $("#circle").html("");
+             */
 
             var time = (Math.floor(event.jPlayer.status.currentTime*10)/10)*10;
             $("#timeline").offset({top : -time + (document.documentElement.clientHeight-23)/2});
@@ -198,6 +172,8 @@ function add_light_script(time, move){
         success: function(script_id) {
             light.push(new Array(script_id, time, move));
             set_light_and_bubble();
+            sort_light();
+            update_timer_circle();
         },
         error: function() {
             $("#new_move").append('<span id="create_move_fail" style="color:red">上傳失敗</span>');
@@ -222,6 +198,8 @@ function remove_light_script(script_id, bubble){
                 }
             }
             bubble.remove();
+            sort_light();
+            update_timer_circle();
         },
         error: function() {
             alert('fail');
@@ -244,8 +222,22 @@ function update_music_url(){
         },
     });
 }
+function update_timer_circle(){
+    var change = 0;
+    $.each(light,function(k,v){
+        var t = v[1] - ctime;
+
+        if( t > 0 && change == 0 && block == 0){
+            $("#circle").html(Math.floor(t));
+            change = 1;
+            return;
+        }
+    });
+    if(change == 0 && block == 0)
+        $("#circle").html("");
+}
 function t_o(t){
-    return t*10-38 ;
+    return t*10-38;
 }
 function set(s,e,t){
     start = s;
@@ -253,4 +245,9 @@ function set(s,e,t){
     if(s != -1)
         $("#jquery_jplayer_1").jPlayer("play", start);
     $("#title").html(t);
+}
+function sort_light(){
+    light.sort(function(a, b){
+        return a[1] - b[1];
+    });
 }

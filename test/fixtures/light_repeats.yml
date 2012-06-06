@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  activity: 
+  name: MyString
+  start: 1.5
+  end: 1.5
+
+two:
+  activity: 
+  name: MyString
+  start: 1.5
+  end: 1.5
