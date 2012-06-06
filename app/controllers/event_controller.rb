@@ -583,6 +583,19 @@ class EventController < ApplicationController
 		redirect_to :action => :show_act
 	end
   end
+  def edit_post
+	@p_id = params[:e_id]
+	@type = params[:type]
+	@p = Post.find(@p_id)
+	@content = params[:post_content]
+	@p.content = @content
+	@p.save
+	if @type == "dep"
+		redirect_to :action => :show_dep
+	elsif @type == "act"
+		redirect_to :action => :show_act
+	end
+  end
   def get_ajax
 	@id = params[:id]
 	@post = Post.find(@id)
@@ -601,4 +614,18 @@ class EventController < ApplicationController
   	entry.save
   	redirect_to :action => :show_act_accounting
   end
+
+  def acc_approve
+        entry = Accounting.find(:first, :conditions => {:id => params[:accid]})
+        entry.approved = true;
+        entry.save
+        redirect_to :action => :accounting
+  end
+  def acc_pay
+        entry = Accounting.find(:first, :conditions => {:id => params[:accid]})
+        entry.paid = true;
+        entry.save
+        redirect_to :action => :accounting
+  end
+
 end

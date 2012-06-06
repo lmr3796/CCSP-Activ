@@ -47,8 +47,10 @@
 	</ul>
 </div>
 <table id="account" class="tablesorter"><thead>
-<tr><th>編號</th><th>部門/節目</th><th>款項</th><th>金額</th><th>統一發票號碼</th><th>報帳人</th><th>報帳時間</th><th>備註</th><th>核銷</th><th>撥款</th></tr></thead>
+<tr><th>▼ 編號</th><th>▼ 部門/節目</th><th>▼ 款項</th><th>▼ 金額</th><th>▼ 統一發票號碼</th><th>▼ 報帳人</th><th>▼ 報帳時間</th><th>▼ 備註</th><th>▼ 核銷</th><th>▼ 撥款</th></tr></thead>
+
 <tbody>
+<% @sum = 0 %><% @asum = 0 %><% @psum = 0 %>
 <%@i = 0%>
 <% @eacc.each do |acc| %>
 <%@i = @i + 1%>
@@ -61,17 +63,37 @@
 <%end%>
 <td><%= acc.title %></td>
 <td><%= acc.balance %></td>
+<% @sum += acc.balance %>
+        <% if acc.approved == true %>
+                <% @asum += acc.balance %>
+                <% if acc.approved == true %>
+                        <% @psum += acc.balance %>
+                <% end %>
+        <% end %>
 <td><%= acc.receipt %></td>
 <%u = User.find(acc.user_id)%>
 <td><%= u.username %></td>
 <td><%= acc.updated_at %></td>
 <td><%= acc.comment %></td>
-<td><% if acc.approved == false %>X<% else %>O<% end %></td>
-<td><% if acc.paid == false %>X<% else %>O<% end %></td>
+<td><% if acc.approved == false %>
+        <%= link_to "核可", {:controller => 'event', :action => 'acc_approve', :accid => acc.id} %>
+        <% else %>O<% end %>
+</td>
+<td><% if acc.approved == false %>X
+        <% else %>
+        <% if acc.paid == false %>
+                 <%= link_to "付款", {:controller => 'event', :action => 'acc_pay', :accid => acc.id} %>
+        <% else %>O<% end %>
+<% end %></td>
 </tr>
 <% end %>
 </tbody>
 </table>
+<h3>表面帳額: <%= @sum %></h3>
+<h3>實際帳額: <%= @asum %></h3>
+<h3>已付帳額: <%= @psum %></h3>
+<h3>記帳管理者: </h3>
+
 
 </div>
 <div id="rightcolumn">
