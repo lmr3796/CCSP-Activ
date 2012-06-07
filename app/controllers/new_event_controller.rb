@@ -46,14 +46,16 @@ class NewEventController < GoogleController
         end         
 
         cal_id = @cal_wrapper.create_cal(params[:event_name])[:cal].id
+        test ={@event_name, @start_date, @end_date,cal_id }
+        render :json => test
 
-
-
+=begin  
         @e = Event.new(:event_name => @event_name, :event_start => @start_date, :event_end => @end_date, :event_head => session[:user_id],:organization_id=> @org_id, :accounting_manager_id => session[:user_id], :calendar_id => cal_id)
         @e.save
         @a = UserEvent.new(:user_id => session[:user_id], :event_id => @e.id)
-        @a.save
+        @a.save        
         redirect_to home_path
+=end
     end
 
     private
