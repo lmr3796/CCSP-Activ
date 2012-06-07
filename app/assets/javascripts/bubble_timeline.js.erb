@@ -139,8 +139,8 @@ function add_light_script(time, move){
     form.find("#light_script_time").val(time);
     form.find("#light_script_move").val(move);
     $.ajaxSetup({
-        'beforeSend': function(xhr) {
-            xhr.setRequestHeader("Accept", "text/javascript")
+        beforeSend: function(xhr) {
+            //xhr.setRequestHeader("Accept", "text/javascript")
             xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
         }
     })
@@ -166,8 +166,8 @@ function remove_light_script(script_id, bubble){
     close_button.hide();
     bubble.css({'opacity' : 0.5}).end().css({'opacity' : 0.5});
     $.ajaxSetup({
-        'beforeSend': function(xhr) {
-            xhr.setRequestHeader("Accept", "text/javascript")
+        beforeSend: function(xhr) {
+            //xhr.setRequestHeader("Accept", "text/javascript")
             xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
         }
     })
@@ -194,8 +194,8 @@ function remove_light_script(script_id, bubble){
 function update_music_url(){
     var form = $('form #music_url');
     $.ajaxSetup({
-        'beforeSend': function(xhr) {
-            xhr.setRequestHeader("Accept", "text/javascript")
+        beforeSend: function(xhr) {
+            //xhr.setRequestHeader("Accept", "text/javascript")
             xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
         }
     })
