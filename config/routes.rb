@@ -7,7 +7,7 @@ Activ::Application.routes.draw do
 
   get "/new_event/new" => "new_event#new"
   get "/new_event/new/oauth2callback" => "new_event#new"
-  post "/new_event/new" => "new_event#done"
+  #post "/new_event/new" => "new_event#done"
 
   match  "/calendar/oauth2callback"
 

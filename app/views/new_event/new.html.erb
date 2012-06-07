@@ -9,7 +9,7 @@
 <div id="content">   
     <div class="create">
         <h2>新增活動</h2>
-        <%=form_tag  do %>
+        <%=form_tag(:controller => "new_event", :action => "done")  do %>
             <%= label_tag :event_name,"活動名稱" %>:
             <%= text_field_tag :event_name %><br />
             <%= label_tag :event_start,"活動開始日期" %>:
