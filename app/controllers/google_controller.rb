@@ -9,7 +9,6 @@ class GoogleController < ApplicationController
     REDIRECT_CALLBACK = '/oauth2callback'
     API_SCOPES = [
         'https://www.googleapis.com/auth/calendar',
-        'https://www.googleapis.com/auth/drive.file'
     ]
     protected
     before_filter :set_google_client
@@ -17,10 +16,10 @@ class GoogleController < ApplicationController
         # get api_path and redirect uri
         /^(?<api_path>\/.*[^\/])/ =~ request.path_info
         redirect_uri = root_url[0...-1] + api_path + if request.path_info =~ /\/oauth2callback$/ 
-                                                        ""
-                                                     else
-                                                        REDIRECT_CALLBACK
-                                                     end
+                                                         ""
+        else
+            REDIRECT_CALLBACK
+        end
         @client = Google::APIClient.new
         @client.authorization.client_id = CLIENT_ID
         @client.authorization.client_secret = CLIENT_SECRET
@@ -35,19 +34,21 @@ class GoogleController < ApplicationController
         if @client.authorization.refresh_token && @client.authorization.expired?
             @client.authorization.fetch_access_token!
         end
-        if session[:google_callback]
-            uri = session[:google_callback]
-            session.delete(:google_callback)
-            redirect_to uri
-        end
         unless @client.authorization.access_token || request.path_info =~ /\/oauth2callback$/
             session[:google_callback] = request.url 
             redirect_to @client.authorization.authorization_uri.to_s
             @redirected = true
             return
         end
-        if request.path_info =~ /\/oauth2callback/
+
+        persist_token()
+        if session[:google_callback]
+            uri = session[:google_callback]
+            session.delete(:google_callback)
             persist_token()
+            @redirected = true
+            redirect_to uri
+            return
         end
     end
 

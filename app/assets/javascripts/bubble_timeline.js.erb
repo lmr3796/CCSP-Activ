@@ -1,6 +1,6 @@
 var start = -1,end = -1,light=new Array(),ctime = 0,block = 0,temp;
 function new_move_bubble(){
-    return '<p id="new_move" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="30" rows="4" id="new_move_content"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>'
+    return '<p id="new_move" class="triangle-border left" style="text-align:center;position:absolute;top:'+t_o(ctime)+'px; "><textarea cols="20" rows="4" id="new_move_content"></textarea><br/><button id="confirm">Confirm</button><button id="cancel">Cancel</button></p>'
 }
 function set_light_and_bubble(){
     //Remove old bubbles
@@ -138,6 +138,12 @@ function add_light_script(time, move){
     var form = $("#new_light_script");
     form.find("#light_script_time").val(time);
     form.find("#light_script_move").val(move);
+    $.ajaxSetup({
+        'beforeSend': function(xhr) {
+            xhr.setRequestHeader("Accept", "text/javascript")
+            xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+        }
+    })
     $.ajax({
         type: "POST",
         url: "light?act_id=" + act_id,
@@ -159,6 +165,12 @@ function remove_light_script(script_id, bubble){
     console.log(close_button);
     close_button.hide();
     bubble.css({'opacity' : 0.5}).end().css({'opacity' : 0.5});
+    $.ajaxSetup({
+        'beforeSend': function(xhr) {
+            xhr.setRequestHeader("Accept", "text/javascript")
+            xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+        }
+    })
     $.ajax({
         type: "DELETE",
         url: "light?act_id=" + act_id + '&script_id=' + script_id,
@@ -181,6 +193,12 @@ function remove_light_script(script_id, bubble){
 }
 function update_music_url(){
     var form = $('form #music_url');
+    $.ajaxSetup({
+        'beforeSend': function(xhr) {
+            xhr.setRequestHeader("Accept", "text/javascript")
+            xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'));
+        }
+    })
     $.ajax({
         type: "POST",
         url: "light/music?act_id=" + act_id,

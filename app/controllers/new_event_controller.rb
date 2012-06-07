@@ -16,9 +16,6 @@ class NewEventController < GoogleController
         @o = Organization.all
     end
     def done
-        if @redirected
-            return
-        end
         @event_name = params[:event_name]
         @start = params[:event_start]   
         @end = params[:event_end]
@@ -48,11 +45,16 @@ class NewEventController < GoogleController
         cal_id = @cal_wrapper.create_cal(params[:event_name])[:cal].id
 
 
-
         @e = Event.new(:event_name => @event_name, :event_start => @start_date, :event_end => @end_date, :event_head => session[:user_id],:organization_id=> @org_id, :accounting_manager_id => session[:user_id], :calendar_id => cal_id)
-        @e.save
+        if ! @e.save
+            render :text => "create event fail", :status => 400
+            return
+        end
         @a = UserEvent.new(:user_id => session[:user_id], :event_id => @e.id)
-        @a.save
+        if ! @a.save
+            render :text => "create user event fail", :status => 400
+            return
+        end
         redirect_to home_path
     end
 
