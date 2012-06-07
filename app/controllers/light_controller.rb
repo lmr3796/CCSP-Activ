@@ -1,10 +1,17 @@
 require 'json'
 class LightController < ApplicationController
+  before_filter :check_user_id
   def find_music_rec(p)
 	return Activity.find(p[:act_id])
   end
+
+  def check_user_id
+    
+  end
+
   def param_session_valid(p, s)
     # Test if the passed parameters like activity id is valid
+
     return !(p[:act_id].blank? or Activity.find_by_id(p[:act_id]).blank?)
   end
   def show
@@ -37,6 +44,7 @@ class LightController < ApplicationController
   # create and delete works as ajax 
 =end
   def create 
+    session[:user_id] = @user_id
     if not param_session_valid(params, session)
       render :nothing => true, :status => 400
       return
@@ -51,20 +59,22 @@ class LightController < ApplicationController
   end
 
   def delete
+    session[:user_id] = @user_id
     if not param_session_valid(params, session)
-      render :nothing => true, :status => 400
+      render :text => 'succeed', :status => 400
       return
     end
     move = LightScript.find_by_id(params[:script_id])
     id = move.id
     if !move.blank? and move.delete
-      render :nothing => true 
+      render :text => 'succeed' 
     else
-      render :nothing => true, :status => 400
+      render :text => 'succeed', :status => 400
     end
   end
 
   def music_url
+    session[:user_id] = @user_id
     if param_session_valid(params, session)
       r = find_music_rec(params)
       r.music_url = params[:music_url] unless params[:music_url].blank?
@@ -74,22 +84,17 @@ class LightController < ApplicationController
   end
 
   def create_repeat
+    session[:user_id] = @user_id
     if param_session_valid(params, session)
       repeat = LightRepeat.new params[:light_repeat]
       repeat.activity_id = params[:act_id]
       repeat.save
     end
     redirect_to :back
-=begin
-    if repeat.save 
-      render :text => repeat.id 
-    else
-      render :nothing => true, :status => 400
-    end
-=end
   end
 
   def delete_repeat
+    session[:user_id] = @user_id
     if not param_session_valid(params, session)
       render :nothing => true, :status => 400
       return
